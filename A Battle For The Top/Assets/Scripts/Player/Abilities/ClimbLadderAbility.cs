@@ -104,7 +104,7 @@ namespace BFTT.Abilities
                 if (_currentLadder.CanClimbTop)
                 {
                     _animator.CrossFadeInFixedTime(climbUpAnimState, 0.1f);
-                    _mover.ApplyRootMotion(Vector3.one);
+                    _mover.ApplyRootMotion(Vector3.one * 3);
                     _capsule.DisableCollision();
                     _climbingUp = true;
                     return;

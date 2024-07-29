@@ -31,12 +31,15 @@ namespace BFTT.Controller
         public float CameraAngleOverride = 0.0f;
         [Tooltip("Speed of camera turn")]
         public Vector2 CameraTurnSpeed = new Vector2(300.0f, 200.0f);
+        public Vector2 CameraTurnSpeedController = new Vector2(300.0f, 200.0f);
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
+
+        public bool _usingController;
 
         // for shooter ui
         public float CurrentRecoil { get; private set; } = 0f;
@@ -125,8 +128,16 @@ namespace BFTT.Controller
             // if there is an input and camera position is not fixed
             if (Look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
-                _cinemachineTargetYaw += Look.x * CameraTurnSpeed.x * Time.deltaTime;
-                _cinemachineTargetPitch += Look.y * CameraTurnSpeed.y * Time.deltaTime;
+                if (!_usingController)
+                {
+                    _cinemachineTargetYaw += Look.x * CameraTurnSpeed.x * Time.deltaTime;
+                    _cinemachineTargetPitch += Look.y * CameraTurnSpeed.y * Time.deltaTime;
+                }
+                else
+                {
+                    _cinemachineTargetYaw += Look.x * CameraTurnSpeedController.x * Time.deltaTime;
+                    _cinemachineTargetPitch += Look.y * -CameraTurnSpeedController.y * Time.deltaTime;
+                }
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -181,33 +192,6 @@ namespace BFTT.Controller
             Interact = false;
             Drop = false;
         }
-
-        //public void LegacyInput()
-        //{
-        //    Move.x = Input.GetAxis("Horizontal");
-        //    Move.y = Input.GetAxis("Vertical");
-
-        //    Look.x = Input.GetAxis("Mouse X");
-        //    Look.y = Input.GetAxis("Mouse Y");
-
-        //    Walk = Input.GetButton("Walk");
-        //    Jump = Input.GetButtonDown("Jump");
-        //    Roll = Input.GetButtonDown("Roll");
-        //    Crouch = Input.GetButton("Crouch");
-        //    Crawl = Input.GetButtonDown("Crawl");
-        //    Zoom = Input.GetButtonDown("Zoom");
-        //    Interact = Input.GetButtonDown("Interact");
-
-        //    // special actions for climbing
-        //    Drop = Input.GetButtonDown("Drop");
-
-        //    /*
-        //    // special actions for shooter
-        //    Fire = Input.GetButton("Fire");
-        //    Reload = Input.GetButtonDown("Reload");
-        //    Switch = Input.GetAxisRaw("Switch");
-        //    Toggle = Input.GetButtonDown("Toggle");*/
-        //}
 
         public void OnMove(Vector2 value)
         {
