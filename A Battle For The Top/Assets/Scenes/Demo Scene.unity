@@ -30817,7 +30817,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2958730473866535770, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: _usingController
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2958730473866535770, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: CameraTurnSpeedController.x
@@ -30918,6 +30918,10 @@ PrefabInstance:
     - target: {fileID: 6233448299827713264, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6241974261496409474, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: offsetFromWall
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6242940637646221197, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: m_IsActive
