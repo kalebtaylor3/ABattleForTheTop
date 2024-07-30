@@ -221,8 +221,7 @@ namespace BFTT.Abilities
                     if (_matchTarget && !_animator.isMatchingTarget)
                     {
                         _capsule.DisableCollision();
-                        _animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.RightFoot,
-                            new MatchTargetWeightMask(Vector3.one, 0f), 0.4f, 0.9f);
+                        _animator.MatchTarget(_matchTargetPosition, _matchTargetRotation, AvatarTarget.RightFoot,new MatchTargetWeightMask(Vector3.one, 0f), 0.2f, 1.0f);
 
                         _matchTarget = false;
                     }

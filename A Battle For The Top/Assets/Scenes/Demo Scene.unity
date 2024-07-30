@@ -30987,6 +30987,14 @@ PrefabInstance:
       propertyPath: m_UIInputModule
       value: 
       objectReference: {fileID: 599836139}
+    - target: {fileID: 8815666479999534364, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: jumpEffort
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8815666479999534364, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: hardLandClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8815666479999534372, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: m_Avatar
       value: 

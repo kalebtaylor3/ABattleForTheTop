@@ -794,8 +794,8 @@ MonoBehaviour:
   airControl: 0.1
   heightForHardLand: 5
   heightForKillOnLand: 12
-  jumpEffort: {fileID: 8300000, guid: 9ae93c56eab4b274bbd9489b85799b06, type: 3}
-  hardLandClip: {fileID: 8300000, guid: 8f6a3fcf53f0718418d4341566f98e8d, type: 3}
+  jumpEffort: {fileID: 0}
+  hardLandClip: {fileID: 0}
   OnLanded:
     m_PersistentCalls:
       m_Calls: []
@@ -923,7 +923,7 @@ MonoBehaviour:
         m_MethodName: PlayVoice
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 3a3bf34e7b214f241b0087979f62e696, type: 3}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
