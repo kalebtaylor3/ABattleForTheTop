@@ -3,6 +3,7 @@ using UnityEngine;
 using BFTT.Components;
 using BFTT.Climbing;
 using BFTT.Debugging;
+using System.Collections;
 
 namespace BFTT.Abilities
 {
@@ -105,6 +106,7 @@ namespace BFTT.Abilities
         private float _shimmyMinRatio = 0.5f;
         private bool _stopRightShimmy;
         private bool _stopLeftShimmy;
+        private bool _canShimmy = true;
 
         // avoid climb the same ledge when droping
         private Collider _ledgeBlocked;
@@ -252,7 +254,10 @@ namespace BFTT.Abilities
 
                 ProccesMovement();
 
-                _mover.ApplyRootMotion(Vector3.one * climbSpeedMultiplier); // Apply the speed multiplier here
+                if(_canShimmy)
+                    _mover.ApplyRootMotion(Vector3.one * climbSpeedMultiplier); // Apply the speed multiplier here
+                else
+                    _mover.ApplyRootMotion(Vector3.one);
 
                 _context.CurrentClimbState.Idle(_context);
 
@@ -471,7 +476,6 @@ namespace BFTT.Abilities
 
             // cast right
             CastShimmy(ref _rightDistanceToShimmy, 1);
-
         }
 
         /// <summary>
@@ -617,7 +621,6 @@ namespace BFTT.Abilities
 
                                 // debug ray
                                 Debug.DrawLine(topStart, top.point, Color.red);
-
                                 return true;
                             }
                         }
@@ -789,10 +792,19 @@ namespace BFTT.Abilities
 
                 if (_localCoordMove != Vector2.zero)
                     Jump();
+
+                _canShimmy = false;
+                StartCoroutine(WaitForShimmy());    
             }
 
             if (_action.drop)
                 Drop();
+        }
+
+        IEnumerator WaitForShimmy()
+        {
+            yield return new WaitForSeconds(_tweenDuration + 0.3f);
+            _canShimmy = true;
         }
 
         /// <summary>

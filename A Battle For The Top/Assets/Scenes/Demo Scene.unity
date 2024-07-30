@@ -30915,6 +30915,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6057181338735160676, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: climbSpeedMultiplier
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6233448299827713264, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: m_IsActive
       value: 0
