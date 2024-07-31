@@ -60,16 +60,18 @@ namespace BFTT.Components
         {
             if (_animator == null) return;
 
-            _animator.enabled = false;
+            Debug.Log("dead");
 
-            // activate rigidbodies
-            _ragdollRigidbodies.ForEach(r => { 
-                r.isKinematic = false;
-                r.useGravity = true;
-            });
+            //_animator.enabled = false;
 
-            // activate colliders
-            _ragdollColliders.ForEach(c => c.enabled = true);
+            //// activate rigidbodies
+            //_ragdollRigidbodies.ForEach(r => { 
+            //    r.isKinematic = false;
+            //    r.useGravity = true;
+            //});
+
+            //// activate colliders
+            //_ragdollColliders.ForEach(c => c.enabled = true);
         }
     }
 }

@@ -25,7 +25,10 @@ namespace BFTT.Components
         [Tooltip("Changes the engine default value at awake")]
         [SerializeField] private float Gravity = -15.0f;
 
-        // player
+        [Header("Sliding")]
+        [Tooltip("Sliding force applied on ice platforms")]
+        [SerializeField] private float slidingForce = 1f;
+
         private float _speed;
         private float _animationBlend;
         private float _targetRotation = 0.0f;
@@ -33,12 +36,10 @@ namespace BFTT.Components
         private float _initialCapsuleHeight = 2f;
         private float _initialCapsuleRadius = 0.28f;
 
-        // variables for root motion
         private bool _useRootMotion = false;
         private Vector3 _rootMotionMultiplier = Vector3.one;
         private bool _useRotationRootMotion = false;
 
-        // animation IDs
         private int _animIDSpeed;
         private int _animIDMotionSpeed;
 
@@ -48,6 +49,7 @@ namespace BFTT.Components
         private GameObject _mainCamera;
 
         private bool _hasAnimator;
+        private bool _isOnIce = false;
 
         private void Awake()
         {
@@ -71,13 +73,16 @@ namespace BFTT.Components
         {
             GroundedCheck();
             GravityControl();
+            HandleSliding();
+
+            // Debug the grounded state
+            Debug.Log($"Grounded: {Grounded}");
         }
 
         private void OnAnimatorMove()
         {
             if (!_useRootMotion) return;
 
-            // multiply by multiplier
             Vector3 velocity = Vector3.Scale(_animator.deltaPosition / Time.deltaTime, _rootMotionMultiplier);
             if (_rigidbody.useGravity)
                 velocity.y = _rigidbody.velocity.y;
@@ -94,11 +99,37 @@ namespace BFTT.Components
 
         private void GroundedCheck()
         {
-            // set sphere position, with offset
             Vector3 spherePosition = transform.position + Vector3.up * GroundedRadius * 2;
             RaycastHit groundHit;
             Grounded = Physics.SphereCast(spherePosition, GroundedRadius, Vector3.down, out groundHit,
                 GroundedCheckDistance + GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+        }
+
+        private void HandleSliding()
+        {
+            if (Grounded && IsOnIce())
+            {
+                Vector3 slidingDirection = new Vector3(_rigidbody.velocity.x, 0, _rigidbody.velocity.z).normalized;
+                if (slidingDirection == Vector3.zero)
+                {
+                    slidingDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
+                }
+                _rigidbody.AddForce(slidingDirection * slidingForce, ForceMode.Acceleration);
+            }
+        }
+
+        private bool IsOnIce()
+        {
+            Vector3 spherePosition = transform.position + Vector3.up * GroundedRadius * 2;
+            RaycastHit hit;
+            if (Physics.SphereCast(spherePosition, GroundedRadius, Vector3.down, out hit, GroundedCheckDistance + GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore))
+            {
+                if (hit.collider.CompareTag("Ice"))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public Collider GetGroundCollider()
@@ -121,27 +152,19 @@ namespace BFTT.Components
 
         public void Move(Vector2 moveInput, float targetSpeed, Quaternion cameraRotation, bool rotateCharacter = true)
         {
-            // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-            // if there is no input, set the target speed to 0
             if (moveInput == Vector2.zero) targetSpeed = 0.0f;
 
-            // a reference to the players current horizontal velocity
             float currentHorizontalSpeed = new Vector3(_rigidbody.velocity.x, 0.0f, _rigidbody.velocity.z).magnitude;
 
             float speedOffset = 0.1f;
-            float inputMagnitude = moveInput.magnitude; // _input.analogMovement ? _input.move.magnitude : 1f;
+            float inputMagnitude = moveInput.magnitude;
 
             if (inputMagnitude > 1)
                 inputMagnitude = 1f;
 
-            // accelerate or decelerate to target speed
             if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
             {
-                // creates curved result rather than a linear one giving a more organic speed change
-                // note T in Lerp is clamped, so we don't need to clamp our speed
                 _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
-
-                // round speed to 3 decimal places
                 _speed = Mathf.Round(_speed * 1000f) / 1000f;
             }
             else
@@ -150,22 +173,17 @@ namespace BFTT.Components
             }
             _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
 
-            // normalise input direction
             Vector3 inputDirection = new Vector3(moveInput.x, 0.0f, moveInput.y).normalized;
 
-            // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-            // if there is a move input rotate player when the player is moving
             if (moveInput != Vector2.zero)
             {
                 _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cameraRotation.eulerAngles.y;
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, RotationSmoothTime);
 
-                // rotate to face input direction relative to camera position
                 if (rotateCharacter && !_useRotationRootMotion)
                     transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
 
-            // update animator if using character
             if (_hasAnimator)
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
@@ -174,7 +192,6 @@ namespace BFTT.Components
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
-            // don't apply movement if it's using root motion
             if (!_useRootMotion)
             {
                 Vector3 velocity = targetDirection.normalized * _speed;
@@ -197,32 +214,22 @@ namespace BFTT.Components
             {
                 if (Grounded)
                 {
-                    // stop our velocity dropping infinitely when grounded
                     if (_rigidbody.velocity.y < 0.0f)
                     {
                         Vector3 velocity = _rigidbody.velocity;
-                        velocity.y = Mathf.Clamp(velocity.y, -2, 0); // Avoid character goes up
-
+                        velocity.y = Mathf.Clamp(velocity.y, -2, 0);
                         _rigidbody.velocity = velocity;
                     }
                 }
             }
         }
 
-        /// <summary>
-		/// Get rotation to face desired direction
-		/// </summary>
-		/// <returns></returns>
-		public Quaternion GetRotationFromDirection(Vector3 direction)
+        public Quaternion GetRotationFromDirection(Vector3 direction)
         {
             float yaw = Mathf.Atan2(direction.x, direction.z);
             return Quaternion.Euler(0, yaw * Mathf.Rad2Deg, 0);
         }
 
-        /// <summary>
-        /// Sets character new position
-        /// </summary>
-        /// <param name="newPosition"></param>
         public void SetPosition(Vector3 newPosition)
         {
             _rigidbody.position = newPosition + _rigidbody.velocity * Time.fixedDeltaTime;
@@ -306,6 +313,7 @@ namespace BFTT.Components
         {
             return Grounded;
         }
+
         public void StopMovement()
         {
             _rigidbody.velocity = Vector3.zero;

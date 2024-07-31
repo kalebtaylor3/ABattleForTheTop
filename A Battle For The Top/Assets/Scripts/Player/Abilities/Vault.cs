@@ -35,10 +35,15 @@ namespace BFTT.Abilities
         private IMover _mover;
         private CastDebug _debug;
 
+        [HideInInspector] public CharacterAudioPlayer _audioPlayer;
+
+        public AudioClip vaultEffect;
+
         private void Awake()
         {
             _capsule = GetComponent<ICapsule>();
             _mover = GetComponent<IMover>();
+            _audioPlayer = GetComponent<CharacterAudioPlayer>();
             _debug = GetComponent<CastDebug>();
         }
 
@@ -57,6 +62,10 @@ namespace BFTT.Abilities
             _tweenStep = Vector3.Distance(transform.position, _targetPosition) / vaultDuration;
             _tweenStartPosition = transform.position;
             _tweenStartRotation = transform.rotation;
+
+            if(_audioPlayer)
+                _audioPlayer.PlayEffect(vaultEffect);
+           
 
             // Draw char position
             Vector3 p1 = _targetPosition + Vector3.up * _capsule.GetCapsuleRadius();

@@ -37,7 +37,7 @@ namespace BFTT.Abilities
         {
             if (!_mover.IsGrounded()) return false;
 
-            if (_action.crawl || ForceCrawlByHeight())
+            if (_action.crawl)// || ForceCrawlByHeight())
                 return true;
 
             return false;

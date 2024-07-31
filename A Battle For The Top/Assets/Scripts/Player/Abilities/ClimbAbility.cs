@@ -112,6 +112,11 @@ namespace BFTT.Abilities
         private Collider _ledgeBlocked;
         private float _timeBlockStarted;
 
+        [HideInInspector] public CharacterAudioPlayer _audioPlayer;
+
+        public AudioClip climbUpClip;
+        public AudioClip dropClip;
+
         #region State Machine Methods
 
         public void Idle() => _context.CurrentClimbState.Idle(_context);
@@ -132,6 +137,7 @@ namespace BFTT.Abilities
             _capsule = GetComponent<ICapsule>();
             _climbIK = GetComponent<ClimbIK>();
             _debug = GetComponent<CastDebug>();
+            _audioPlayer = GetComponent<CharacterAudioPlayer>();
 
             _mainCamera = Camera.main;
 
@@ -178,6 +184,7 @@ namespace BFTT.Abilities
             DoTween(GetCharacterPositionOnLedge(), GetCharacterRotationOnLedge(), startClimbMatchTime, _currentCollider);
 
             SetAnimationState("Climb.Start Climb");
+            _audioPlayer.PlayEffect(climbUpClip);
 
             _timeWithoutLedge = 0;
         }

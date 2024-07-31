@@ -7,7 +7,6 @@ namespace BFTT.ThirdPersonSystem
 {
     public class SetupProjectSettings : EditorWindow
     {
-        [MenuItem("Dias Games/Setup Project Settings")]
         public static void ShowWindow()
         {
             GetWindow<SetupProjectSettings>(true, "Setup Project Settings");

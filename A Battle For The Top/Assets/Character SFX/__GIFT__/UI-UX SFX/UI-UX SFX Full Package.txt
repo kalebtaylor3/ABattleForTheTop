@@ -1,0 +1,23 @@
+
+Get Full Package UI/UX SFX:
+
+-->  https://assetstore.unity.com/packages/audio/sound-fx/ui-ux-sfx-185913
+
+__GIFT__
+- Alarm
+- Buzzer
+- Click ( camera )
+- Click ( digital )
+- Click ( fantasy )
+- Click ( keyboard )
+- Click ( simple )
+- Coin
+- Coin ( digital )
+- Gem
+- Gun Shot ( cartoon )
+- Jump
+- Lose
+- Notification
+- Pop up
+- UX
+- Win

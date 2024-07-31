@@ -30,12 +30,14 @@ namespace BFTT.Climbing
                 context.climb.DoTween(_targetPosition, _targetRotation, dropDuration, _targetVerticalHit.collider);
                 SetLefttHandIK(context);
                 context.climb.StartCoroutine(ResetIK(context));
+                context.climb._audioPlayer.PlayEffect(context.climb.dropClip);
             }
             else
             {
                 context.animator.CrossFadeInFixedTime(dropToFall, 0.1f);
                 context.climb.FinishAfterAnimation(dropToFall);
                 context.climb.BlockCurrentLedge();
+                context.climb._audioPlayer.PlayEffect(context.climb.dropClip);
             }
 
             _startTime = Time.time;

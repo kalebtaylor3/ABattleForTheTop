@@ -29,8 +29,8 @@ namespace BFTT.Abilities
 
         public override bool ReadyToRun()
         {
-            if (ForceCrouchByHeight())
-                return true;
+            //if (ForceCrouchByHeight())
+            //    return true;
 
             return _mover.IsGrounded() && _action.crouch;
         }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using BFTT.Components;
 using BFTT.Climbing;
+using System.Collections;
 
 namespace BFTT.Abilities
 {
@@ -36,10 +37,25 @@ namespace BFTT.Abilities
         private float _step;
         private float _weight;
 
+        [SerializeField] private ClimbStateContext _context;
+        private Collider _currentCollider;
+        private RaycastHit _currentHorizontalHit;
+        private RaycastHit _currentTopHit;
+        private Vector2 _localCoordMove;
+        private ClimbIK _climbIK;
+
+        public void Idle() => _context.CurrentClimbState.Idle(_context);
+        public void Jump() => _context.CurrentClimbState.Jump(_context);
+
+        public string jumpBackState = "Climb.Jump From Wall";
+        private float _targetDuration = 2f;
+        private float _startTime;
+
         private void Awake()
         {
             _mover = GetComponent<IMover>();
             _capsule = GetComponent<ICapsule>();
+            _climbIK = GetComponent<ClimbIK>();
         }
 
         public override bool ReadyToRun()
@@ -49,6 +65,16 @@ namespace BFTT.Abilities
 
         public override void OnStartAbility()
         {
+            _context.climb = new ClimbAbility();
+            _context.animator = _animator;
+            _context.ik = _climbIK;
+            _context.grabReference = grabReference;
+            _context.transform = transform;
+            _context.currentCollider = _currentCollider;
+            _context.horizontalHit = _currentHorizontalHit;
+            _context.topHit = _currentTopHit;
+            _context.input = _localCoordMove;
+            _context.SetState(_context.Idle);
             _animator.CrossFadeInFixedTime(climbLadderAnimState, 0.1f);
             _mover.DisableGravity();
 
@@ -94,6 +120,14 @@ namespace BFTT.Abilities
             // check limits
             CheckVerticalLimits();
 
+            if (_action.jump)
+            {
+                BlockLadder();
+                _animator.applyRootMotion = true;
+                _animator.CrossFadeInFixedTime(jumpBackState, 0.1f);
+                StartCoroutine(WaitJumpBackAnimation(0.62f, _context));
+            }
+
             // stop down movement if reach limit
             if (_stopDown && vertical < 0) vertical = 0;
 
@@ -129,6 +163,29 @@ namespace BFTT.Abilities
                 StopAbility();
                 BlockLadder();
             }
+        }
+
+        private IEnumerator WaitJumpBackAnimation(float targetNormalizedtime, ClimbStateContext context)
+        {
+            float normalizedTime = 0;
+            while (Mathf.Repeat(normalizedTime, 1) < targetNormalizedtime)
+            {
+                var state = _animator.GetCurrentAnimatorStateInfo(0);
+
+                if (state.IsName(jumpBackState))
+                    normalizedTime = state.normalizedTime;
+
+                // constantly update start time to avoid call this method twice
+                _startTime = Time.time;
+                yield return null;
+            }
+
+                _targetDuration = 2f;
+                transform.rotation = Quaternion.LookRotation(-transform.forward);
+                _mover.SetVelocity(-transform.forward * 10 + Vector3.up * 3);
+
+            _startTime = Time.time;
+            StopAbility();
         }
 
         public override void OnStopAbility()

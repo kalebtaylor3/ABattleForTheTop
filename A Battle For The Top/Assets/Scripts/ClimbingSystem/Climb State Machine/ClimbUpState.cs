@@ -25,6 +25,7 @@ namespace BFTT.Climbing
                 string animation = context.animator.GetFloat("HangWeight") > 0.6f ? hangClimbUpState : braceClimbUpState;
 
                 context.animator.CrossFadeInFixedTime(animation, 0.1f);
+                context.climb._audioPlayer.PlayEffect(context.climb.climbUpClip);
 
                 if (animation.Contains("Hang")) animation = "Hang Climb Up - End";
                 context.climb.FinishAfterAnimation(animation, _targetPos, context.transform.rotation);

@@ -16,11 +16,16 @@ namespace BFTT.Abilities
         private float _targetRotation = 0;
         private Transform _camera = null;
 
+        [HideInInspector] public CharacterAudioPlayer _audioPlayer;
+
+        public AudioClip rollClip;
+        public AudioClip rollVoice;
+
         private void Awake()
         {
             _mover = GetComponent<IMover>();
             _capsule = GetComponent<ICapsule>();
-
+            _audioPlayer = GetComponent<CharacterAudioPlayer>();
             _camera = Camera.main.transform;
         }
 
@@ -33,6 +38,12 @@ namespace BFTT.Abilities
         {
             _animator.CrossFadeInFixedTime("Roll", 0.1f);
             _capsule.SetCapsuleSize(capsuleHeightOnRoll, _capsule.GetCapsuleRadius());
+
+            if (_audioPlayer)
+            {
+                _audioPlayer.PlayEffect(rollClip);
+                _audioPlayer.PlayVoice(rollVoice);
+            }
 
             _rollDirection = transform.forward;
             _targetRotation = transform.eulerAngles.y;

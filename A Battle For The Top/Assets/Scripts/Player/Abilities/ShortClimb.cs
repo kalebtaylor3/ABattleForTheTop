@@ -24,10 +24,15 @@ namespace BFTT.Abilities
         private RaycastHit _targetHit;
         private bool _hasMatchTarget;
 
+        [HideInInspector] public CharacterAudioPlayer _audioPlayer;
+
+        public AudioClip climbEffect;
+
         private void Awake()
         {
             _mover = GetComponent<IMover>();
             _capsule = GetComponent<ICapsule>();
+            _audioPlayer = GetComponent<CharacterAudioPlayer>();
             _debug = GetComponent<CastDebug>();
         }
 
@@ -42,6 +47,7 @@ namespace BFTT.Abilities
             _mover.DisableGravity();
             _mover.ApplyRootMotion(Vector3.one);
             _mover.StopMovement();
+            _audioPlayer.PlayEffect(climbEffect);
 
             _animator.CrossFadeInFixedTime(shortClimbAnimState, 0.1f);
             _hasMatchTarget = false;

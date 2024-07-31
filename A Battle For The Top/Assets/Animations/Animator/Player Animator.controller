@@ -516,7 +516,7 @@ BlendTree:
   m_Name: Left Shimmy Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -7716069563950445115, guid: 19ddc3514bbcaab4daf688cccb7059fe, type: 3}
+    m_Motion: {fileID: 7400000, guid: 209fea398fb6dc242b8ede91c728d942, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1.3
@@ -1182,7 +1182,7 @@ BlendTree:
   m_Name: Left Shimmy Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -7262943461914595334, guid: 19ddc3514bbcaab4daf688cccb7059fe, type: 3}
+    m_Motion: {fileID: 7400000, guid: 55a2cbfaec8bb6c43975b474fa93a8ad, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1.3
@@ -1405,7 +1405,7 @@ AnimatorState:
   m_MirrorParameterActive: 1
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -2422350723045547755, guid: 389b8ccff470eda40b228091355352cf, type: 3}
+  m_Motion: {fileID: 7400000, guid: f4b068eb7c182dd4ba21c500accd76b5, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: Mirror
@@ -1729,7 +1729,7 @@ AnimatorStateMachine:
     m_Position: {x: -50, y: 150, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8989387851127864324}
-    m_Position: {x: 540, y: 140, z: 0}
+    m_Position: {x: 540, y: 150, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1538288740651121394}
     m_Position: {x: 50, y: 400, z: 0}

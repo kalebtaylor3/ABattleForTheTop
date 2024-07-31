@@ -19,6 +19,7 @@ namespace BFTT.Abilities
         [SerializeField] private float heightForKillOnLand = 7f;
         [Header("Sound FX")]
         [SerializeField] private AudioClip jumpEffort;
+        [SerializeField] private AudioClip jumpVoice;
         [SerializeField] private AudioClip hardLandClip;
         [Header("Event")]
         [SerializeField] private UnityEvent OnLanded = null;
@@ -171,7 +172,10 @@ namespace BFTT.Abilities
                 _startInput.Normalize();
 
             if (_audioPlayer)
-                _audioPlayer.PlayVoice(jumpEffort);
+                _audioPlayer.PlayVoice(jumpVoice);
+
+            //if (_audioPlayer)
+            //    _audioPlayer.PlayEffect(jumpEffort);
         }
 
 

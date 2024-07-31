@@ -11,6 +11,9 @@ TagManager:
   - Stone
   - Wood
   - Sand
+  - Brick
+  - Rope
+  - Ice
   layers:
   - Default
   - TransparentFX
@@ -32,8 +35,8 @@ TagManager:
   - Short Climb
   - Vault
   - Wall Run
-  - 
-  - 
+  - Rope
+  - Ice
   - 
   - 
   - 
