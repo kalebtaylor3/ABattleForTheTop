@@ -17,6 +17,7 @@ namespace BFTT.Components
         void DisableGravity();
 
         void SetPosition(Vector3 newPosition);
+        void SetRotation(Quaternion newRotation);
         Quaternion GetRotationFromDirection(Vector3 direction);
 
         bool IsGrounded();

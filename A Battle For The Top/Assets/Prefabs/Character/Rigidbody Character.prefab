@@ -962,6 +962,7 @@ GameObject:
   - component: {fileID: 1764070892886877082}
   - component: {fileID: 2589809277822072157}
   - component: {fileID: 918649762577057183}
+  - component: {fileID: 2017105220034564156}
   m_Layer: 15
   m_Name: Rigidbody Character
   m_TagString: Player
@@ -1123,6 +1124,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 458753
   Gravity: -20
+  slidingForce: 1
 --- !u!114 &3797456225819413310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1808,6 +1810,105 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  smoothnessTime: 0.12
+  swingForce: 10
+  maxSwingSpeed: 5
+  charOffsetY: 0.3
+  charOffsetX: 0.3
+  grabReference: {fileID: 0}
+  overlapRange: 1
+  ropeMask:
+    serializedVersion: 2
+    m_Bits: 0
+  jumpBackState: Climb.Jump From Wall
+  climbUpAnimState: Climb.Idle
+  _context:
+    Idle:
+      climbIdleState: Climb.Brace Idle
+    ClimbUp:
+      braceClimbUpState: Climb.Climb up
+      hangClimbUpState: Climb.Hang Climb up
+      GroundLayers:
+        serializedVersion: 2
+        m_Bits: 0
+      sphereRadius: 0.3
+      horizontalOffset: 0.75
+      minHeight: 0.75
+    ClimbJump:
+      jumpObstacleMask:
+        serializedVersion: 2
+        m_Bits: 0
+      hopRightState: Climb.Hop Right
+      hopLeftState: Climb.Hop Left
+      hopUpState: Climb.Hop Up
+      hopDropState: Climb.Hop Drop
+      jumpBackState: Climb.Jump From Wall
+      horizontalHopDuration: 0.5
+      HopUpDuration: 0.25
+      HopDropDuration: 0.25
+      jumpBackSpeed: 10
+      moveCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      maxForwardDistance: 1
+      iterations: 10
+      capsuleCastRadius: 0.25
+      maxHeight: 1
+      minHeight: -1
+      minJumpDistance: 1
+      maxJumpDistance: 2.25
+      maxJumpBackDistance: 5
+      maxHangHeightJump: 0.5
+      handZOffset: 0.4
+      debugColor: {r: 0, g: 1, b: 1, a: 1}
+      debugFoundHitColor: {r: 1, g: 0, b: 1, a: 1}
+    ClimbDrop:
+      dropToFall: Climb.Braced Drop
+      dropHop: Climb.Hop Drop
+      dropDuration: 0.3
+      maxHeightBelow: 1.5
+      maxCastingDistance: 1.5
+      castRadius: 0.75
+    CornerOut:
+      rightCornerOut: Climb.Right Corner Out
+      leftCornerOut: Climb.Left Corner Out
+      cornerDuration: 0.3
+      castSideDistance: 1.2
+      castRadius: 0.2
+      castHeight: 0.5
+      cornerSide: 0
+    CornerIn:
+      rightCornerIn: Climb.Hop Right
+      leftCornerIn: Climb.Hop Left
+      cornerDuration: 0.3
+      castSideDistance: 1.2
+      castRadius: 0.2
+      capsuleHeight: 0.2
+    animator: {fileID: 0}
+    transform: {fileID: 0}
+    grabReference: {fileID: 0}
+    currentCollider: {fileID: 0}
+    input: {x: 0, y: 0}
+    climb: {fileID: 0}
+    ik: {fileID: 0}
+--- !u!114 &2017105220034564156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797456225819413306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0078e26e9e242e649859d41c208a2480, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityPriority: 3
+  rideState: Ride
+  detectionRange: 1
 --- !u!1 &4240283749775208963
 GameObject:
   m_ObjectHideFlags: 0

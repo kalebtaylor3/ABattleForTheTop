@@ -112,7 +112,7 @@ namespace BFTT.Abilities
                         float currentHeight = _highestPosition - transform.position.y - heightForHardLand;
                         float ratio = currentHeight / (heightForKillOnLand - heightForHardLand);
 
-                        _damage.Damage((int)(200 * ratio));
+                        //_damage.Damage((int)(200 * ratio));
                     }
 
                     return;

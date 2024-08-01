@@ -284,7 +284,16 @@ namespace BFTT.Components
 			_controller.enabled = currentEnable;
 		}
 
-		public void DisableCollision()
+        public void SetRotation(Quaternion newRotation)
+        {
+            bool currentEnable = _controller.enabled;
+
+            _controller.enabled = false;
+            transform.rotation = newRotation;
+            _controller.enabled = currentEnable;
+        }
+
+        public void DisableCollision()
 		{
 			_controller.enabled = false;
 		}
@@ -378,5 +387,5 @@ namespace BFTT.Components
 
 			return relative;
 		}
-	}
+    }
 }

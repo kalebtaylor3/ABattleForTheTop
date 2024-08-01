@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2851215648956785523}
   - component: {fileID: 2851215648956785522}
   m_Layer: 18
-  m_Name: Vault - 0.5m
+  m_Name: Vault 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

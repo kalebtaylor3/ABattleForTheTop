@@ -14,6 +14,7 @@ TagManager:
   - Brick
   - Rope
   - Ice
+  - Horse
   layers:
   - Default
   - TransparentFX

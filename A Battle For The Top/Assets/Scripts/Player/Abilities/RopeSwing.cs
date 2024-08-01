@@ -9,7 +9,6 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class RopeSwing : AbstractAbility
 {
-
     bool hasRope = false;
     private RigidbodyMover _mover;
     private ICapsule _capsule;
@@ -21,7 +20,7 @@ public class RopeSwing : AbstractAbility
     [SerializeField] private float swingForce = 10f; // Force applied for swinging
     [SerializeField] private float maxSwingSpeed = 5f; // Maximum speed for swinging
 
-    //values to set position on the rope
+    // Values to set position on the rope
     private Vector3 _startPosition, _targetPosition;
     private Quaternion _startRotation, _targetRotation;
     private float _step;
@@ -65,7 +64,7 @@ public class RopeSwing : AbstractAbility
     {
         var overlaps = Physics.OverlapSphere(grabReference.position, overlapRange);
 
-        // loop through all overlaps
+        // Loop through all overlaps
         foreach (var coll in overlaps)
         {
             if (coll.gameObject.tag == "Rope")
@@ -89,7 +88,7 @@ public class RopeSwing : AbstractAbility
 
     public bool CanGrab(GameObject rope)
     {
-        // can't grab if character is not looking on ladder
+        // Can't grab if character is not looking on ladder
         if (Vector3.Dot(transform.forward, rope.transform.forward) < -0.1f) return false;
 
         return true;
@@ -130,7 +129,6 @@ public class RopeSwing : AbstractAbility
             _mover.EnableGravity();
             _mover.SetVelocity(_ropeRigidbody.velocity);
             _mover.GetComponent<Rigidbody>().AddForce(_ropeRigidbody.velocity, ForceMode.VelocityChange);
-            //_animator.applyRootMotion = true;
             _animator.CrossFadeInFixedTime(jumpBackState, 0.1f);
             StartCoroutine(WaitJumpBackAnimation(0.62f, _context));
         }
@@ -147,7 +145,7 @@ public class RopeSwing : AbstractAbility
             if (state.IsName(jumpBackState))
                 normalizedTime = state.normalizedTime;
 
-            // constantly update start time to avoid call this method twice
+            // Constantly update start time to avoid call this method twice
             _startTime = Time.time;
             yield return null;
         }
@@ -174,13 +172,14 @@ public class RopeSwing : AbstractAbility
         float horizontalInput = _action.move.x; // Get horizontal input (A/D or Left Arrow/Right Arrow)
         float verticalInput = _action.move.y; // Get vertical input (W/S or Up Arrow/Down Arrow)
 
-        // Calculate the force to apply
+        // Calculate the force to apply in local space
         ropeForce = new Vector3(0, 0, verticalInput * swingForce);
+        Vector3 localRopeForce = _ropeRigidbody.transform.TransformDirection(ropeForce);
 
-        // Apply the force to the Rigidbody of the hinge joint
+        // Apply the force to the Rigidbody of the hinge joint in local space
         if (_ropeRigidbody.velocity.magnitude < maxSwingSpeed)
         {
-            _ropeRigidbody.AddForce(ropeForce);
+            _ropeRigidbody.AddForce(localRopeForce);
         }
     }
 

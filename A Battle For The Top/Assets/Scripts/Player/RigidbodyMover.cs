@@ -76,7 +76,6 @@ namespace BFTT.Components
             HandleSliding();
 
             // Debug the grounded state
-            Debug.Log($"Grounded: {Grounded}");
         }
 
         private void OnAnimatorMove()
@@ -233,6 +232,11 @@ namespace BFTT.Components
         public void SetPosition(Vector3 newPosition)
         {
             _rigidbody.position = newPosition + _rigidbody.velocity * Time.fixedDeltaTime;
+        }
+
+        public void SetRotation(Quaternion newRotation)
+        {
+            _rigidbody.rotation = newRotation;
         }
 
         public void DisableCollision()
