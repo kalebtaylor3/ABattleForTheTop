@@ -19012,15 +19012,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc4296cddaf58e4fba6e97a9d910125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1204805346 stripped
+--- !u!114 &1204805341 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8815666479999534363, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+  m_CorrespondingSourceObject: {fileID: 547542191013163532, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
   m_PrefabInstance: {fileID: 2248706110178943368}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1204805243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48e113eb20c68564d87c399f36ff5315, type: 3}
+  m_Script: {fileID: 11500000, guid: c572b55779e4ff9499b9018155111a31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1204805347 stripped
@@ -19047,20 +19047,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
 --- !u!114 &1204805355
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1204805243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7eca6de4bb29474aa1db7263cc3387d, type: 3}
+  m_Script: {fileID: 11500000, guid: b0e5c606126605c42b092315a4ec5be9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combatPriority: 1
   AllowedAbilities:
-  - {fileID: 1204805349}
-  - {fileID: 1204805346}
   - {fileID: 1204805347}
+  - {fileID: 1204805349}
+  - {fileID: 1204805341}
 --- !u!1 &1206552013
 GameObject:
   m_ObjectHideFlags: 0
@@ -32222,14 +32223,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8815666479999534370, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
-      insertIndex: 3
-      addedObject: {fileID: 1204805355}
-    - targetCorrespondingSourceObject: {fileID: 8815666479999534370, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1204805273}
     - targetCorrespondingSourceObject: {fileID: 8815666479999534370, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1204805302}
+    - targetCorrespondingSourceObject: {fileID: 8815666479999534370, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1204805355}
     - targetCorrespondingSourceObject: {fileID: 2156531194940559518, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2067243226}

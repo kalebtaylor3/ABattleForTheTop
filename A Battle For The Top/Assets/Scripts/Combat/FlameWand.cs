@@ -3,37 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Combat : AbstractCombat
+public class FlameWand : AbstractCombat
 {
     public override bool CombatReadyToRun()
     {
+        if (_action.jump)
+            return true;
         return false;
+
     }
 
     public override void OnStartCombat()
     {
-        Debug.Log("combat action triggered");
+        Debug.Log("shot");
     }
 
     public override void OnStopCombat()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("stopped");
     }
 
     public override void UpdateCombat()
     {
-        Debug.Log("combatting");
+        if (!_action.jump)
+            StopCombat();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

@@ -7,6 +7,7 @@ namespace BFTT.Combat
 {
     public abstract class AbstractCombat : MonoBehaviour
     {
+        [SerializeField] private int combatPriority = 0;
         [SerializeField] private AbstractAbility[] AllowedAbilities;
 
         public bool IsCombatRunning { get; protected set; } = false;
@@ -14,6 +15,8 @@ namespace BFTT.Combat
         protected AbstractAbility _abilityRunning = null;
 
         public event Action OnCombatStop = null;
+
+        public int CombatPriority { get { return combatPriority; } }
 
         protected float startedTime = 0;
         protected float stoppedTime = 0;
