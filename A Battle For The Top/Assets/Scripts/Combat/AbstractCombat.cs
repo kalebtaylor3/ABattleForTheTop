@@ -17,6 +17,7 @@ namespace BFTT.Combat
         public event Action OnCombatStop = null;
 
         public int CombatPriority { get { return combatPriority; } }
+        public CardManager _manager;
 
         protected float startedTime = 0;
         protected float stoppedTime = 0;

@@ -16,7 +16,7 @@ namespace BFTT
         public AbstractCombat CurrentCombat { get; private set; }
 
         public CharacterActions characterActions = new CharacterActions();
-        
+
         // Observers
         public event Action OnUpdatedAbilities = null;
         public event Action<AbstractAbility> OnAbilityStopped = null;
@@ -30,7 +30,7 @@ namespace BFTT
 
             foreach (AbstractAbility ability in CharAbilities)
                 ability.SetActionReference(ref characterActions);
-            
+
             foreach (AbstractCombat combat in CharCombats)
                 combat.SetActionReference(ref characterActions);
         }
@@ -88,7 +88,7 @@ namespace BFTT
                 // Stops the current ability
                 if (CurrentAbility != null)
                     CurrentAbility.StopAbility();
-                
+
                 // Starts the new Ability
                 nextAbility.StartAbility();
 
@@ -97,7 +97,7 @@ namespace BFTT
                 CurrentAbility.abilityStopped += AbilityHasStopped;
                 OnAbilityStarted?.Invoke(CurrentAbility);
 
-                if(CurrentCombat != null)
+                if (CurrentCombat != null)
                     CurrentCombat.SetCurrentAbility(CurrentAbility);
             }
         }
@@ -123,7 +123,7 @@ namespace BFTT
                 return;
             }
 
-            foreach(AbstractCombat combat in CharCombats)
+            foreach (AbstractCombat combat in CharCombats)
             {
                 if (combat.CombatReadyToRun())
                 {

@@ -19062,6 +19062,34 @@ MonoBehaviour:
   - {fileID: 1204805347}
   - {fileID: 1204805349}
   - {fileID: 1204805341}
+  _manager: {fileID: 1204805382}
+--- !u!114 &1204805381
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204805243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c950e185e4f899e4682ca4c1ec435271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatPriority: 0
+  AllowedAbilities:
+  - {fileID: 1204805349}
+  _manager: {fileID: 1204805382}
+--- !u!114 &1204805382 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3741675738128705071, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+  m_PrefabInstance: {fileID: 2248706110178943368}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204805243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e73c378de96558a4f981fddba713153e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1206552013
 GameObject:
   m_ObjectHideFlags: 0
@@ -31951,6 +31979,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3741675738128705071, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: Cards.Array.data[0]
+      value: 
+      objectReference: {fileID: 1204805355}
+    - target: {fileID: 3741675738128705071, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: Cards.Array.data[1]
+      value: 
+      objectReference: {fileID: 1204805381}
     - target: {fileID: 3850831002641248167, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: m_Name
       value: Player
@@ -32231,6 +32267,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8815666479999534370, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1204805355}
+    - targetCorrespondingSourceObject: {fileID: 8815666479999534370, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1204805381}
     - targetCorrespondingSourceObject: {fileID: 2156531194940559518, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2067243226}

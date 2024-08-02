@@ -165,6 +165,7 @@ namespace BFTT.Controller
             _scheduler.characterActions.interact = Interact;
             _scheduler.characterActions.crawl = Crawl;
             _scheduler.characterActions.drop = Drop;
+            _scheduler.characterActions.UseCard = UseCard;
 
             // weapon
             _scheduler.characterActions.zoom = Zoom;
@@ -183,6 +184,9 @@ namespace BFTT.Controller
         public bool Crawl = false;
         public bool Zoom = false;
         public bool Drop = false;
+        public bool UseCard = false;
+        public bool NextCard = false;
+        public bool PreviousCard = false;
 
         public void ResetActions()
         {
@@ -191,7 +195,10 @@ namespace BFTT.Controller
             Crawl = false;
             Interact = false;
             Drop = false;
-        }
+            UseCard = false;
+            NextCard = false;
+            PreviousCard = false;
+    }
 
         public void OnMove(Vector2 value)
         {
@@ -213,6 +220,10 @@ namespace BFTT.Controller
         {
             Roll = value;
         }
+        public void OnUseCard(bool value)
+        {
+            UseCard = value;
+        }
         public void OnCrouch(bool value)
         {
             Crouch = value;
@@ -233,6 +244,16 @@ namespace BFTT.Controller
         public void OnDrop(bool value)
         {
             Drop = value;
+        }
+
+        public void OnNextCard(bool value)
+        {
+            NextCard = value;
+        }
+
+        public void OnPreviousCard(bool value)
+        {
+            PreviousCard = value;
         }
 
 #if ENABLE_INPUT_SYSTEM
@@ -262,6 +283,11 @@ namespace BFTT.Controller
             OnRoll(value.isPressed);
         }
 
+        private void OnUseCard(InputValue value)
+        {
+            OnUseCard(value.isPressed);
+        }
+
         private void OnCrouch(InputValue value)
         {
             OnCrouch(value.isPressed);
@@ -285,6 +311,16 @@ namespace BFTT.Controller
         private void OnDrop(InputValue value)
         {
             OnDrop(value.isPressed);
+        }
+
+        private void OnNextCard(InputValue value)
+        {
+            OnNextCard(value.isPressed);
+        }
+
+        private void OnPreviousCard(InputValue value)
+        {
+            OnPreviousCard(value.isPressed);
         }
 
 #endif

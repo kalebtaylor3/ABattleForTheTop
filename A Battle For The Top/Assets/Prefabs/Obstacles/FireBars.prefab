@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2396f04974c20744b0b7bb030914882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchForce: 25
+  launchForce: 30
   rayDistance: 10
 --- !u!1 &1508531261950100511
 GameObject:
@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2396f04974c20744b0b7bb030914882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchForce: 25
+  launchForce: 30
   rayDistance: 10
 --- !u!1 &1747186741723654786
 GameObject:
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2396f04974c20744b0b7bb030914882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchForce: 25
+  launchForce: 30
   rayDistance: 10
 --- !u!1001 &2973199699559923867
 PrefabInstance:

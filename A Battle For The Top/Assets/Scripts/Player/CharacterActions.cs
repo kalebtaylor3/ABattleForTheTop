@@ -13,6 +13,7 @@ namespace BFTT.Abilities
         public bool drop = false;
         public bool crawl = false;
         public bool interact = false;
+        public bool UseCard = false;
 
         public bool zoom = false;
     }

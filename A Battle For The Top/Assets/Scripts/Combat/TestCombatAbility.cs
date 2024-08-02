@@ -3,31 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlameWand : AbstractCombat
+public class TestCombatAbility : AbstractCombat
 {
     public override bool CombatReadyToRun()
     {
-        if (_manager.currentCard == this && _action.UseCard)
+        if(_manager.currentCard == this)
             return true;
+       
         return false;
-
     }
 
     public override void OnStartCombat()
     {
-        Debug.Log("shot");
+        Debug.Log("next ability started");
     }
 
     public override void OnStopCombat()
     {
-        Debug.Log("stopped");
+        Debug.Log("next ability started");
     }
 
     public override void UpdateCombat()
     {
-        if (!_action.UseCard)
-            StopCombat();
+        Debug.Log("doing next ability");
     }
-
-    
 }
