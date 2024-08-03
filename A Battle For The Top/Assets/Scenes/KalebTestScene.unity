@@ -20693,6 +20693,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 759234386}
     - target: {fileID: 4460019786376504664, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: wandOffset.x
+      value: -0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460019786376504664, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: wandOffset.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460019786376504664, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: wandOffset.z
+      value: 0.17
+      objectReference: {fileID: 0}
+    - target: {fileID: 4460019786376504664, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: wantDurability
       value: 500
       objectReference: {fileID: 0}

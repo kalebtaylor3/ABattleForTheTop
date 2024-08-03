@@ -150,8 +150,15 @@ public class CardManager : MonoBehaviour
                 currentIndex = 0;
             }
 
-            currentCard = Cards[currentIndex];
+            if(Cards.Length > 0)
+                currentCard = Cards[currentIndex];
+            else
+                currentCard = null;
             UpdateCardUI();
+
+            if (currentCard != null)
+                if(currentCard.abilityProp)
+                    currentCard.abilityProp.SetActive(true);
         }
     }
 }

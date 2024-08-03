@@ -90,6 +90,7 @@ public class GrappleBeam : AbstractCombat
         rope.lineRenderer.enabled = false; // Disable the LineRenderer
         rope.lineRenderer.positionCount = 0;
         rope.spring.Reset();
+        _manager._controller.canControl = true;
         if (_ikScheduler != null)
         {
             _ikScheduler.StopIK(AvatarIKGoal.RightHand);
