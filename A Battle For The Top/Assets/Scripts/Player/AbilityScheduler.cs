@@ -22,7 +22,6 @@ namespace BFTT
         public event Action<AbstractAbility> OnAbilityStopped = null;
         public event Action<AbstractAbility> OnAbilityStarted = null;
         public event Action OnCombatUpdate = null;
-        public Transform aimPosition;
 
         private void Awake()
         {

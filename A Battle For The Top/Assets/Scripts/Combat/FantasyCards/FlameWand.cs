@@ -16,7 +16,7 @@ public class FlameWand : AbstractCombat
 
     public override bool CombatReadyToRun()
     {
-        if (_manager.currentCard == this && _action.UseCardHold && wandDurability > 0)
+        if (_manager.currentCard == this && _action.UseCardHold && wandDurability > 0 && _action.zoom)
             return true;
         return false;
     }
@@ -46,6 +46,7 @@ public class FlameWand : AbstractCombat
     {
         Debug.Log("Fire is going down");
         InvokeRepeating(nameof(DecreaseDurability), 0f, decreaseInterval);
+        FaceCenterOfScreen();
 
         if (wandDurability <= 0)
         {
@@ -64,6 +65,23 @@ public class FlameWand : AbstractCombat
         if (wandDurability > 0)
         {
             wandDurability -= durabilityDecreaseAmount;
+        }
+    }
+
+    private void FaceCenterOfScreen()
+    {
+        // Get the screen center point
+        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+
+        // Convert screen center point to world point
+        Ray ray = Camera.main.ScreenPointToRay(screenCenter);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            // Get the direction to the hit point
+            Vector3 direction = (hit.point - flame.transform.position).normalized;
+
+            // Rotate the flame emitter to face the direction
+            flame.transform.rotation = Quaternion.LookRotation(direction);
         }
     }
 }

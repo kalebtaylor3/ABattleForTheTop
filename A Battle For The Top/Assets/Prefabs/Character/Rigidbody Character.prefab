@@ -1026,7 +1026,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3797456225819413307}
-  - component: {fileID: 3797456225819413308}
   - component: {fileID: 6166703247035367854}
   - component: {fileID: 1016636568761972781}
   - component: {fileID: 7488160260164627778}
@@ -1057,7 +1056,8 @@ GameObject:
   - component: {fileID: 1764070892886877082}
   - component: {fileID: 2589809277822072157}
   - component: {fileID: 8287155444075490112}
-  - component: {fileID: 918649762577057183}
+  - component: {fileID: 4254764118895377075}
+  - component: {fileID: 8826966994789190160}
   - component: {fileID: 2017105220034564156}
   - component: {fileID: 728698708942723040}
   m_Layer: 15
@@ -1089,27 +1089,6 @@ Transform:
   - {fileID: 2992006094229545134}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!95 &3797456225819413308
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3797456225819413306}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
-  m_Controller: {fileID: 9100000, guid: d4a30b5c8ae19c742a15b6dadba272d8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 1
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!54 &6166703247035367854
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1209,15 +1188,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cards:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8287155444075490112}
+  - {fileID: 728698708942723040}
   currentCard: {fileID: 0}
   _controller: {fileID: 7488160260164627778}
   cardParent: {fileID: 0}
   cardPrefab: {fileID: 808658411863886823, guid: fb7ed5d20a30b3942a2ed6eff6663be4, type: 3}
   tweenDuration: 0.5
-  selectedScale: {x: 1.2, y: 1.2, z: 1.2}
-  deselectedScale: {x: 1, y: 1, z: 1}
+  selectedScale: {x: 1.4, y: 1.8279, z: 1}
+  deselectedScale: {x: 1.2501, y: 1.6279, z: 1}
   selectedZPosition: -100
   deselectedZPosition: 0
 --- !u!114 &5685802461359468118
@@ -1275,7 +1254,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc4296cddaf58e4fba6e97a9d910125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimPosition: {fileID: 0}
 --- !u!114 &2791942983394663560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1297,7 +1275,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 458753
   Gravity: -20
-  slidingForce: 1
+  slidingForce: 10
 --- !u!114 &3797456225819413310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1312,7 +1290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityPriority: 0
   walkSpeed: 4
-  sprintSpeed: 8
+  sprintSpeed: 7
   movementByKey: 1
   groundedAnimBlendState: Grounded
 --- !u!114 &3797456225819413250
@@ -1363,7 +1341,7 @@ MonoBehaviour:
   animHardLandState: Air.Hard Landing
   jumpHeight: 1.2
   speedOnAir: 6
-  airControl: 0.1
+  airControl: 0.2
   heightForHardLand: 5
   heightForKillOnLand: 12
   jumpEffort: {fileID: 8300000, guid: 795216c8e68934744b94d94de794c966, type: 3}
@@ -1478,7 +1456,7 @@ MonoBehaviour:
   strafeAnimState: Strafe
   horizontalAnimFloat: Horizontal
   verticalAnimFloat: Vertical
-  aimPosition: {fileID: 0}
+  aimPosition: {fileID: 2992006094229545134}
 --- !u!114 &9198912552874988716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1728,8 +1706,23 @@ MonoBehaviour:
   debugColor: {r: 1, g: 0.56037736, b: 0.96978754, a: 1}
   _audioPlayer: {fileID: 0}
   climbUpClip:
-  - {fileID: 0}
-  pullUpClip: {fileID: 0}
+  - {fileID: 8300000, guid: f8278a659d6d9e4468b3a897f9a02a77, type: 3}
+  - {fileID: 8300000, guid: 3d668d6616eddfd4c83972a67a241a24, type: 3}
+  - {fileID: 8300000, guid: b854e81726bbb374b946504abe467ab6, type: 3}
+  - {fileID: 8300000, guid: 434a8fa17d0550c43800ba20bc4dcfc1, type: 3}
+  - {fileID: 8300000, guid: 028ed9db216c36b429e2cec0e0bac42b, type: 3}
+  - {fileID: 8300000, guid: 66808b80e6c42124d85ba542557f5772, type: 3}
+  - {fileID: 8300000, guid: f0cd33363b28dbb408aa08a79ffbdab4, type: 3}
+  - {fileID: 8300000, guid: 44cf8516fe43d7646aac7d42d882a575, type: 3}
+  - {fileID: 8300000, guid: a6accba6b5690124290aeb4a666424ec, type: 3}
+  - {fileID: 8300000, guid: bd6803a36da03f4429d3a27f67b2233e, type: 3}
+  - {fileID: 8300000, guid: 39be47796744522428ef02f5c41cca85, type: 3}
+  - {fileID: 8300000, guid: 430512c76a0edac43aef1acdace4b81b, type: 3}
+  - {fileID: 8300000, guid: 6232cc6bdd00cea49ac14f45e099d724, type: 3}
+  - {fileID: 8300000, guid: f276ac3ecd75034478929d9e96ecc1b6, type: 3}
+  - {fileID: 8300000, guid: 2b453243dad02c147886d54f070ba754, type: 3}
+  - {fileID: 8300000, guid: c8cb6371d30f2b244b1a818d72b724d6, type: 3}
+  pullUpClip: {fileID: 8300000, guid: f6b5bf1c4a58eb243a13dcb31cc8c9c1, type: 3}
   dropClip: {fileID: 0}
 --- !u!114 &8640517651718905341
 MonoBehaviour:
@@ -1840,7 +1833,7 @@ MonoBehaviour:
   climbLadderAnimState: Ladder
   climbUpAnimState: Climb up
   ladderAnimFloat: Vertical
-  climbSpeed: 0.9
+  climbSpeed: 1.6
   charOffset: 0.3
   smoothnessTime: 0.12
   _context:
@@ -1858,34 +1851,52 @@ MonoBehaviour:
     ClimbJump:
       jumpObstacleMask:
         serializedVersion: 2
-        m_Bits: 0
+        m_Bits: 2
       hopRightState: Climb.Hop Right
       hopLeftState: Climb.Hop Left
       hopUpState: Climb.Hop Up
       hopDropState: Climb.Hop Drop
       jumpBackState: Climb.Jump From Wall
       horizontalHopDuration: 0.5
-      HopUpDuration: 0.25
-      HopDropDuration: 0.25
-      jumpBackSpeed: 10
+      HopUpDuration: 0.35
+      HopDropDuration: 0.4
+      jumpBackSpeed: 8
       moveCurve:
         serializedVersion: 2
-        m_Curve: []
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      maxForwardDistance: 1
+      maxForwardDistance: 1.5
       iterations: 10
       capsuleCastRadius: 0.25
-      maxHeight: 1
-      minHeight: -1
-      minJumpDistance: 1
-      maxJumpDistance: 2.25
-      maxJumpBackDistance: 5
-      maxHangHeightJump: 0.5
-      handZOffset: 0.4
+      maxHeight: 2
+      minHeight: -2.5
+      minJumpDistance: 0.7
+      maxJumpDistance: 2
+      maxJumpBackDistance: 4
+      maxHangHeightJump: 1
+      handZOffset: -0.05
       debugColor: {r: 0, g: 1, b: 1, a: 1}
-      debugFoundHitColor: {r: 1, g: 0, b: 1, a: 1}
+      debugFoundHitColor: {r: 1, g: 0.33490568, b: 1, a: 1}
     ClimbDrop:
       dropToFall: Climb.Braced Drop
       dropHop: Climb.Hop Drop
@@ -1958,7 +1969,7 @@ MonoBehaviour:
     m_Bits: 524288
   wallRunSpeed: 5
   smoothnessTime: 0.1
-  offsetFromWall: 0.75
+  offsetFromWall: 0.5
   wallRunAnimState: Wall Run
   mirrorBoolParameter: Mirror
 --- !u!114 &2589809277822072157
@@ -1997,7 +2008,28 @@ MonoBehaviour:
   flame: {fileID: 4308459285429565286}
   durabilityDecreaseAmount: 1
   decreaseInterval: 0.1
---- !u!114 &918649762577057183
+--- !u!95 &4254764118895377075
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797456225819413306}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
+  m_Controller: {fileID: 9100000, guid: d4a30b5c8ae19c742a15b6dadba272d8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8826966994789190160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2013,13 +2045,13 @@ MonoBehaviour:
   smoothnessTime: 0.12
   swingForce: 10
   maxSwingSpeed: 5
-  charOffsetY: 0.3
-  charOffsetX: 0.3
-  grabReference: {fileID: 0}
+  charOffsetY: 1.21
+  charOffsetX: -0.53
+  grabReference: {fileID: 7744043083319612224}
   overlapRange: 1
   ropeMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1048576
   jumpBackState: Climb.Jump From Wall
   climbUpAnimState: Climb.Idle
   _context:
@@ -2129,7 +2161,8 @@ MonoBehaviour:
   abilityProp: {fileID: 8523051274509492930}
   cardIcon: {fileID: 21300000, guid: 48624f05b683e4a4ab1a142e40fd6971, type: 3}
   _manager: {fileID: 9009967721863243831}
-  grappleSpeed: 4
+  Durability: 5
+  grappleSpeed: 5
   grappleOffset: 0.5
   maxGrappleDuration: 2
   grappleSpawn: {fileID: 5024304425624354628}
@@ -2614,14 +2647,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4896911350494545005}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.6950751, y: -0.6876319, z: -0.15856642, w: 0.1374405}
-  m_LocalPosition: {x: -0.066, y: 0.0466, z: 0.0419}
+  m_LocalRotation: {x: 0.18531221, y: -0.961927, z: 0.08906463, w: 0.18006487}
+  m_LocalPosition: {x: -0.0168, y: 0.1021, z: 0.0068}
   m_LocalScale: {x: 0.027972769, y: 0.08610515, z: 0.028724497}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4308459285415408166}
   m_Father: {fileID: 5024304425624354628}
-  m_LocalEulerAnglesHint: {x: -1.548, y: 204.18, z: -90.948}
+  m_LocalEulerAnglesHint: {x: 13.773, y: 198.826, z: -19.514}
 --- !u!33 &1046603632281098468
 MeshFilter:
   m_ObjectHideFlags: 0
