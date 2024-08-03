@@ -25,10 +25,13 @@ namespace BFTT.Climbing
                 string animation = context.animator.GetFloat("HangWeight") > 0.6f ? hangClimbUpState : braceClimbUpState;
 
                 context.animator.CrossFadeInFixedTime(animation, 0.1f);
-                context.climb._audioPlayer.PlayEffect(context.climb.climbUpClip);
+                context.climb._audioPlayer.PlayEffect(context.climb.climbUpClip[Random.Range(0,context.climb.climbUpClip.Length)]);
 
                 if (animation.Contains("Hang")) animation = "Hang Climb Up - End";
-                context.climb.FinishAfterAnimation(animation, _targetPos, context.transform.rotation);
+                {
+                    context.climb.FinishAfterAnimation(animation, _targetPos, context.transform.rotation);
+                    context.climb._audioPlayer.PlayEffect(context.climb.pullUpClip);
+                }
 
                 context.climb.DrawSphere(_targetPos, 0.1f, Color.blue, 2f);
             }

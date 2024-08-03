@@ -107,10 +107,19 @@
                 {
                     "name": "UseCard",
                     "type": "Button",
-                    "id": "adc1007e-44da-422e-895a-940b8250ef61",
+                    "id": "0f5a536d-1a8e-4ac0-a100-69c44ad7ed4f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UseCardHold",
+                    "type": "Button",
+                    "id": "adc1007e-44da-422e-895a-940b8250ef61",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -513,8 +522,8 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "UseCard",
+                    "groups": "Keyboard Scheme",
+                    "action": "UseCardHold",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -524,8 +533,8 @@
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "UseCard",
+                    "groups": "Controller",
+                    "action": "UseCardHold",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -535,7 +544,18 @@
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Controller",
+                    "action": "NextCard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "847741ab-1c9c-4c25-9b29-ff731d4459d0",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Scheme",
                     "action": "NextCard",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -546,8 +566,41 @@
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Controller",
                     "action": "PreviousCard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "809de7e7-500d-42f1-82c4-5d5e4eefb8a6",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Scheme",
+                    "action": "PreviousCard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64f9c3d1-0988-43c8-8a44-168cc1259606",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Scheme",
+                    "action": "UseCard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "358bd1a6-6672-4e25-bf24-255a9d1c510a",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "UseCard",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

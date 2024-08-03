@@ -45,12 +45,15 @@ namespace BFTT.Controller
         public float CurrentRecoil { get; private set; } = 0f;
         private float recoilReturnVel = 0;
 
+        [HideInInspector] public bool canControl = true;
+
         private void Awake()
         {
             _scheduler = GetComponent<AbilityScheduler>();
             _health = GetComponent<Health>();
             _mover = GetComponent<IMover>();
             _capsule = GetComponent<ICapsule>();
+            canControl = true;
 
             if (hideCursor)
             {
@@ -93,7 +96,8 @@ namespace BFTT.Controller
 
         private void Update()
         {
-            UpdateCharacterActions();
+            if(canControl)
+                UpdateCharacterActions();
 
             if (CurrentRecoil > 0)
                 CurrentRecoil = Mathf.SmoothDamp(CurrentRecoil, 0, ref recoilReturnVel, 0.2f);
@@ -166,6 +170,7 @@ namespace BFTT.Controller
             _scheduler.characterActions.crawl = Crawl;
             _scheduler.characterActions.drop = Drop;
             _scheduler.characterActions.UseCard = UseCard;
+            _scheduler.characterActions.UseCardHold = UseCardHold;
 
             // weapon
             _scheduler.characterActions.zoom = Zoom;
@@ -185,6 +190,7 @@ namespace BFTT.Controller
         public bool Zoom = false;
         public bool Drop = false;
         public bool UseCard = false;
+        public bool UseCardHold = false;
         public bool NextCard = false;
         public bool PreviousCard = false;
 
@@ -223,6 +229,10 @@ namespace BFTT.Controller
         public void OnUseCard(bool value)
         {
             UseCard = value;
+        }
+        public void OnUseCardHold(bool value)
+        {
+            UseCardHold = value;
         }
         public void OnCrouch(bool value)
         {
@@ -286,6 +296,11 @@ namespace BFTT.Controller
         private void OnUseCard(InputValue value)
         {
             OnUseCard(value.isPressed);
+        }
+
+        private void OnUseCardHold(InputValue value)
+        {
+            OnUseCardHold(value.isPressed);
         }
 
         private void OnCrouch(InputValue value)

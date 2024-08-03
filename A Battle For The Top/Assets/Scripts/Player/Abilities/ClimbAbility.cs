@@ -114,7 +114,8 @@ namespace BFTT.Abilities
 
         [HideInInspector] public CharacterAudioPlayer _audioPlayer;
 
-        public AudioClip climbUpClip;
+        public AudioClip[] climbUpClip;
+        public AudioClip pullUpClip;
         public AudioClip dropClip;
 
         #region State Machine Methods
@@ -184,7 +185,7 @@ namespace BFTT.Abilities
             DoTween(GetCharacterPositionOnLedge(), GetCharacterRotationOnLedge(), startClimbMatchTime, _currentCollider);
 
             SetAnimationState("Climb.Start Climb");
-            _audioPlayer.PlayEffect(climbUpClip);
+            _audioPlayer.PlayEffect(climbUpClip[Random.Range(0,climbUpClip.Length)]);
 
             _timeWithoutLedge = 0;
         }

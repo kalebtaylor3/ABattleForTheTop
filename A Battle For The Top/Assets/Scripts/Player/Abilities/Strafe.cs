@@ -1,5 +1,6 @@
 using UnityEngine;
 using BFTT.Components;
+using BFTT.IK;
 
 namespace BFTT.Abilities
 {
@@ -18,10 +19,15 @@ namespace BFTT.Abilities
         private int _animHorizontalID;
         private int _animVerticalID;
 
+        private IKScheduler _ikScheduler;
+
+        public Transform aimPosition;
+
         private void Awake()
         {
             _mover = GetComponent<IMover>();
             _camera = Camera.main.gameObject;
+            _ikScheduler = GetComponent<IKScheduler>();
 
             _animHorizontalID = Animator.StringToHash(horizontalAnimFloat);
             _animVerticalID = Animator.StringToHash(verticalAnimFloat);
@@ -47,8 +53,25 @@ namespace BFTT.Abilities
             _animator.SetFloat(_animHorizontalID, _action.move.x, 0.1f, Time.deltaTime);
             _animator.SetFloat(_animVerticalID, _action.move.y, 0.1f, Time.deltaTime);
 
+            HandleIK();
+
             if (!_action.zoom || !_mover.IsGrounded())
+            {
+                if (_ikScheduler != null)
+                {
+                    _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+                }
                 StopAbility();
+            }
+        }
+
+        private void HandleIK()
+        {
+            if (aimPosition != null && _ikScheduler != null)
+            {
+                IKPass rightHandPass = new IKPass(aimPosition.position, aimPosition.rotation, AvatarIKGoal.RightHand, 1, 1);
+                _ikScheduler.ApplyIK(rightHandPass);
+            }
         }
     }
 }

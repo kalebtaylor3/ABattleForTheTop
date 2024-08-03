@@ -2710,10 +2710,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7744043084479324329, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8985604511258954549}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3797456225819413306, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
-      insertIndex: 5
-      addedObject: {fileID: 3741675738128705071}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
 --- !u!114 &2371849006148345221 stripped
 MonoBehaviour:
@@ -2731,17 +2728,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7744043084479324329, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
   m_PrefabInstance: {fileID: 5684896939519184408}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2958730473866535770 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7488160260164627778, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
-  m_PrefabInstance: {fileID: 5684896939519184408}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8815666479999534370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a0985afc2d9a3040a69d5cd9712ae28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3552730560231234228 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9198912552874988716, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
@@ -2773,23 +2759,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3797456225819413306, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
   m_PrefabInstance: {fileID: 5684896939519184408}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3741675738128705071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8815666479999534370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e73c378de96558a4f981fddba713153e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Cards:
-  - {fileID: 0}
-  - {fileID: 0}
-  currentCard: {fileID: 0}
-  _controller: {fileID: 2958730473866535770}
 --- !u!4 &8815666479999534371 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3797456225819413307, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}

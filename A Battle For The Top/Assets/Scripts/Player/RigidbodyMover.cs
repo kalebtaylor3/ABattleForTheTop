@@ -47,6 +47,7 @@ namespace BFTT.Components
         private Rigidbody _rigidbody;
         private CapsuleCollider _capsule;
         private GameObject _mainCamera;
+        private bool grappling = false;
 
         private bool _hasAnimator;
         private bool _isOnIce = false;
@@ -333,6 +334,16 @@ namespace BFTT.Components
                    Vector3.Scale(_mainCamera.transform.forward, new Vector3(1, 0, 1)) * input.y;
 
             return relative;
+        }
+
+        public bool IsGrappling()
+        {
+            return grappling;
+        }
+
+        public void SetIsGrappling(bool value)
+        {
+            grappling = value;  
         }
     }
 }

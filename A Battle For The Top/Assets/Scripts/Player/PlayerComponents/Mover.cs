@@ -387,5 +387,16 @@ namespace BFTT.Components
 
 			return relative;
 		}
+
+        public void SetIsGrappling(bool value)
+        {
+            //
+        }
+
+        public bool IsGrappling()
+        {
+			//
+			return false;
+        }
     }
 }

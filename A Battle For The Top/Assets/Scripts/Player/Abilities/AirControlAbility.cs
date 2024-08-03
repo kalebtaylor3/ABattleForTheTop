@@ -13,7 +13,7 @@ namespace BFTT.Abilities
         [Header("Jump parameters")]
         [SerializeField] private float jumpHeight = 1.2f;
         [SerializeField] private float speedOnAir = 6f;
-        [SerializeField] private float airControl = 0.5f;
+        [SerializeField] public float airControl = 0.5f;
         [Header("Landing")]
         [SerializeField] private float heightForHardLand = 3f;
         [SerializeField] private float heightForKillOnLand = 7f;
@@ -51,7 +51,7 @@ namespace BFTT.Abilities
 
         public override bool ReadyToRun()
         {
-            return !_mover.IsGrounded() || _action.jump;
+            return !_mover.IsGrounded() && !_mover.IsGrappling() || _action.jump;
         }
 
         public override void OnStartAbility()

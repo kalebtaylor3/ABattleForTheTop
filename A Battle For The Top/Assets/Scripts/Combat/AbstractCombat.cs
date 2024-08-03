@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using BFTT.Abilities;
+using UnityEngine.UI;
 
 namespace BFTT.Combat
 {
@@ -17,10 +18,13 @@ namespace BFTT.Combat
         public event Action OnCombatStop = null;
 
         public int CombatPriority { get { return combatPriority; } }
+        public GameObject abilityProp;
+        public Sprite cardIcon;
         public CardManager _manager;
 
         protected float startedTime = 0;
         protected float stoppedTime = 0;
+
 
         public abstract bool CombatReadyToRun();
 

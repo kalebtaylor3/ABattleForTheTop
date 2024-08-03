@@ -82,7 +82,7 @@ namespace BFTT.Climbing
             {
                 SetAnimation(context);
                 context.climb.StartCoroutine(ResetIK(context));
-                context.climb._audioPlayer.PlayEffect(context.climb.climbUpClip);
+                context.climb._audioPlayer.PlayEffect(context.climb.climbUpClip[Random.Range(0, context.climb.climbUpClip.Length)]);
 
                 if (_jumpBack)
                 {
@@ -102,6 +102,7 @@ namespace BFTT.Climbing
             else if (_jumpBack)
             {
                 context.climb._audioPlayer.PlayVoice(context.climb.dropClip);
+                context.climb._audioPlayer.PlayEffect(context.climb.pullUpClip);
                 context.animator.CrossFadeInFixedTime(jumpBackState, 0.1f);
                 context.climb.FinishAfterAnimation(jumpBackState);
 

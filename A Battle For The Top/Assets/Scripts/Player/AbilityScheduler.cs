@@ -22,6 +22,7 @@ namespace BFTT
         public event Action<AbstractAbility> OnAbilityStopped = null;
         public event Action<AbstractAbility> OnAbilityStarted = null;
         public event Action OnCombatUpdate = null;
+        public Transform aimPosition;
 
         private void Awake()
         {
@@ -53,6 +54,8 @@ namespace BFTT
 
             UpdateCombats();
 
+            //set the right hand ik to be the aim position
+
             // Tells any observer that it has updated.
             OnUpdatedAbilities?.Invoke();
         }
@@ -82,7 +85,8 @@ namespace BFTT
                 }
             }
 
-            // After loop through all abilities, check if should change the current ability
+            // After loop through all abilities, check if should c
+            // ge the current ability
             if (nextAbility != CurrentAbility)
             {
                 // Stops the current ability

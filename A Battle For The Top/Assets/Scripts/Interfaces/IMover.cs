@@ -21,6 +21,8 @@ namespace BFTT.Components
         Quaternion GetRotationFromDirection(Vector3 direction);
 
         bool IsGrounded();
+        void SetIsGrappling(bool value);
+        bool IsGrappling();
         Collider GetGroundCollider();
         void ApplyRootMotion(Vector3 multiplier, bool applyRotation = false);
         void StopRootMotion();
