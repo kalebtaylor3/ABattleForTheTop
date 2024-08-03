@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Dias Games/Climbing System/Scenes/Demo Scene.unity
     guid: be30c1826347f844bbc6c6356d32e2a9
   - enabled: 1
-    path: Assets/Scenes/Demo Scene.unity
+    path: Assets/Scenes/KalebTestScene.unity
     guid: 0529c93a77535684c8cda7e7d30d378b
   - enabled: 0
     path: Assets/Dias Games/Climbing System/Scenes/CS Demo Scene - Mobile.unity

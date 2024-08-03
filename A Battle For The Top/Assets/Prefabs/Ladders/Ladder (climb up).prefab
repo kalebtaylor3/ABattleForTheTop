@@ -58,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8125727781482780506, guid: 51b5fae4919b8584d87570c79d8b4d76, type: 3}
       propertyPath: m_Name
-      value: Ladder - 4m (climb up) Variant
+      value: Ladder (climb up)
       objectReference: {fileID: 0}
     - target: {fileID: 8125727782450281948, guid: 51b5fae4919b8584d87570c79d8b4d76, type: 3}
       propertyPath: m_Materials.Array.data[0]

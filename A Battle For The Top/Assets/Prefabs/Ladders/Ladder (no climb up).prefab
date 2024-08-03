@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8125727781482780485}
   - component: {fileID: 8125727781482780480}
   m_Layer: 16
-  m_Name: Ladder - 4m (no climb up)
+  m_Name: Ladder (no climb up)
   m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
