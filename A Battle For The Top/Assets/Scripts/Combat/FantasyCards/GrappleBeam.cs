@@ -184,7 +184,7 @@ public class GrappleBeam : AbstractCombat
     private void MoveTowardsGrapplePoint()
     {
         Vector3 direction = (_grapplePoint - transform.position).normalized;
-        Vector3 newPosition = transform.position + direction * grappleSpeed * Time.deltaTime;
+        Vector3 newPosition = Vector3.Lerp(transform.position, _grapplePoint, grappleSpeed * Time.deltaTime);
         _mover.SetPosition(newPosition);
     }
 
@@ -198,7 +198,7 @@ public class GrappleBeam : AbstractCombat
 
         Debug.DrawRay(start, forward * 10f, Color.red, 2f); // Draw the ray for debugging
 
-        if (Physics.Raycast(start, forward, out hit, 20f))
+        if (Physics.Raycast(start, forward, out hit, 10f))
         {
             Vector3 grapplePoint = hit.point;
             Debug.DrawLine(start, grapplePoint, Color.green, 2f); // Draw the line to the grapple point for debugging

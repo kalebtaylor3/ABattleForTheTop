@@ -2163,7 +2163,7 @@ MonoBehaviour:
   cardIcon: {fileID: 21300000, guid: 48624f05b683e4a4ab1a142e40fd6971, type: 3}
   _manager: {fileID: 9009967721863243831}
   Durability: 5
-  grappleSpeed: 15
+  grappleSpeed: 5
   grappleOffset: 0.5
   maxGrappleDuration: 2
   grappleSpawn: {fileID: 5024304425624354628}
