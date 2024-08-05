@@ -15,6 +15,8 @@ namespace BFTT.Abilities
         public bool interact = false;
         public bool UseCard = false;
         public bool UseCardHold = false;
+        public bool NextCard = false;
+        public bool PreviousCard = false;
 
         public bool zoom = false;
     }

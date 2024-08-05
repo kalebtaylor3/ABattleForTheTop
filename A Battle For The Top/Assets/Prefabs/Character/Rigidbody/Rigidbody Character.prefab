@@ -2008,6 +2008,7 @@ MonoBehaviour:
   flame: {fileID: 4308459285429565286}
   durabilityDecreaseAmount: 1
   decreaseInterval: 0.1
+  wandOffset: {x: 0, y: 0, z: 0}
 --- !u!95 &4254764118895377075
 Animator:
   serializedVersion: 5
@@ -2162,7 +2163,7 @@ MonoBehaviour:
   cardIcon: {fileID: 21300000, guid: 48624f05b683e4a4ab1a142e40fd6971, type: 3}
   _manager: {fileID: 9009967721863243831}
   Durability: 5
-  grappleSpeed: 5
+  grappleSpeed: 15
   grappleOffset: 0.5
   maxGrappleDuration: 2
   grappleSpawn: {fileID: 5024304425624354628}

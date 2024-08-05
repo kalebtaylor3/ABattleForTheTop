@@ -171,6 +171,8 @@ namespace BFTT.Controller
             _scheduler.characterActions.drop = Drop;
             _scheduler.characterActions.UseCard = UseCard;
             _scheduler.characterActions.UseCardHold = UseCardHold;
+            _scheduler.characterActions.NextCard = NextCard;
+            _scheduler.characterActions.PreviousCard = PreviousCard;
 
             // weapon
             _scheduler.characterActions.zoom = Zoom;
