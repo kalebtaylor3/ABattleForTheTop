@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 298703078435902162}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.0812, y: 19.988207, z: 16.12768}
+  m_LocalPosition: {x: -2.009997, y: 1.3, z: -3.0000005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1564,12 +1564,12 @@ MonoBehaviour:
   m_LayerIndex: 0
   m_ShowDebugText: 0
   m_ChildCameras:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 6538669317476573847}
+  - {fileID: 6826935976096053008}
+  - {fileID: 6298160949431556862}
+  - {fileID: 5116622453611338105}
+  - {fileID: 3967010337433801954}
+  - {fileID: 6538669316430560220}
   m_Instructions:
   - m_FullHash: 0
     m_VirtualCamera: {fileID: 6538669317476573847}
@@ -2177,7 +2177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.9532509, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.06575353, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2485,8 +2485,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5389312938347298543}
   m_HandleRect: {fileID: 8525523724383283884}
   m_Direction: 2
-  m_Value: 0.9999982
-  m_Size: 0.915
+  m_Value: 0.9999973
+  m_Size: 0.9150001
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
