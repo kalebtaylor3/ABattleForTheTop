@@ -213,7 +213,7 @@ public class GrappleBeam : AbstractCombat
 
         Debug.DrawRay(start, forward * 10f, Color.red, 2f); // Draw the ray for debugging
 
-        if (Physics.Raycast(start, forward, out hit, 10f))
+        if (Physics.Raycast(start, forward, out hit, 20f))
         {
             Vector3 grapplePoint = hit.point;
             Debug.DrawLine(start, grapplePoint, Color.green, 2f); // Draw the line to the grapple point for debugging
