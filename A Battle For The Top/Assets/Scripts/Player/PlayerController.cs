@@ -11,7 +11,7 @@ namespace BFTT.Controller
     public class PlayerController : MonoBehaviour
     {
         // Components
-        private AbilityScheduler _scheduler = null;
+        [HideInInspector] public AbilityScheduler _scheduler = null;
         private Health _health = null;
         private IMover _mover;
         private ICapsule _capsule;

@@ -45,7 +45,7 @@ public class CardManager : MonoBehaviour
 
     void Update()
     {
-        if (_controller.NextCard)
+        if (_controller._scheduler.characterActions.NextCard)
         {
             currentCard.StopCombat();
             if(currentCard.abilityProp)
@@ -57,7 +57,7 @@ public class CardManager : MonoBehaviour
             UpdateCardUI();
         }
 
-        if (_controller.PreviousCard)
+        if (_controller._scheduler.characterActions.PreviousCard)
         {
             currentCard.StopCombat();
             if (currentCard.abilityProp)
