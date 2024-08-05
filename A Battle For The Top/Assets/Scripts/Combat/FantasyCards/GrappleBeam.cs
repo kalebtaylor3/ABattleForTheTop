@@ -31,6 +31,9 @@ public class GrappleBeam : AbstractCombat
     float originalAirControl;
     float grappleStartTime;
 
+    private bool shouldMoveTowardsGrapplePoint = false;
+    private Vector3 fixedIncrement;
+
     private void Awake()
     {
         _mover = GetComponent<RigidbodyMover>();
@@ -53,8 +56,8 @@ public class GrappleBeam : AbstractCombat
             return;
         }
 
-            // Assuming you have a method to calculate the grapple point
-            _grapplePoint = CalculateGrapplePoint();
+        // Assuming you have a method to calculate the grapple point
+        _grapplePoint = CalculateGrapplePoint();
 
         if (_grapplePoint != Vector3.zero)
         {
@@ -108,7 +111,7 @@ public class GrappleBeam : AbstractCombat
         HandleIK();
 
         // Update the LineRenderer positions
-        //rope.UpdateLineRenderer(grappleSpawn, _grapplePoint);
+        // rope.UpdateLineRenderer(grappleSpawn, _grapplePoint);
     }
 
     private IEnumerator GrappleDelayCoroutine()
@@ -122,7 +125,6 @@ public class GrappleBeam : AbstractCombat
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
 
         _mover.DisableCollision();
         _mover.DisableGravity();
@@ -141,10 +143,14 @@ public class GrappleBeam : AbstractCombat
             GetComponent<Animator>().CrossFade(downwardGrappleState, 0.1f);
         }
 
+        shouldMoveTowardsGrapplePoint = true;
+
+        // Calculate the fixed increment for consistent movement
+        Vector3 direction = (_grapplePoint - transform.position).normalized;
+        fixedIncrement = direction * grappleSpeed * Time.fixedDeltaTime;
+
         while (_isGrappling)
         {
-            // Smoothly move the player towards the grapple point
-            MoveTowardsGrapplePoint();
             HandleIK();
             _mover.StopMovement();
 
@@ -179,12 +185,21 @@ public class GrappleBeam : AbstractCombat
 
             yield return null;
         }
+
+        shouldMoveTowardsGrapplePoint = false;
+    }
+
+    private void FixedUpdate()
+    {
+        if (shouldMoveTowardsGrapplePoint)
+        {
+            MoveTowardsGrapplePoint();
+        }
     }
 
     private void MoveTowardsGrapplePoint()
     {
-        Vector3 direction = (_grapplePoint - transform.position).normalized;
-        Vector3 newPosition = Vector3.Lerp(transform.position, _grapplePoint, grappleSpeed * Time.deltaTime);
+        Vector3 newPosition = transform.position + fixedIncrement;
         _mover.SetPosition(newPosition);
     }
 
