@@ -1,6 +1,7 @@
 using BFTT.Abilities;
 using BFTT.Climbing;
 using BFTT.Components;
+using BFTT.IK;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -35,6 +36,7 @@ public class RopeSwing : AbstractAbility
     public string jumpBackState = "Climb.Jump From Wall";
     private float _targetDuration = 2f;
     private float _startTime;
+    private IKScheduler _ikScheduler;
 
     private Vector3 ropeForce;
 
@@ -46,6 +48,7 @@ public class RopeSwing : AbstractAbility
     {
         _mover = GetComponent<RigidbodyMover>();
         _capsule = GetComponent<ICapsule>();
+        _ikScheduler = GetComponent<IKScheduler>();
     }
 
     public override void OnStartAbility()
@@ -113,18 +116,29 @@ public class RopeSwing : AbstractAbility
         _targetRotation = GetCharRotation();
         _mover.SetPosition(_targetPosition);
         transform.rotation = _targetRotation;
+        HandleIK();
 
         HandleSwingInput();
 
         if (_action.drop)
         {
             _mover.EnableGravity();
+            if (_ikScheduler != null)
+            {
+                _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+                _ikScheduler.StopIK(AvatarIKGoal.LeftHand);
+            }
             StopAbility();
             BlockRope();
         }
 
         if (_action.jump)
         {
+            if (_ikScheduler != null)
+            {
+                _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+                _ikScheduler.StopIK(AvatarIKGoal.LeftHand);
+            }
             BlockRope();
             _mover.EnableGravity();
             _mover.SetVelocity(_ropeRigidbody.velocity);
@@ -194,5 +208,18 @@ public class RopeSwing : AbstractAbility
     public Quaternion GetCharRotation()
     {
         return Quaternion.LookRotation(_currentRope.transform.forward);
+    }
+
+    private void HandleIK()
+    {
+        if (_currentRope != null && _ikScheduler != null)
+        {
+            // Right hand IK
+            IKPass rightHandPass = new IKPass(_currentRope.transform.position, _currentRope.transform.rotation, AvatarIKGoal.RightHand, 1, 1);
+            _ikScheduler.ApplyIK(rightHandPass);
+
+            IKPass leftHandPass = new IKPass(_currentRope.transform.position, _currentRope.transform.rotation, AvatarIKGoal.LeftHand, 1, 1);
+            _ikScheduler.ApplyIK(leftHandPass);
+        }
     }
 }

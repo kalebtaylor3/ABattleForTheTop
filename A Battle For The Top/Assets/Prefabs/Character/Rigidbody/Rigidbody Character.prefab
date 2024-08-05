@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &308169952393789682
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5457782023273413758}
+  m_Layer: 0
+  m_Name: GrappleLeftHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5457782023273413758
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308169952393789682}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.47611645, y: -0.8641532, z: 0.11170683, w: 0.11863387}
+  m_LocalPosition: {x: -0.417, y: 0.19, z: -0.852}
+  m_LocalScale: {x: 2.3251033, y: 2.3250673, z: 2.664956}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3797456225819413307}
+  m_LocalEulerAnglesHint: {x: -90, y: -90, z: -90}
 --- !u!1 &659355455904543751
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +162,37 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!1 &981364453985267375
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1568121552569740181}
+  m_Layer: 0
+  m_Name: GrappleRightFoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1568121552569740181
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981364453985267375}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
+  m_LocalPosition: {x: 0.09999991, y: 0.04100001, z: -0.8349994}
+  m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3797456225819413307}
+  m_LocalEulerAnglesHint: {x: 70, y: 0, z: 0}
 --- !u!1 &1122522221499940519
 GameObject:
   m_ObjectHideFlags: 0
@@ -1085,6 +1147,9 @@ Transform:
   - {fileID: 3797456225483781756}
   - {fileID: 7744043084479324329}
   - {fileID: 44553387894958796}
+  - {fileID: 5457782023273413758}
+  - {fileID: 2461691264376929694}
+  - {fileID: 1568121552569740181}
   - {fileID: 8685629045512354813}
   - {fileID: 2992006094229545134}
   m_Father: {fileID: 0}
@@ -2174,6 +2239,10 @@ MonoBehaviour:
   downwardGrappleState: GrappleDown
   grappleDelay: 0.5
   rope: {fileID: 5685802461359468118}
+  leftFootTarget: {fileID: 2461691264376929694}
+  rightFootTarget: {fileID: 1568121552569740181}
+  leftHandTarget: {fileID: 5457782023273413758}
+  grappleRotation: {x: 0.1305262, y: 0, z: 0, w: 0.9914449}
 --- !u!1 &4240283749775208963
 GameObject:
   m_ObjectHideFlags: 0
@@ -3063,6 +3132,37 @@ Transform:
   - {fileID: 1422667912422995040}
   m_Father: {fileID: 6595240138020071271}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6123443105041365874
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2461691264376929694}
+  m_Layer: 0
+  m_Name: GrappleLeftFoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2461691264376929694
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6123443105041365874}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
+  m_LocalPosition: {x: -0.11, y: 0.041, z: -0.915}
+  m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3797456225819413307}
+  m_LocalEulerAnglesHint: {x: 70, y: 0, z: 0}
 --- !u!1 &6641916209437675125
 GameObject:
   m_ObjectHideFlags: 0

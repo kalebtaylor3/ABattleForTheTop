@@ -127,4 +127,10 @@ public class FlameWand : AbstractCombat
             }
         }
     }
+
+    public override bool ReadyToExit()
+    {
+        if(!_action.UseCardHold) return true;
+        else return false;
+    }
 }

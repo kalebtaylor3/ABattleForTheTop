@@ -31,8 +31,14 @@ public class GrappleBeam : AbstractCombat
     float originalAirControl;
     float grappleStartTime;
 
+    public Transform leftFootTarget;
+    public Transform rightFootTarget;
+    public Transform leftHandTarget;
+
     private bool shouldMoveTowardsGrapplePoint = false;
     private Vector3 fixedIncrement;
+
+    public Quaternion grappleRotation = new Quaternion(60, 0, 0, 1);
 
     private void Awake()
     {
@@ -97,6 +103,9 @@ public class GrappleBeam : AbstractCombat
         if (_ikScheduler != null)
         {
             _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+            _ikScheduler.StopIK(AvatarIKGoal.LeftFoot);
+            _ikScheduler.StopIK(AvatarIKGoal.RightFoot);
+            _ikScheduler.StopIK(AvatarIKGoal.LeftHand);
         }
     }
 
@@ -107,8 +116,11 @@ public class GrappleBeam : AbstractCombat
             StopCombat();
             return;
         }
-
         HandleIK();
+        if (shouldMoveTowardsGrapplePoint)
+        {
+            HandleFootIK();
+        }
 
         // Update the LineRenderer positions
         // rope.UpdateLineRenderer(grappleSpawn, _grapplePoint);
@@ -130,8 +142,17 @@ public class GrappleBeam : AbstractCombat
         _mover.DisableGravity();
         _mover.StopMovement();
         _mover.SetIsGrappling(true);
-        _mover.SetRotation(_mover.GetRotationFromDirection(_grapplePoint));
         grappleStartTime = Time.time;
+
+        // Calculate the direction and rotation to the grapple point
+        Vector3 directionToGrapplePoint = (_grapplePoint - transform.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(directionToGrapplePoint);
+
+        // Apply the desired rotation offset
+        targetRotation *= grappleRotation;
+
+        // Set the mover's rotation
+        _mover.SetRotation(targetRotation);
 
         // Determine which animation state to use based on the angle
         if (_grapplePoint.y > transform.position.y)
@@ -227,8 +248,37 @@ public class GrappleBeam : AbstractCombat
     {
         if (_grapplePoint != null && _ikScheduler != null)
         {
+            // Right hand IK
             IKPass rightHandPass = new IKPass(grappleHandReach.position, grappleHandReach.rotation, AvatarIKGoal.RightHand, 1, 1);
             _ikScheduler.ApplyIK(rightHandPass);
         }
+    }
+
+    private void HandleFootIK()
+    {
+        if (_grapplePoint != null && _ikScheduler != null)
+        {
+            // Foot IK with flaring effect
+            float flaringAmount = 0.1f; // Adjust as necessary
+            float flaringSpeed = 10f; // Adjust as necessary
+
+            Vector3 leftFootFlare = leftFootTarget.position + new Vector3(Mathf.Sin(Time.time * flaringSpeed) * flaringAmount, Mathf.Cos(Time.time * flaringSpeed) * flaringAmount, 0);
+            Vector3 rightFootFlare = rightFootTarget.position + new Vector3(Mathf.Cos(Time.time * flaringSpeed) * flaringAmount, Mathf.Sin(Time.time * flaringSpeed) * flaringAmount, 0);
+            Vector3 leftHandFlare = leftHandTarget.position + new Vector3(Mathf.Cos(Time.time * flaringSpeed) * flaringAmount, Mathf.Sin(Time.time * flaringSpeed) * flaringAmount, 0);
+
+            IKPass leftFootPass = new IKPass(leftFootFlare, leftFootTarget.rotation, AvatarIKGoal.LeftFoot, 1, 1);
+            IKPass rightFootPass = new IKPass(rightFootFlare, rightFootTarget.rotation, AvatarIKGoal.RightFoot, 1, 1);
+            IKPass leftHandPass = new IKPass(leftHandFlare, leftHandTarget.rotation, AvatarIKGoal.LeftHand, 1, 1);
+
+            _ikScheduler.ApplyIK(leftFootPass);
+            _ikScheduler.ApplyIK(rightFootPass);
+            _ikScheduler.ApplyIK(leftHandPass);
+        }
+    }
+
+    public override bool ReadyToExit()
+    {
+        if (!_isGrappling) return true;
+        else return false;
     }
 }

@@ -25,6 +25,8 @@ namespace BFTT.Combat
         protected float startedTime = 0;
         protected float stoppedTime = 0;
 
+        private bool readyToExit = true;
+
 
         public abstract bool CombatReadyToRun();
 
@@ -73,5 +75,7 @@ namespace BFTT.Combat
         {
             _abilityRunning = newAbility;
         }
+
+        public abstract bool ReadyToExit();
     }
 }
