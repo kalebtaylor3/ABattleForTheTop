@@ -43,7 +43,7 @@ namespace BFTT.Components
         private int _animIDSpeed;
         private int _animIDMotionSpeed;
 
-        private Animator _animator;
+        [HideInInspector] public Animator _animator;
         private Rigidbody _rigidbody;
         private CapsuleCollider _capsule;
         private GameObject _mainCamera;
@@ -67,6 +67,18 @@ namespace BFTT.Components
         private void Start()
         {
             _hasAnimator = TryGetComponent(out _animator);
+
+            if (!_hasAnimator)
+            {
+                _animator = GetComponentInChildren<Animator>();
+                _hasAnimator = true;
+            }
+
+            AssignAnimationIDs();
+        }
+
+        private void OnEnable()
+        {
             AssignAnimationIDs();
         }
 
@@ -158,6 +170,8 @@ namespace BFTT.Components
 
             float speedOffset = 0.1f;
             float inputMagnitude = moveInput.magnitude;
+
+            Debug.Log(inputMagnitude);
 
             if (inputMagnitude > 1)
                 inputMagnitude = 1f;

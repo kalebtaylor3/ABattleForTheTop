@@ -452,6 +452,17 @@
                 },
                 {
                     "name": "",
+                    "id": "45ebb172-ede3-430a-a8dc-b1243d41833d",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "d1396a5b-1094-4f5c-88d8-6d68304a9ce0",
                     "path": "<Keyboard>/e",
                     "interactions": "",

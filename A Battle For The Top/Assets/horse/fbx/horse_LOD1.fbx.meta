@@ -1,0 +1,198 @@
+fileFormatVersion: 2
+guid: 57ff849cca9d0e04fb972a9b49865d2c
+timeCreated: 18446744011573954816
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Bip01
+    100002: Bip01_Head
+    100004: Bip01_L_Calf
+    100006: Bip01_L_Clavicle
+    100008: Bip01_L_Finger0
+    100010: Bip01_L_Foot
+    100012: Bip01_L_Forearm
+    100014: Bip01_L_Hand
+    100016: Bip01_L_Thigh
+    100018: Bip01_L_Toe0
+    100020: Bip01_L_UpperArm
+    100022: Bip01_Neck
+    100024: Bip01_Neck1
+    100026: Bip01_Neck2
+    100028: Bip01_Pelvis
+    100030: Bip01_R_Calf
+    100032: Bip01_R_Clavicle
+    100034: Bip01_R_Finger0
+    100036: Bip01_R_Foot
+    100038: Bip01_R_Forearm
+    100040: Bip01_R_Hand
+    100042: Bip01_R_Thigh
+    100044: Bip01_R_Toe0
+    100046: Bip01_R_UpperArm
+    100048: Bip01_Spine
+    100050: Bip01_Spine1
+    100052: Bip01_Spine2
+    100054: Bip01_Tail
+    100056: Bip01_Tail1
+    100058: Bip01_Tail2
+    100060: Bip01_Tail3
+    100062: //RootNode
+    100064: U3DMesh
+    100066: U3DRoot
+    100068: Unicorn
+    100070: U3DMesh 1
+    100072: U3DRoot0
+    100074: U3DMesh0
+    100076: U3DRoot00
+    400000: Bip01
+    400002: Bip01_Head
+    400004: Bip01_L_Calf
+    400006: Bip01_L_Clavicle
+    400008: Bip01_L_Finger0
+    400010: Bip01_L_Foot
+    400012: Bip01_L_Forearm
+    400014: Bip01_L_Hand
+    400016: Bip01_L_Thigh
+    400018: Bip01_L_Toe0
+    400020: Bip01_L_UpperArm
+    400022: Bip01_Neck
+    400024: Bip01_Neck1
+    400026: Bip01_Neck2
+    400028: Bip01_Pelvis
+    400030: Bip01_R_Calf
+    400032: Bip01_R_Clavicle
+    400034: Bip01_R_Finger0
+    400036: Bip01_R_Foot
+    400038: Bip01_R_Forearm
+    400040: Bip01_R_Hand
+    400042: Bip01_R_Thigh
+    400044: Bip01_R_Toe0
+    400046: Bip01_R_UpperArm
+    400048: Bip01_Spine
+    400050: Bip01_Spine1
+    400052: Bip01_Spine2
+    400054: Bip01_Tail
+    400056: Bip01_Tail1
+    400058: Bip01_Tail2
+    400060: Bip01_Tail3
+    400062: //RootNode
+    400064: U3DMesh
+    400066: U3DRoot
+    400068: Unicorn
+    400070: U3DMesh 1
+    400072: U3DRoot0
+    400074: U3DMesh0
+    400076: U3DRoot00
+    4300000: U3DMesh
+    7400000: horse_all_LOD1
+    7400002: run
+    7400004: stand
+    7400006: idle
+    7400008: attack1
+    7400010: attack2
+    7400012: hurt
+    7400014: death
+    7400016: eat
+    7400018: walk
+    7400020: Run
+    7400022: Stand
+    7400024: Idle
+    7400026: Attack1
+    7400028: Attack2
+    7400030: Hurt
+    7400032: Death
+    7400034: HeadDown
+    7400036: Eat
+    7400038: HeadUp
+    7400040: Walk
+    7400042: PropUp
+    7400044: TPose
+    7400046: Idle_02
+    7400048: Sleep
+    7400050: Sleep2
+    11100000: //RootNode
+    13700000: U3DMesh
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: body256
+    second: {fileID: 2100000, guid: d6ee499fa505b804b8f19dda3f66e5f9, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.03
+    meshCompression: 0
+    addColliders: 1
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+    normalCalculationMode: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

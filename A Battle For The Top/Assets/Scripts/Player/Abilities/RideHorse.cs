@@ -34,6 +34,7 @@ public class RideHorse : AbstractAbility
             _animator.CrossFadeInFixedTime(rideState, 0.1f);
             _mover.SetPosition(saddleTransform.position);
             _mover.SetRotation(saddleTransform.rotation);
+            horse._mover._animator.CrossFadeInFixedTime("Grounded", 0.1f);
         }
     }
 
@@ -78,6 +79,7 @@ public class RideHorse : AbstractAbility
                 _ikScheduler.StopIK(AvatarIKGoal.LeftFoot);
                 _ikScheduler.StopIK(AvatarIKGoal.RightFoot);
             }
+            horse._mover._animator.CrossFadeInFixedTime("Idle", 0.1f);
             horse._beingRode = false;
             _mover.EnableGravity();
             StopAbility();
