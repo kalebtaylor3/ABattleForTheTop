@@ -12,6 +12,7 @@ public class FlameWand : AbstractCombat
     public ParticleSystem flame;
     public float durabilityDecreaseAmount = 1f; // Amount to decrease per interval
     public float decreaseInterval = 0.1f; // Interval in seconds
+    public float iceDetectionRange = 2.0f;
 
     public Vector3 wandOffset = Vector3.zero; // Public offset for the wand
 
@@ -63,7 +64,6 @@ public class FlameWand : AbstractCombat
     {
         Debug.Log("Fire is going down");
         InvokeRepeating(nameof(DecreaseDurability), 0f, decreaseInterval);
-        FaceCenterOfScreen();
         HandleIK();
 
         if (wandDurability <= 0)
@@ -86,45 +86,34 @@ public class FlameWand : AbstractCombat
         }
     }
 
-    private void FaceCenterOfScreen()
-    {
-        // Get the screen center point
-        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-
-        // Convert screen center point to world point
-        Ray ray = Camera.main.ScreenPointToRay(screenCenter);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            // Get the direction to the hit point
-            Vector3 direction = (hit.point - flame.transform.position).normalized;
-
-            // Rotate the flame emitter to face the direction
-            flame.transform.rotation = Quaternion.LookRotation(direction);
-        }
-    }
-
     private void HandleIK()
     {
-        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenter);
+        Vector3 direction = transform.forward;
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        // Determine the default target position in front of the player, including the offset
+        Vector3 targetPosition = transform.position + transform.TransformDirection(wandOffset);
+        Quaternion targetRotation = Quaternion.LookRotation(direction); // Default rotation
+
+        // Check for objects with the tag "Ice" within the detection range
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, iceDetectionRange);
+        foreach (Collider hitCollider in hitColliders)
         {
-            // Get the direction to the hit point
-            Vector3 direction = (hit.point - transform.position).normalized;
-
-            // Determine the target position in front of the player, including the offset
-            Vector3 targetPosition = transform.position + direction * 1.0f + wandOffset;
-
-            if (_ikScheduler != null)
+            if (hitCollider.CompareTag("Ice"))
             {
-                // Create a rotation that faces the direction
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-                // Apply IK to the right hand
-                IKPass rightHandPass = new IKPass(targetPosition, targetRotation, AvatarIKGoal.RightHand, 1, 1);
-                _ikScheduler.ApplyIK(rightHandPass);
+                // Set the target position to the position of the object with the "Ice" tag
+                targetPosition = hitCollider.transform.position;
+                // Calculate the direction with a downward bias
+                direction = (targetPosition - transform.position).normalized + Vector3.down * 0.6f;
+                targetRotation = Quaternion.LookRotation(direction);
+                break;
             }
+        }
+
+        if (_ikScheduler != null)
+        {
+            // Apply IK to the right hand with the updated position and rotation
+            IKPass rightHandPass = new IKPass(targetPosition, targetRotation, AvatarIKGoal.RightHand, 1, 1);
+            _ikScheduler.ApplyIK(rightHandPass);
         }
     }
 

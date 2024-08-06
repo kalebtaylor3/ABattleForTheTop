@@ -14,7 +14,7 @@ public class Horse : MonoBehaviour
     public Transform leftFootPosition;
     public Transform rightFootPosition;
 
-    public RigidbodyMover _mover;
+    public HorseMover _mover;
 
     [HideInInspector] public bool _beingRode;
 

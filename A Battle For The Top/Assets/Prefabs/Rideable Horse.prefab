@@ -470,7 +470,7 @@ PrefabInstance:
       addedObject: {fileID: 8293569741417673406}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65ec41fe8a55fc940a3edbd5c8527f79, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5272895357630351358}
+      addedObject: {fileID: 3037324821285983205}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65ec41fe8a55fc940a3edbd5c8527f79, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4584161040517404258}
@@ -523,7 +523,7 @@ MonoBehaviour:
   rightHandPosition: {fileID: 6713929365226197082}
   leftFootPosition: {fileID: 2035189550121647105}
   rightFootPosition: {fileID: 5761854112209185858}
-  _mover: {fileID: 5272895357630351358}
+  _mover: {fileID: 3037324821285983205}
   _beingRode: 0
   _scheduler: {fileID: 0}
 --- !u!136 &8293569741417673406
@@ -549,7 +549,7 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 1.15, z: 0}
---- !u!114 &5272895357630351358
+--- !u!114 &3037324821285983205
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -558,20 +558,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 7626733008550855499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60d385e0d0e364b47b5ed67038cc0186, type: 3}
+  m_Script: {fileID: 11500000, guid: 4da16a9762299e54fb6c1c7ec39d3bf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotationSmoothTime: 0.3
+  RotationSmoothTime: 0.5
   SpeedChangeRate: 100
   Grounded: 1
   GroundedCheckDistance: 0.14
   GroundedRadius: 0.28
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 458753
   Gravity: -15
   slidingForce: 1
   _animator: {fileID: 0}
+  _trotSpeed: 2.5
+  _gallopSpeed: 7
+  _acceleration: 5
+  _decelerationDuringTurn: 15
 --- !u!54 &4584161040517404258
 Rigidbody:
   m_ObjectHideFlags: 0

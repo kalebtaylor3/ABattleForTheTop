@@ -186,13 +186,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 981364453985267375}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
-  m_LocalPosition: {x: 0.09999991, y: 0.04100001, z: -0.8349994}
+  m_LocalRotation: {x: 0.843132, y: 0.001060754, z: 0.013157738, w: 0.5375445}
+  m_LocalPosition: {x: 0.099999726, y: 0.0040003136, z: -1.2730005}
   m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3797456225819413307}
-  m_LocalEulerAnglesHint: {x: 70, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 65.014, y: 176.834, z: 177.838}
 --- !u!1 &1122522221499940519
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,13 +217,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1122522221499940519}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5025829, y: 0.5025821, z: -0.49740368, w: 0.49740463}
-  m_LocalPosition: {x: 0.18240643, y: 1.2352431, z: 0.84913003}
+  m_LocalRotation: {x: -0.24053334, y: 0.23906803, z: 0.004948283, w: 0.94072616}
+  m_LocalPosition: {x: 1.846, y: 1.123, z: 2.774}
   m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3797456225819413307}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -27.06, y: 30.16, z: -6.817}
 --- !u!1 &1358224544330825297
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,6 +1122,8 @@ GameObject:
   - component: {fileID: 8826966994789190160}
   - component: {fileID: 2017105220034564156}
   - component: {fileID: 728698708942723040}
+  - component: {fileID: 8636666903817777281}
+  - component: {fileID: 2459442512926243637}
   m_Layer: 15
   m_Name: Rigidbody Character
   m_TagString: Player
@@ -1219,7 +1221,7 @@ MonoBehaviour:
   _scheduler: {fileID: 0}
   hideCursor: 1
   CinemachineCameraTarget: {fileID: 3797456225483781755}
-  TopClamp: 70
+  TopClamp: 90
   BottomClamp: -30
   CameraAngleOverride: 0
   CameraTurnSpeed: {x: 8, y: 6}
@@ -1256,6 +1258,7 @@ MonoBehaviour:
   Cards:
   - {fileID: 8287155444075490112}
   - {fileID: 728698708942723040}
+  - {fileID: 8636666903817777281}
   currentCard: {fileID: 0}
   _controller: {fileID: 7488160260164627778}
   cardParent: {fileID: 0}
@@ -1342,6 +1345,7 @@ MonoBehaviour:
     m_Bits: 458753
   Gravity: -20
   slidingForce: 10
+  _animator: {fileID: 0}
 --- !u!114 &3797456225819413310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2068,13 +2072,14 @@ MonoBehaviour:
   - {fileID: 3797456225819413310}
   - {fileID: 5295543893798943764}
   abilityProp: {fileID: 4896911350494545005}
-  cardIcon: {fileID: 21300000, guid: 4c72f3c555f96274787f31379fabb6ff, type: 3}
+  cardIcon: {fileID: 21300000, guid: fb7ea449a413f6641b8a3f9e18fc9fd0, type: 3}
   _manager: {fileID: 9009967721863243831}
   wandDurability: 10000
   flame: {fileID: 4308459285429565286}
   durabilityDecreaseAmount: 1
   decreaseInterval: 0.1
-  wandOffset: {x: 0, y: 0, z: 0}
+  iceDetectionRange: 6
+  wandOffset: {x: 0.16, y: 0.4, z: 0.14}
 --- !u!95 &4254764118895377075
 Animator:
   serializedVersion: 5
@@ -2120,7 +2125,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1048576
   jumpBackState: Climb.Jump From Wall
-  climbUpAnimState: Climb.Idle
+  climbUpAnimState: RopeIdle
   _context:
     Idle:
       climbIdleState: Climb.Brace Idle
@@ -2206,8 +2211,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  ridingHorse: 0
   rideState: Ride
   detectionRange: 1
+  simpleMessageDisplay: {fileID: 2459442512926243637}
+  horseCard: {fileID: 8636666903817777281}
 --- !u!114 &728698708942723040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2226,7 +2234,7 @@ MonoBehaviour:
   - {fileID: 3797456225819413252}
   - {fileID: 5295543893798943764}
   abilityProp: {fileID: 8523051274509492930}
-  cardIcon: {fileID: 21300000, guid: 48624f05b683e4a4ab1a142e40fd6971, type: 3}
+  cardIcon: {fileID: 21300000, guid: 75cdd54996acdd04c825e518b9250a7c, type: 3}
   _manager: {fileID: 9009967721863243831}
   Durability: 5
   grappleSpeed: 10
@@ -2242,7 +2250,104 @@ MonoBehaviour:
   leftFootTarget: {fileID: 2461691264376929694}
   rightFootTarget: {fileID: 1568121552569740181}
   leftHandTarget: {fileID: 5457782023273413758}
-  grappleRotation: {x: 0.1305262, y: 0, z: 0, w: 0.9914449}
+  grappleRotation: {x: 0.043619387, y: 0, z: 0, w: 0.99904823}
+--- !u!114 &8636666903817777281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797456225819413306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25c5a63c5d0d9c84080602d53b9c19ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatPriority: 3
+  AllowedAbilities: []
+  abilityProp: {fileID: 0}
+  cardIcon: {fileID: 21300000, guid: 623d0c34aad46c3448a7aa7b5e99b516, type: 3}
+  _manager: {fileID: 9009967721863243831}
+  ridingAbility: {fileID: 2017105220034564156}
+--- !u!114 &2459442512926243637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797456225819413306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcee75badb58a14e8f678b0543b89e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guiStyle:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
 --- !u!1 &4240283749775208963
 GameObject:
   m_ObjectHideFlags: 0
@@ -2718,14 +2823,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4896911350494545005}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.18531221, y: -0.961927, z: 0.08906463, w: 0.18006487}
-  m_LocalPosition: {x: -0.0168, y: 0.1021, z: 0.0068}
+  m_LocalRotation: {x: 0.004469029, y: -0.9797509, z: 0.06713804, w: 0.1885759}
+  m_LocalPosition: {x: -0.0046, y: 0.105, z: 0.0051}
   m_LocalScale: {x: 0.027972769, y: 0.08610515, z: 0.028724497}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4308459285415408166}
   m_Father: {fileID: 5024304425624354628}
-  m_LocalEulerAnglesHint: {x: 13.773, y: 198.826, z: -19.514}
+  m_LocalEulerAnglesHint: {x: 7.657, y: 201.853, z: 0.958}
 --- !u!33 &1046603632281098468
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3156,13 +3261,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6123443105041365874}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
-  m_LocalPosition: {x: -0.11, y: 0.041, z: -0.915}
+  m_LocalRotation: {x: 0.94595945, y: -0.020450504, z: -0.13702399, w: 0.29320124}
+  m_LocalPosition: {x: -0.11, y: 0.254, z: -1.163}
   m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3797456225819413307}
-  m_LocalEulerAnglesHint: {x: 70, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 33.306, y: -161.063, z: -171.811}
 --- !u!1 &6641916209437675125
 GameObject:
   m_ObjectHideFlags: 0

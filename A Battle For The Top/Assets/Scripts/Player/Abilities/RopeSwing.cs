@@ -40,7 +40,7 @@ public class RopeSwing : AbstractAbility
 
     private Vector3 ropeForce;
 
-    [SerializeField] private string climbUpAnimState = "Climb.Idle";
+    [SerializeField] private string climbUpAnimState = "RopeIdle";
 
     [SerializeField] private ClimbStateContext _context;
 
@@ -61,6 +61,16 @@ public class RopeSwing : AbstractAbility
         _mover.DisableGravity();
         _animator.SetFloat("HangWeight", 1);
         _animator.CrossFadeInFixedTime(climbUpAnimState, 0.1f);
+    }
+
+    public override void OnStopAbility()
+    {
+        if (_ikScheduler != null)
+        {
+            _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+            _ikScheduler.StopIK(AvatarIKGoal.LeftHand);
+        }
+        base.OnStopAbility(); 
     }
 
     private bool FoundRope()
@@ -109,6 +119,7 @@ public class RopeSwing : AbstractAbility
         return FoundRope();
     }
 
+
     public override void UpdateAbility()
     {
         Debug.Log("onRope");
@@ -123,22 +134,12 @@ public class RopeSwing : AbstractAbility
         if (_action.drop)
         {
             _mover.EnableGravity();
-            if (_ikScheduler != null)
-            {
-                _ikScheduler.StopIK(AvatarIKGoal.RightHand);
-                _ikScheduler.StopIK(AvatarIKGoal.LeftHand);
-            }
             StopAbility();
             BlockRope();
         }
 
         if (_action.jump)
         {
-            if (_ikScheduler != null)
-            {
-                _ikScheduler.StopIK(AvatarIKGoal.RightHand);
-                _ikScheduler.StopIK(AvatarIKGoal.LeftHand);
-            }
             BlockRope();
             _mover.EnableGravity();
             _mover.SetVelocity(_ropeRigidbody.velocity);

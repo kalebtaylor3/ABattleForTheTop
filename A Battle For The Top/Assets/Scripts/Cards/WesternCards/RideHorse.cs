@@ -1,13 +1,15 @@
 using BFTT.Abilities;
 using BFTT.Components;
 using BFTT.IK;
+using BFTT.Combat;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class RideHorse : AbstractAbility
 {
-    bool ridingHorse = false;
+    [HideInInspector] public bool ridingHorse = false;
     [SerializeField] private string rideState = "Ride";
     [SerializeField] private float detectionRange = 5f; // Range to detect the horse
 
@@ -16,6 +18,11 @@ public class RideHorse : AbstractAbility
     private IKScheduler _ikScheduler;
     private Transform saddleTransform;
     private Horse horse;
+    public DisplayMessage simpleMessageDisplay;
+
+    public AbstractCombat horseCard;
+
+    bool showMessage = false;
 
     private void Awake()
     {
@@ -42,20 +49,36 @@ public class RideHorse : AbstractAbility
     {
         // Check if there is a horse within range
         Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRange);
+        bool horseInRange = false;
         foreach (Collider collider in colliders)
         {
             if (collider.CompareTag("Horse"))
             {
+                horseInRange = true;
                 horse = collider.GetComponent<Horse>();
-                if (_action.interact)
+                if (horseCard.CombatReadyToRun())
                 {
-                    saddleTransform = horse.saddlePosition;
-                    horse._beingRode = true;
-                    ridingHorse = true;
-                    return true;
+                    if (_action.interact)
+                    {
+                        saddleTransform = horse.saddlePosition;
+                        horse._beingRode = true;
+                        ridingHorse = true;
+                        simpleMessageDisplay.SetShowMessage(false, "Horse Card", "Must be equipped to ride!"); // Hide the message
+                        return true;
+                    }
+                }
+                else
+                {
+                    simpleMessageDisplay.SetShowMessage(true, "Horse Card", "Must be equipped to ride!"); // Show the message
                 }
             }
         }
+
+        if (!horseInRange || (horseInRange && horseCard.CombatReadyToRun()))
+        {
+            simpleMessageDisplay.SetShowMessage(false, "Horse Card", "Must be equipped to ride!"); // Hide the message if not in range or combat is ready
+        }
+
         ridingHorse = false;
         saddleTransform = null;
         return false;
