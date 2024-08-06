@@ -20603,14 +20603,6 @@ PrefabInstance:
       propertyPath: _scheduler
       value: 
       objectReference: {fileID: 1204805326}
-    - target: {fileID: 5272895357630351358, guid: 2137fb16200f95942ade482209868070, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5272895357630351358, guid: 2137fb16200f95942ade482209868070, type: 3}
-      propertyPath: GroundLayers.m_Bits
-      value: 458753
-      objectReference: {fileID: 0}
     - target: {fileID: 7105635606182222321, guid: 2137fb16200f95942ade482209868070, type: 3}
       propertyPath: m_LocalPosition.x
       value: 65.63

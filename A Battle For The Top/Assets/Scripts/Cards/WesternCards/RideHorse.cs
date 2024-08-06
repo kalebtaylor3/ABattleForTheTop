@@ -104,6 +104,7 @@ public class RideHorse : AbstractAbility
             }
             horse._mover._animator.CrossFadeInFixedTime("Idle", 0.1f);
             horse._beingRode = false;
+            horse._mover._animator.SetLayerWeight(2, 0);
             _mover.EnableGravity();
             StopAbility();
         }

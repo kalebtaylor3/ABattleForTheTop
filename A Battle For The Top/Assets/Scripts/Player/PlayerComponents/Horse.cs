@@ -21,9 +21,8 @@ public class Horse : MonoBehaviour
     public AbilityScheduler _scheduler;
 
 
-
     bool happenOnce = false;
-    private float jumpHeight = 2;
+    private float jumpHeight = 3;
     private float _startSpeed;
     private float speedOnAir = 6f;
     private Vector2 _startInput;
@@ -48,7 +47,7 @@ public class Horse : MonoBehaviour
             float targetSpeed = 0;
             targetSpeed = _scheduler.characterActions.walk ? 7 : 2.5f;
             _mover.enabled = true;
-            _mover.Move(_scheduler.characterActions.move, targetSpeed);
+            _mover.Move(new Vector2(0, _scheduler.characterActions.move.y), targetSpeed);
             Debug.Log(_scheduler.characterActions.move);
             happenOnce = false;
 

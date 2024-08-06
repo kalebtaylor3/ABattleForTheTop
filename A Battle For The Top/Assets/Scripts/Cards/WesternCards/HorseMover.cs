@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace BFTT.Components
@@ -60,6 +61,8 @@ namespace BFTT.Components
         public float _gallopSpeed = 7f;
         public float _acceleration = 5f;
         public float _decelerationDuringTurn = 2f; // Deceleration rate during a turn
+
+        bool signifigantTurning = false;
 
         private void Awake()
         {
@@ -187,8 +190,11 @@ namespace BFTT.Components
                 {
                     _animator.SetFloat(_animIDSpeed, 0);
                     _animator.SetFloat(_animIDMotionSpeed, 0);
+                    _animator.SetBool("leftTurn", false);
+                    _animator.SetBool("rightTurn", false);
                 }
                 _isTurning = false;
+                _animator.SetLayerWeight(2, Mathf.Lerp(_animator.GetLayerWeight(2), 0, 0.01f));
                 return;
             }
 
@@ -222,13 +228,34 @@ namespace BFTT.Components
                 if (rotateCharacter && !_useRotationRootMotion)
                 {
                     transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-                    isRotating = Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, _targetRotation)) > 90.0f; // Significant rotation threshold
+                    isRotating = Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, _targetRotation)) > 130.0f; // Significant rotation threshold
+                    float angleDifference = Mathf.DeltaAngle(transform.eulerAngles.y, _targetRotation);
 
                     // Trigger turn animation if significant rotation is detected and not already turning
                     if (isRotating && !_isTurning)
                     {
                         _animator.CrossFadeInFixedTime("Turn", 0.1f);
+                        _animator.SetLayerWeight(2, 0);
                         _isTurning = true;
+                        signifigantTurning = true;
+                        StartCoroutine(WaitForTurn());
+                    } 
+                    else if(!signifigantTurning)
+                        _animator.SetLayerWeight(2, Mathf.Lerp(_animator.GetLayerWeight(2), 1, 0.01f));
+
+
+                    if (!signifigantTurning)
+                    {
+                        if (Mathf.Abs(angleDifference) > 10) // Threshold of 5 degrees to determine "not facing forward"
+                        {
+                            _animator.SetBool("leftTurn", angleDifference > 0);
+                            _animator.SetBool("rightTurn", angleDifference < 0);
+                        }
+                        else
+                        {
+                            _animator.SetBool("leftTurn", false);
+                            _animator.SetBool("rightTurn", false);
+                        }
                     }
                 }
             }
@@ -249,7 +276,7 @@ namespace BFTT.Components
             {
                 // Gradually reduce forward movement during significant rotation
                 Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
-                Vector3 velocity = targetDirection.normalized * _speed * (1 - Time.deltaTime * _decelerationDuringTurn);
+                Vector3 velocity = Vector3.zero; //targetDirection.normalized * _speed * (1 - Time.deltaTime * _decelerationDuringTurn);
                 velocity.y = _rigidbody.velocity.y;
 
                 if (!_useRootMotion)
@@ -266,6 +293,12 @@ namespace BFTT.Components
                 _animator.SetFloat(_animIDSpeed, _speed);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
             }
+        }
+
+        IEnumerator WaitForTurn()
+        {
+            yield return new WaitForSeconds(1.5f);
+            signifigantTurning = false;
         }
 
         private Gait DetermineGait(float targetSpeed)
