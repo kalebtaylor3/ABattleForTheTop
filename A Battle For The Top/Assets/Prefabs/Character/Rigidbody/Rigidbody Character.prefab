@@ -224,6 +224,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3797456225819413307}
   m_LocalEulerAnglesHint: {x: -27.06, y: 30.16, z: -6.817}
+--- !u!1 &1248222989188530443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6510960822439073664}
+  m_Layer: 0
+  m_Name: GrappleRightFootDown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6510960822439073664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248222989188530443}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.48463908, y: 0.012244612, z: 0.024388358, w: 0.87428844}
+  m_LocalPosition: {x: 0.09999766, y: -0.318, z: 1.609999}
+  m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3797456225819413307}
+  m_LocalEulerAnglesHint: {x: -57.998, y: -0.241, z: 3.329}
+--- !u!1 &1297523035812783681
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1440696419845963626}
+  m_Layer: 0
+  m_Name: GrappleLeftHandDown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1440696419845963626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297523035812783681}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.53889805, y: -0.28549698, z: 0.22471046, w: 0.7599906}
+  m_LocalPosition: {x: -0.619, y: 0.825, z: 0.015}
+  m_LocalScale: {x: 2.3251033, y: 2.3250673, z: 2.664956}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3797456225819413307}
+  m_LocalEulerAnglesHint: {x: -43.694, y: -69.25, z: 63.892}
 --- !u!1 &1358224544330825297
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,6 +968,37 @@ Transform:
   - {fileID: 8391889683534829092}
   m_Father: {fileID: 1157035055131840086}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3594291029397116068
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6750627346579767741}
+  m_Layer: 0
+  m_Name: GrappleLeftFootDown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6750627346579767741
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3594291029397116068}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.50361556, y: -0.019215554, z: 0.043759845, w: -0.86260486}
+  m_LocalPosition: {x: -0.11, y: 0.254, z: 1.72}
+  m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3797456225819413307}
+  m_LocalEulerAnglesHint: {x: -60.13, y: -351.079, z: -10.979}
 --- !u!1 &3700258263701368239
 GameObject:
   m_ObjectHideFlags: 0
@@ -1150,8 +1243,11 @@ Transform:
   - {fileID: 7744043084479324329}
   - {fileID: 44553387894958796}
   - {fileID: 5457782023273413758}
+  - {fileID: 1440696419845963626}
   - {fileID: 2461691264376929694}
   - {fileID: 1568121552569740181}
+  - {fileID: 6750627346579767741}
+  - {fileID: 6510960822439073664}
   - {fileID: 8685629045512354813}
   - {fileID: 2992006094229545134}
   m_Father: {fileID: 0}
@@ -2249,8 +2345,12 @@ MonoBehaviour:
   rope: {fileID: 5685802461359468118}
   leftFootTarget: {fileID: 2461691264376929694}
   rightFootTarget: {fileID: 1568121552569740181}
+  leftFootTargetDown: {fileID: 6750627346579767741}
+  rightFootTargetDown: {fileID: 6510960822439073664}
+  leftHandTargetDown: {fileID: 1440696419845963626}
   leftHandTarget: {fileID: 5457782023273413758}
   grappleRotation: {x: 0.043619387, y: 0, z: 0, w: 0.99904823}
+  _cameraSpeedEffect: {fileID: 0}
 --- !u!114 &8636666903817777281
 MonoBehaviour:
   m_ObjectHideFlags: 0
