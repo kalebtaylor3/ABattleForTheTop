@@ -139,6 +139,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "OpenCardMenu",
+                    "type": "Button",
+                    "id": "24926c67-0a62-4b9b-bbfb-e42f1a14ee4c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -612,6 +621,17 @@
                     "processors": "",
                     "groups": "Controller",
                     "action": "UseCard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "48997e9c-ec0e-4f0f-8607-e454201179fc",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Scheme",
+                    "action": "OpenCardMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -173,6 +173,7 @@ namespace BFTT.Controller
             _scheduler.characterActions.UseCardHold = UseCardHold;
             _scheduler.characterActions.NextCard = NextCard;
             _scheduler.characterActions.PreviousCard = PreviousCard;
+            _scheduler.characterActions.OpenCardMenu = OpenCardMenu;
 
             // weapon
             _scheduler.characterActions.zoom = Zoom;
@@ -195,6 +196,7 @@ namespace BFTT.Controller
         public bool UseCardHold = false;
         public bool NextCard = false;
         public bool PreviousCard = false;
+        public bool OpenCardMenu = false;
 
         public void ResetActions()
         {
@@ -206,6 +208,7 @@ namespace BFTT.Controller
             UseCard = false;
             NextCard = false;
             PreviousCard = false;
+            OpenCardMenu = false;
     }
 
         public void OnMove(Vector2 value)
@@ -266,6 +269,11 @@ namespace BFTT.Controller
         public void OnPreviousCard(bool value)
         {
             PreviousCard = value;
+        }
+
+        public void OnOpenCardMenu(bool value)
+        {
+            OpenCardMenu = value;
         }
 
 #if ENABLE_INPUT_SYSTEM
@@ -338,6 +346,11 @@ namespace BFTT.Controller
         private void OnPreviousCard(InputValue value)
         {
             OnPreviousCard(value.isPressed);
+        }
+
+        private void OnOpenCardMenu(InputValue value)
+        {
+            OnOpenCardMenu(value.isPressed);
         }
 
 #endif

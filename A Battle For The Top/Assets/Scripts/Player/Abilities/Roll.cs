@@ -21,6 +21,8 @@ namespace BFTT.Abilities
         public AudioClip rollClip;
         public AudioClip rollVoice;
 
+        public RollCall rollCard;
+
         private void Awake()
         {
             _mover = GetComponent<IMover>();
@@ -31,7 +33,7 @@ namespace BFTT.Abilities
 
         public override bool ReadyToRun()
         {
-            return _action.roll && _mover.IsGrounded();
+            return rollCard.CombatReadyToRun() && _mover.IsGrounded() && _action.UseCard;
         }
 
         public override void OnStartAbility()

@@ -1217,6 +1217,8 @@ GameObject:
   - component: {fileID: 728698708942723040}
   - component: {fileID: 8636666903817777281}
   - component: {fileID: 2459442512926243637}
+  - component: {fileID: 1461055670503368079}
+  - component: {fileID: 6242216404687843183}
   m_Layer: 15
   m_Name: Rigidbody Character
   m_TagString: Player
@@ -1339,6 +1341,7 @@ MonoBehaviour:
   UseCardHold: 0
   NextCard: 0
   PreviousCard: 0
+  OpenCardMenu: 0
 --- !u!114 &9009967721863243831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1355,13 +1358,14 @@ MonoBehaviour:
   - {fileID: 8287155444075490112}
   - {fileID: 728698708942723040}
   - {fileID: 8636666903817777281}
+  - {fileID: 1461055670503368079}
   currentCard: {fileID: 0}
   _controller: {fileID: 7488160260164627778}
   cardParent: {fileID: 0}
   cardPrefab: {fileID: 808658411863886823, guid: fb7ed5d20a30b3942a2ed6eff6663be4, type: 3}
   tweenDuration: 0.5
-  selectedScale: {x: 1.4, y: 1.8279, z: 1}
-  deselectedScale: {x: 1.2501, y: 1.6279, z: 1}
+  selectedScale: {x: 1.6, y: 2, z: 1}
+  deselectedScale: {x: 1, y: 1.4, z: 1}
   selectedZPosition: -100
   deselectedZPosition: 0
 --- !u!114 &5685802461359468118
@@ -1532,8 +1536,9 @@ MonoBehaviour:
   rollSpeed: 7
   capsuleHeightOnRoll: 1
   _audioPlayer: {fileID: 0}
-  rollClip: {fileID: 0}
-  rollVoice: {fileID: 0}
+  rollClip: {fileID: 8300000, guid: f6b5bf1c4a58eb243a13dcb31cc8c9c1, type: 3}
+  rollVoice: {fileID: 8300000, guid: 73d8b761a4472064087c374cef1ba822, type: 3}
+  rollCard: {fileID: 1461055670503368079}
 --- !u!114 &7737306116547435084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2448,6 +2453,36 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+--- !u!114 &1461055670503368079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797456225819413306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22b1e090355249842bb00760bad822ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatPriority: 3
+  AllowedAbilities: []
+  abilityProp: {fileID: 0}
+  cardIcon: {fileID: 21300000, guid: 6ca93523b0317c242b05932fedb07cb3, type: 3}
+  _manager: {fileID: 9009967721863243831}
+--- !u!114 &6242216404687843183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797456225819413306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9807d972c92da145a953eaddd6b6622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityPriority: 1
 --- !u!1 &4240283749775208963
 GameObject:
   m_ObjectHideFlags: 0

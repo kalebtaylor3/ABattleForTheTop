@@ -228,7 +228,7 @@ namespace BFTT.Components
                 if (rotateCharacter && !_useRotationRootMotion)
                 {
                     transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-                    isRotating = Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, _targetRotation)) > 130.0f; // Significant rotation threshold
+                    isRotating = Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, _targetRotation)) > 110.0f; // Significant rotation threshold
                     float angleDifference = Mathf.DeltaAngle(transform.eulerAngles.y, _targetRotation);
 
                     // Trigger turn animation if significant rotation is detected and not already turning

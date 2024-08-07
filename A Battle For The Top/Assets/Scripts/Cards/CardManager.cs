@@ -27,6 +27,7 @@ public class CardManager : MonoBehaviour
         currentCard = Cards[0];
         if (currentCard.abilityProp)
             currentCard.abilityProp.SetActive(true);
+        CenterInitialCard();    
         InitializeCardUI();
         UpdateCardUI();
     }
@@ -41,6 +42,12 @@ public class CardManager : MonoBehaviour
     {
         FlameWand.OnWandBreak -= RemoveCard;
         GrappleBeam.OnGrappleBreak -= RemoveCard;
+    }
+
+    void CenterInitialCard()
+    {
+        float initialOffset = (cardParent.rect.width / 2) - (currentIndex * 160f + 80f); // 80f is half the card width
+        cardParent.anchoredPosition = new Vector2(initialOffset, cardParent.anchoredPosition.y);
     }
 
     void Update()
@@ -86,29 +93,41 @@ public class CardManager : MonoBehaviour
 
     void UpdateCardUI()
     {
+        float cardWidth = 140f; // Width of the card.
+        float centerPositionX = cardParent.rect.width; // Center position adjusted to middle of parent width
+
         for (int i = 0; i < cardRects.Count; i++)
         {
-            if (i == currentIndex)
+            int offsetIndex = (i - currentIndex + cardRects.Count) % cardRects.Count;
+            float newPositionX = centerPositionX + (offsetIndex - cardRects.Count / 2) * cardWidth;
+
+            if (offsetIndex > cardRects.Count / 2)
             {
-                // Tween the selected card
-                cardRects[i].DOScale(selectedScale, tweenDuration);
-                cardRects[i].DOAnchorPos3DZ(selectedZPosition, tweenDuration);
-                cardRects[i].gameObject.SetActive(true); // Make the card visible
+                newPositionX -= cardRects.Count * cardWidth;
             }
-            else if (i == (currentIndex + 1) % cardRects.Count || i == (currentIndex - 1 + cardRects.Count) % cardRects.Count)
+
+            // Determine the visibility based on offsetIndex
+            bool isNeighbor = offsetIndex == 1 || offsetIndex == cardRects.Count - 1; // Checks if it's immediately next to the current
+
+            // Apply dynamic scaling and positioning
+            if (i == currentIndex || isNeighbor)
             {
-                // Tween the adjacent cards
-                cardRects[i].DOScale(deselectedScale, tweenDuration);
-                cardRects[i].DOAnchorPos3DZ(deselectedZPosition, tweenDuration);
-                cardRects[i].gameObject.SetActive(true); // Make the card visible
+                cardRects[i].DOScale(i == currentIndex ? selectedScale : deselectedScale, tweenDuration);
+                cardRects[i].DOAnchorPos3DZ(i == currentIndex ? selectedZPosition : deselectedZPosition, tweenDuration);
+                cardRects[i].GetComponent<CanvasGroup>().DOFade(1, tweenDuration); // Ensure full visibility
+                cardRects[i].gameObject.SetActive(true); // Keep game object active
             }
             else
             {
-                // Hide the cards that are not in the visible range
-                cardRects[i].gameObject.SetActive(false);
+                // Instead of deactivating, fade out and scale down
+                cardRects[i].DOScale(deselectedScale * 0.8f, tweenDuration);
+                cardRects[i].GetComponent<CanvasGroup>().DOFade(0, tweenDuration); // Fade out smoothly
             }
+
+            cardRects[i].DOAnchorPosX(newPositionX, tweenDuration).SetEase(Ease.OutQuad);
         }
     }
+
 
     public void AddCard(AbstractCombat newCard)
     {
