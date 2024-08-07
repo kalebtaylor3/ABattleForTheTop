@@ -22,6 +22,8 @@ public class CardManager : MonoBehaviour
     private List<RectTransform> cardRects = new List<RectTransform>(); // List to hold RectTransforms of the cards
     private int currentIndex = 0;
 
+    public RectTransform scrollRect;
+
     void Start()
     {
         currentCard = Cards[0];
@@ -94,10 +96,12 @@ public class CardManager : MonoBehaviour
     void UpdateCardUI()
     {
         float cardWidth = 140f; // Width of the card.
-        float centerPositionX = cardParent.rect.width; // Center position adjusted to middle of parent width
+                                // Adjust center positioning to account for dynamic total width of all visible cards.
+        float centerPositionX = (scrollRect.rect.width + (cardRects.Count * cardWidth)) / 2 + cardWidth / 2 - 150;
 
         for (int i = 0; i < cardRects.Count; i++)
         {
+            // Compute the offset index considering the current index as the center.
             int offsetIndex = (i - currentIndex + cardRects.Count) % cardRects.Count;
             float newPositionX = centerPositionX + (offsetIndex - cardRects.Count / 2) * cardWidth;
 
@@ -107,7 +111,7 @@ public class CardManager : MonoBehaviour
             }
 
             // Determine the visibility based on offsetIndex
-            bool isNeighbor = offsetIndex == 1 || offsetIndex == cardRects.Count - 1; // Checks if it's immediately next to the current
+            bool isNeighbor = offsetIndex == 1 || offsetIndex == cardRects.Count - 1;
 
             // Apply dynamic scaling and positioning
             if (i == currentIndex || isNeighbor)
@@ -115,7 +119,7 @@ public class CardManager : MonoBehaviour
                 cardRects[i].DOScale(i == currentIndex ? selectedScale : deselectedScale, tweenDuration);
                 cardRects[i].DOAnchorPos3DZ(i == currentIndex ? selectedZPosition : deselectedZPosition, tweenDuration);
                 cardRects[i].GetComponent<CanvasGroup>().DOFade(1, tweenDuration); // Ensure full visibility
-                cardRects[i].gameObject.SetActive(true); // Keep game object active
+                cardRects[i].gameObject.SetActive(true);
             }
             else
             {

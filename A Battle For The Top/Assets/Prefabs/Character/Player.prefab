@@ -3166,6 +3166,10 @@ PrefabInstance:
       propertyPath: cardParent
       value: 
       objectReference: {fileID: 1796482351376166265}
+    - target: {fileID: 9009967721863243831, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
+      propertyPath: scrollRect
+      value: 
+      objectReference: {fileID: 6773897412524449300}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
