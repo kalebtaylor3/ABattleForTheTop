@@ -96,8 +96,7 @@ namespace BFTT.Controller
 
         private void Update()
         {
-            if(canControl)
-                UpdateCharacterActions();
+            UpdateCharacterActions();
 
             if (CurrentRecoil > 0)
                 CurrentRecoil = Mathf.SmoothDamp(CurrentRecoil, 0, ref recoilReturnVel, 0.2f);
@@ -161,22 +160,24 @@ namespace BFTT.Controller
 
         private void UpdateCharacterActions()
         {
-            _scheduler.characterActions.move = Move;
-            _scheduler.characterActions.jump = Jump;
-            _scheduler.characterActions.walk = Walk;
-            _scheduler.characterActions.roll = Roll;
-            _scheduler.characterActions.crouch = Crouch;
-            _scheduler.characterActions.interact = Interact;
-            _scheduler.characterActions.crawl = Crawl;
-            _scheduler.characterActions.drop = Drop;
-            _scheduler.characterActions.UseCard = UseCard;
-            _scheduler.characterActions.UseCardHold = UseCardHold;
-            _scheduler.characterActions.NextCard = NextCard;
-            _scheduler.characterActions.PreviousCard = PreviousCard;
+            if (canControl)
+            {
+                _scheduler.characterActions.move = Move;
+                _scheduler.characterActions.jump = Jump;
+                _scheduler.characterActions.walk = Walk;
+                _scheduler.characterActions.roll = Roll;
+                _scheduler.characterActions.crouch = Crouch;
+                _scheduler.characterActions.interact = Interact;
+                _scheduler.characterActions.crawl = Crawl;
+                _scheduler.characterActions.drop = Drop;
+                _scheduler.characterActions.UseCard = UseCard;
+                _scheduler.characterActions.UseCardHold = UseCardHold;
+                _scheduler.characterActions.NextCard = NextCard;
+                _scheduler.characterActions.PreviousCard = PreviousCard;
+                // weapon
+                _scheduler.characterActions.zoom = Zoom;
+            }
             _scheduler.characterActions.OpenCardMenu = OpenCardMenu;
-
-            // weapon
-            _scheduler.characterActions.zoom = Zoom;
         }
 
         #region Input receiver
