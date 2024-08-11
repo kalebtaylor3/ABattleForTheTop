@@ -35,6 +35,13 @@ namespace BFTT.Combat
         public abstract void OnStartCombat();
         public abstract void OnStopCombat();
 
+        public enum CardType
+        {
+            All = 127 // combination of all types
+        }
+
+        public CardType cardType = CardType.All;
+
 
         public void StartCombat()
         {
@@ -74,6 +81,15 @@ namespace BFTT.Combat
         public void SetCurrentAbility(AbstractAbility newAbility)
         {
             _abilityRunning = newAbility;
+        }
+
+        public string GetDescription()
+        {
+            // name in bold, plus type
+            string desc = "<b>" + name + "</b> (" + "CardDesciption" + ")";
+
+            return desc;
+
         }
 
         public abstract bool ReadyToExit();

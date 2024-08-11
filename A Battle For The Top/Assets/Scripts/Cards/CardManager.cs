@@ -7,29 +7,47 @@ using DG.Tweening;
 
 public class CardManager : MonoBehaviour
 {
-    public AbstractCombat[] Cards;
+    public AbstractCombat[] Cards; // Fixed size array with 5 elements
     public AbstractCombat currentCard;
     public PlayerController _controller;
 
-    public RectTransform cardParent; // Parent RectTransform to hold card UI elements
-    public GameObject cardPrefab; // Prefab for card UI elements
+    public RectTransform cardParent;
+    public GameObject cardPrefab;
     public float tweenDuration = 0.5f;
-    public Vector3 selectedScale = new Vector3(1.2f, 1.2f, 1.2f); // Scale of the selected card
-    public Vector3 deselectedScale = Vector3.one; // Scale of the deselected cards
-    public float selectedZPosition = -100f; // Z position for the selected card
-    public float deselectedZPosition = 0f; // Z position for the deselected cards
+    public Vector3 selectedScale = new Vector3(1.2f, 1.2f, 1.2f);
+    public Vector3 deselectedScale = Vector3.one;
+    public float selectedZPosition = -100f;
+    public float deselectedZPosition = 0f;
 
-    private List<RectTransform> cardRects = new List<RectTransform>(); // List to hold RectTransforms of the cards
+    private List<RectTransform> cardRects = new List<RectTransform>();
     private int currentIndex = 0;
 
     public RectTransform scrollRect;
 
+    public AbstractCombat[] deck = new AbstractCombat[20];
+
+    public enum CardList
+    {
+        InHand,
+        Deck
+    };
+
+    public AbstractCombat[] GetCards(CardList list)
+    {
+        switch (list)
+        {
+            case CardList.InHand: return Cards;
+            case CardList.Deck: return deck;
+            default: return null;
+        }
+    }
+
     void Start()
     {
         currentCard = Cards[0];
-        if (currentCard.abilityProp)
+        if (currentCard != null && currentCard.abilityProp)
             currentCard.abilityProp.SetActive(true);
-        CenterInitialCard();    
+        CenterInitialCard();
         InitializeCardUI();
         UpdateCardUI();
     }
@@ -48,7 +66,7 @@ public class CardManager : MonoBehaviour
 
     void CenterInitialCard()
     {
-        float initialOffset = (cardParent.rect.width / 2) - (currentIndex * 160f + 80f); // 80f is half the card width
+        float initialOffset = (cardParent.rect.width / 2) - (currentIndex * 160f + 80f);
         cardParent.anchoredPosition = new Vector2(initialOffset, cardParent.anchoredPosition.y);
     }
 
@@ -57,12 +75,13 @@ public class CardManager : MonoBehaviour
         if (_controller._scheduler.characterActions.NextCard && currentCard.ReadyToExit())
         {
             currentCard.StopCombat();
-            if(currentCard.abilityProp)
+            if (currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(false);
             currentIndex = (currentIndex + 1) % Cards.Length;
             currentCard = Cards[currentIndex];
-            if (currentCard.abilityProp)
+            if (currentCard != null && currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(true);
+
             UpdateCardUI();
         }
 
@@ -73,8 +92,9 @@ public class CardManager : MonoBehaviour
                 currentCard.abilityProp.SetActive(false);
             currentIndex = (currentIndex - 1 + Cards.Length) % Cards.Length;
             currentCard = Cards[currentIndex];
-            if (currentCard.abilityProp)
+            if (currentCard != null && currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(true);
+
             UpdateCardUI();
         }
     }
@@ -83,54 +103,91 @@ public class CardManager : MonoBehaviour
     {
         for (int i = 0; i < Cards.Length; i++)
         {
-            GameObject cardObj = Instantiate(cardPrefab, cardParent);
-            RectTransform cardRect = cardObj.GetComponent<RectTransform>();
-            cardRects.Add(cardRect);
+            if (Cards[i] != null) // Check if the slot is not empty
+            {
+                GameObject cardObj = Instantiate(cardPrefab, cardParent);
+                RectTransform cardRect = cardObj.GetComponent<RectTransform>();
+                cardRects.Add(cardRect);
 
-            // Assign cardIcon image
-            Image cardIcon = cardRect.GetComponent<Image>();
-            cardIcon.sprite = Cards[i].cardIcon; // Assuming cardIcon is a Sprite property in AbstractCombat
+                // Assign cardIcon image
+                Image cardIcon = cardRect.GetComponent<Image>();
+                cardIcon.sprite = Cards[i].cardIcon;
+            }
+            else
+            {
+                cardRects.Add(null); // Maintain the list structure, but add null to represent an empty slot
+            }
         }
     }
 
-    void UpdateCardUI()
+    public void UpdateCardUI()
     {
         float cardWidth = 140f; // Width of the card.
-                                // Adjust center positioning to account for dynamic total width of all visible cards.
         float centerPositionX = (scrollRect.rect.width + (cardRects.Count * cardWidth)) / 2 + cardWidth / 2 - 150;
 
         for (int i = 0; i < cardRects.Count; i++)
         {
+            // Handle cases where a new card is assigned to a previously null slot
+            if (cardRects[i] == null && Cards[i] != null)
+            {
+                // Instantiate the UI for the new card
+                GameObject cardObj = Instantiate(cardPrefab, cardParent);
+                RectTransform cardRect = cardObj.GetComponent<RectTransform>();
+                cardRects[i] = cardRect;
+
+                // Assign cardIcon image
+                Image cardIcon1 = cardRect.GetComponent<Image>();
+                cardIcon1.sprite = Cards[i].cardIcon;
+
+                // Set the initial state of the card UI
+                cardRect.localScale = deselectedScale * 0.8f;
+                cardRect.GetComponent<CanvasGroup>().alpha = 0;
+                cardRect.gameObject.SetActive(false);
+            }
+
+            if (cardRects[i] == null) // Skip null entries
+                continue;
+
             // Compute the offset index considering the current index as the center.
             int offsetIndex = (i - currentIndex + cardRects.Count) % cardRects.Count;
             float newPositionX = centerPositionX + (offsetIndex - cardRects.Count / 2) * cardWidth;
+
+            Image cardIcon = cardRects[i].GetComponent<Image>();
+            if (Cards[i] != null) // Check if the slot is not empty
+            {
+                cardIcon.sprite = Cards[i].cardIcon;
+            }
 
             if (offsetIndex > cardRects.Count / 2)
             {
                 newPositionX -= cardRects.Count * cardWidth;
             }
 
-            // Determine the visibility based on offsetIndex
             bool isNeighbor = offsetIndex == 1 || offsetIndex == cardRects.Count - 1;
 
-            // Apply dynamic scaling and positioning
             if (i == currentIndex || isNeighbor)
             {
                 cardRects[i].DOScale(i == currentIndex ? selectedScale : deselectedScale, tweenDuration);
                 cardRects[i].DOAnchorPos3DZ(i == currentIndex ? selectedZPosition : deselectedZPosition, tweenDuration);
-                cardRects[i].GetComponent<CanvasGroup>().DOFade(1, tweenDuration); // Ensure full visibility
+                cardRects[i].GetComponent<CanvasGroup>().DOFade(1, tweenDuration);
                 cardRects[i].gameObject.SetActive(true);
             }
             else
             {
-                // Instead of deactivating, fade out and scale down
                 cardRects[i].DOScale(deselectedScale * 0.8f, tweenDuration);
-                cardRects[i].GetComponent<CanvasGroup>().DOFade(0, tweenDuration); // Fade out smoothly
+                cardRects[i].GetComponent<CanvasGroup>().DOFade(0, tweenDuration);
             }
 
             cardRects[i].DOAnchorPosX(newPositionX, tweenDuration).SetEase(Ease.OutQuad);
         }
+
+        if (currentCard == null)
+            currentCard = Cards[0];
+
+        if (currentCard != null && currentCard.abilityProp != null)
+            currentCard.abilityProp.SetActive(true);
     }
+
 
 
     public void AddCard(AbstractCombat newCard)
@@ -159,29 +216,53 @@ public class CardManager : MonoBehaviour
         if (index >= 0)
         {
             // Remove the card from the Cards array
-            List<AbstractCombat> cardsList = new List<AbstractCombat>(Cards);
-            cardsList.RemoveAt(index);
-            Cards = cardsList.ToArray();
+            Cards[index] = null;
 
-            // Destroy the card UI
-            Destroy(cardRects[index].gameObject);
-            cardRects.RemoveAt(index);
+            // Remove the corresponding UI element
+            RectTransform cardRect = cardRects[index];
+            cardRects[index] = null; // Clear the UI reference
+            Destroy(cardRect.gameObject); // Destroy the UI GameObject
 
-            // Adjust currentIndex if necessary
-            if (currentIndex >= Cards.Length)
+            // If the removed card was the current card, move to the next available card
+            if (currentIndex == index)
             {
-                currentIndex = 0;
+                currentIndex = (currentIndex + 1) % Cards.Length;
+                currentCard = Cards[currentIndex];
             }
 
-            if(Cards.Length > 0)
-                currentCard = Cards[currentIndex];
-            else
-                currentCard = null;
+            // If the current card is still null, find the next available card
+            if (currentCard == null)
+            {
+                for (int i = 0; i < Cards.Length; i++)
+                {
+                    if (Cards[i] != null)
+                    {
+                        currentCard = Cards[i];
+                        currentIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // Update the deck if necessary
+            for (int i = 0; i < deck.Length; i++)
+            {
+                if (deck[i] == cardToRemove)
+                {
+                    deck[i] = null; // Clear the reference in the deck
+                    break;
+                }
+            }
+
+            // Update the UI to reflect the changes
             UpdateCardUI();
 
-            if (currentCard != null)
-                if(currentCard.abilityProp)
-                    currentCard.abilityProp.SetActive(true);
+            // Activate the current card's ability, if applicable
+            if (currentCard != null && currentCard.abilityProp)
+            {
+                currentCard.abilityProp.SetActive(true);
+            }
         }
     }
+
 }

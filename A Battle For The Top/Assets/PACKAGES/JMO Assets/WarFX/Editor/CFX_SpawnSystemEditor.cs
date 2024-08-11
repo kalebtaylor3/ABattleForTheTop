@@ -154,39 +154,39 @@ public class CFX_SpawnSystemEditor : Editor
 		if((Event.current.type == EventType.DragPerform || Event.current.type == EventType.DragUpdated)
 			&& dropRect.Contains(Event.current.mousePosition))
 		{
-			DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+			//DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
 			
 			if(Event.current.type == EventType.DragPerform)
 			{
-				foreach(Object o in DragAndDrop.objectReferences)
-				{
-					if(o is GameObject)
-					{
-						bool already = false;
-						foreach(GameObject otherObj in (this.target as CFX_SpawnSystem).objectsToPreload)
-						{
-							if(o == otherObj)
-							{
-								already = true;
-								Debug.LogWarning("CFX_SpawnSystem: Object has already been added: " + o.name);
-								break;
-							}
-						}
+//				foreach(Object o in DragAndDrop.objectReferences)
+//				{
+//					if(o is GameObject)
+//					{
+//						bool already = false;
+//						foreach(GameObject otherObj in (this.target as CFX_SpawnSystem).objectsToPreload)
+//						{
+//							if(o == otherObj)
+//							{
+//								already = true;
+//								Debug.LogWarning("CFX_SpawnSystem: Object has already been added: " + o.name);
+//								break;
+//							}
+//						}
 						
-						if(!already)
-						{
-#if UNITY_4_2
-							Undo.RegisterUndo(target, string.Format("add {0} to Spawn System", o.name));
-#else
-							Undo.RecordObject(target, string.Format("add {0} to Spawn System", o.name));
-#endif
-							ArrayUtility.Add<GameObject>(ref (this.target as CFX_SpawnSystem).objectsToPreload, (GameObject)o);
-							ArrayUtility.Add<int>(ref (this.target as CFX_SpawnSystem).objectsToPreloadTimes, 1);
+//						if(!already)
+//						{
+//#if UNITY_4_2
+//							Undo.RegisterUndo(target, string.Format("add {0} to Spawn System", o.name));
+//#else
+//							Undo.RecordObject(target, string.Format("add {0} to Spawn System", o.name));
+//#endif
+//							ArrayUtility.Add<GameObject>(ref (this.target as CFX_SpawnSystem).objectsToPreload, (GameObject)o);
+//							ArrayUtility.Add<int>(ref (this.target as CFX_SpawnSystem).objectsToPreloadTimes, 1);
 							
-							EditorUtility.SetDirty(target);
-						}
-					}
-				}
+//							EditorUtility.SetDirty(target);
+//						}
+//					}
+//				}
 			}
 		}
 	}
