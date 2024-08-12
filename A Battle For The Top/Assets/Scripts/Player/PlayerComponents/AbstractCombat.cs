@@ -10,6 +10,9 @@ namespace BFTT.Combat
     {
         [SerializeField] private int combatPriority = 0;
         [SerializeField] private AbstractAbility[] AllowedAbilities;
+        [SerializeField] private string abilityName;
+        [SerializeField] private string abilityDescription;
+
 
         public bool IsCombatRunning { get; protected set; } = false;
         protected CharacterActions _action = new CharacterActions();
@@ -86,7 +89,7 @@ namespace BFTT.Combat
         public string GetDescription()
         {
             // name in bold, plus type
-            string desc = "<b>" + name + "</b> (" + "CardDesciption" + ")";
+            string desc = "<b>" + abilityName + "</b> (" + abilityDescription + ")";
 
             return desc;
 

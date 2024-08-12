@@ -2199,6 +2199,8 @@ MonoBehaviour:
   - {fileID: 3797456225819413252}
   - {fileID: 3797456225819413310}
   - {fileID: 5295543893798943764}
+  abilityName: Flame Wand
+  abilityDescription: get a wand to melt ice!
   abilityProp: {fileID: 4896911350494545005}
   cardIcon: {fileID: 21300000, guid: fb7ea449a413f6641b8a3f9e18fc9fd0, type: 3}
   _manager: {fileID: 9009967721863243831}
@@ -2362,6 +2364,8 @@ MonoBehaviour:
   - {fileID: 3797456225819413310}
   - {fileID: 3797456225819413252}
   - {fileID: 5295543893798943764}
+  abilityName: Grapple Beam
+  abilityDescription: get a grapple gun!
   abilityProp: {fileID: 8523051274509492930}
   cardIcon: {fileID: 21300000, guid: 75cdd54996acdd04c825e518b9250a7c, type: 3}
   _manager: {fileID: 9009967721863243831}
@@ -2399,6 +2403,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatPriority: 3
   AllowedAbilities: []
+  abilityName: Horse
+  abilityDescription: Ride a horse
   abilityProp: {fileID: 0}
   cardIcon: {fileID: 21300000, guid: 623d0c34aad46c3448a7aa7b5e99b516, type: 3}
   _manager: {fileID: 9009967721863243831}
@@ -2497,6 +2503,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatPriority: 3
   AllowedAbilities: []
+  abilityName: Roll Call
+  abilityDescription: Perform a roll
   abilityProp: {fileID: 0}
   cardIcon: {fileID: 21300000, guid: 6ca93523b0317c242b05932fedb07cb3, type: 3}
   _manager: {fileID: 9009967721863243831}
