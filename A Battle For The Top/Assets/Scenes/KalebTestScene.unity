@@ -7089,7 +7089,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  ability: {fileID: 0}
   onDragBegin:
     m_PersistentCalls:
       m_Calls: []
@@ -7115,6 +7114,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onDragExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onClick:
     m_PersistentCalls:
       m_Calls: []
   deckManager: {fileID: 2248706110178943403}
@@ -20346,7 +20348,6 @@ MonoBehaviour:
   slotPrefab: {fileID: 114753835999815552, guid: 6da5fc47d0eb4934abf423def4db6b3b, type: 3}
   itemPrefab: {fileID: 114601802247327726, guid: 21072053b9566054da9cbbf0eddf4e0a, type: 3}
   preMadeSlots: []
-  ability: {fileID: 0}
   onDragBegin:
     m_PersistentCalls:
       m_Calls: []
@@ -20372,6 +20373,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onDragExit:
+    m_PersistentCalls:
+      m_Calls: []
+  onClick:
     m_PersistentCalls:
       m_Calls: []
   deckManager: {fileID: 2248706110178943403}
@@ -20959,6 +20963,14 @@ PrefabInstance:
       propertyPath: MinDistance
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3741675738128705071, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: deckUI
+      value: 
+      objectReference: {fileID: 2104796262}
+    - target: {fileID: 3741675738128705071, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
+      propertyPath: handUI
+      value: 
+      objectReference: {fileID: 695421971}
     - target: {fileID: 3741675738128705071, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: scrollView
       value: 

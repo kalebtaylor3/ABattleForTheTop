@@ -54,5 +54,15 @@ namespace DragAndDrop
                     slots[i].OnDraggableExit();
             }
         }
+
+        public void clearSlots()
+        {
+            for(int i = 0; i < slots.Length; i++)
+            {
+                Destroy(slots[i].gameObject);
+            }
+
+
+        }
     }
 }

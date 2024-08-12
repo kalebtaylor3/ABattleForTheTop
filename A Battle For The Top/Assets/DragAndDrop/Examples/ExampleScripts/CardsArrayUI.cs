@@ -20,6 +20,13 @@ public class CardsArrayUI : ObjectContainerArray {
         CreateSlots(deckManager.GetCards(cardList));
     }
 
+    public void UpdateUI()
+    {
+        clearSlots();
+        CreateSlots(deckManager.GetCards(cardList));
+    }
+
+
     public override void Drop(Slot slot, ObjectContainer fromContainer)
     {
         base.Drop(slot, fromContainer);

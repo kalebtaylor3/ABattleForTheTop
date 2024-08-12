@@ -5,10 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using BFTT.Combat;
 
 namespace DragAndDrop
 {
-    public abstract class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public abstract class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         protected bool dragging;
         public static Draggable current;
@@ -23,6 +24,8 @@ namespace DragAndDrop
         public Slot slot;
         [HideInInspector]
         public UnityEngine.Object obj;
+
+        public static event Action<AbstractCombat> OnClick;
 
         // override this in derived classes, usually casting to to the type they deal with
         public abstract void UpdateObject();
@@ -223,6 +226,13 @@ namespace DragAndDrop
                     }
                 }
             }
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            AbstractCombat ability = obj as AbstractCombat;
+            Debug.Log("clicked on the card" + ability);
+            OnClick?.Invoke(ability);
         }
     }
 }

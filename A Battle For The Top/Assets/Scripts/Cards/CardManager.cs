@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using DragAndDrop;
 
 public class CardManager : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class CardManager : MonoBehaviour
     public RectTransform scrollRect;
 
     public AbstractCombat[] deck = new AbstractCombat[20];
+
+    public CardsArrayUI deckUI;
+    public CardsArrayUI handUI;
 
     public enum CardList
     {
@@ -56,6 +60,7 @@ public class CardManager : MonoBehaviour
     {
         FlameWand.OnWandBreak += RemoveCard;
         GrappleBeam.OnGrappleBreak += RemoveCard;
+        Draggable.OnClick += SwapCard;
     }
 
     private void OnDisable()
@@ -63,6 +68,72 @@ public class CardManager : MonoBehaviour
         FlameWand.OnWandBreak -= RemoveCard;
         GrappleBeam.OnGrappleBreak -= RemoveCard;
     }
+
+    void SwapCard(AbstractCombat card)
+    {
+        int cardIndexInHand = -1;
+        int cardIndexInDeck = -1;
+
+        // Find the index of the card in the hand
+        for (int i = 0; i < Cards.Length; i++)
+        {
+            if (Cards[i] == card)
+            {
+                cardIndexInHand = i;
+                break;
+            }
+        }
+
+        // Find the index of the card in the deck
+        for (int i = 0; i < deck.Length; i++)
+        {
+            if (deck[i] == card)
+            {
+                cardIndexInDeck = i;
+                break;
+            }
+        }
+
+        if (cardIndexInHand >= 0) // The card is in the hand
+        {
+            // Find the first empty slot in the deck
+            for (int i = 0; i < deck.Length; i++)
+            {
+                if (deck[i] == null)
+                {
+                    // Move the card to this empty slot in the deck
+                    deck[i] = Cards[cardIndexInHand];
+                    Cards[cardIndexInHand] = null;
+
+                    // Update the UI
+                    UpdateCardUI();
+                    handUI.UpdateUI();
+                    deckUI.UpdateUI();
+                    return;
+                }
+            }
+        }
+        else if (cardIndexInDeck >= 0) // The card is in the deck
+        {
+            // Find the first empty slot in the hand
+            for (int i = 0; i < Cards.Length; i++)
+            {
+                if (Cards[i] == null)
+                {
+                    // Move the card to this empty slot in the hand
+                    Cards[i] = deck[cardIndexInDeck];
+                    deck[cardIndexInDeck] = null;
+
+                    // Update the UI
+                    UpdateCardUI();
+                    handUI.UpdateUI();
+                    deckUI.UpdateUI();
+                    return;
+                }
+            }
+        }
+    }
+
 
     void CenterInitialCard()
     {

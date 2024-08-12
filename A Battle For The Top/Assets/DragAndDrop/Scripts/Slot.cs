@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using BFTT.Combat;
+using UnityEngine.EventSystems;
 
 namespace DragAndDrop
 {
@@ -18,6 +20,8 @@ namespace DragAndDrop
         // used by ObjectContainerArray and ObjectContainerList to identify which element of the collection this Slot corresponds to
         [HideInInspector]
         public int index;
+
+        public AbstractCombat ability;
 
         Image image;
 
@@ -72,6 +76,5 @@ namespace DragAndDrop
             get { return _item;}
             set { _item = value; UpdateSlot(); }
         }
-    
     }
 }

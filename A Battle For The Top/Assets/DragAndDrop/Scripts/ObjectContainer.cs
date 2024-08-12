@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using BFTT.Combat;
+using UnityEngine.EventSystems;
 
 namespace DragAndDrop
 {
@@ -20,20 +21,21 @@ namespace DragAndDrop
 
         public Slot[] preMadeSlots;
 
-        [HideInInspector] public AbstractCombat ability;
-
         [Tooltip("Invoked when an item is first dragged out of this container")]
         public UnityEvent onDragBegin;
         [Tooltip("Invoked when an item has been dragged out of this container, and that drag has ended")]
         public UnityEvent onDragEnd;
 
-        [Tooltip("Invoked when an item has been dragged intot he wrong slot, and snaps back to its start position")]
+        [Tooltip("Invoked when an item has been dragged into the wrong slot, and snaps back to its start position")]
         public UnityEvent onDragFail;
 
         [Tooltip("Invoked when an item is dragged over one of our slots, entering our airspace")]
         public UnityEvent onDragEnter;
         [Tooltip("Invoked when the dragged item no longer lies over our slots")]
         public UnityEvent onDragExit;
+
+        [Tooltip("Invoked when the container is clicked")]
+        public UnityEvent onClick;
 
         // in the general class, we can drag and drop anything anywhere
         public virtual bool CanDrag(Draggable dragged) { return true; }
@@ -59,7 +61,6 @@ namespace DragAndDrop
         {
             return false;
         }
-
 
         // create a Slot (or use the optional supplied one) and populate it with the given object
         protected Slot MakeSlot(UnityEngine.Object obj, Slot preMade = null)
@@ -88,6 +89,7 @@ namespace DragAndDrop
             slot.item = item;
             slot.container = this;
             item.slot = slot;
+
 
             return slot;
         }
