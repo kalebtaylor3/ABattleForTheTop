@@ -171,8 +171,6 @@ namespace BFTT.Components
             float speedOffset = 0.1f;
             float inputMagnitude = moveInput.magnitude;
 
-            Debug.Log(inputMagnitude);
-
             if (inputMagnitude > 1)
                 inputMagnitude = 1f;
 

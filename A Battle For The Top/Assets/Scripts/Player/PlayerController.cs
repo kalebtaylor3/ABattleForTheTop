@@ -174,6 +174,8 @@ namespace BFTT.Controller
                 _scheduler.characterActions.UseCardHold = UseCardHold;
                 _scheduler.characterActions.NextCard = NextCard;
                 _scheduler.characterActions.PreviousCard = PreviousCard;
+                _scheduler.characterActions.UIClick = UIClick;
+                _scheduler.characterActions.UIPoint = UIPoint;
                 // weapon
                 _scheduler.characterActions.zoom = Zoom;
             }
@@ -198,6 +200,8 @@ namespace BFTT.Controller
         public bool NextCard = false;
         public bool PreviousCard = false;
         public bool OpenCardMenu = false;
+        public bool UIClick = false;
+        public bool UIPoint = false;
 
         public void ResetActions()
         {
@@ -277,6 +281,16 @@ namespace BFTT.Controller
             OpenCardMenu = value;
         }
 
+        public void OnUIClick(bool value)
+        {
+            UIClick = value;
+        }
+
+        public void OnUIPoint(bool value)
+        {
+            UIPoint = value;
+        }
+
 #if ENABLE_INPUT_SYSTEM
         private void OnMove(InputValue value)
         {
@@ -352,6 +366,22 @@ namespace BFTT.Controller
         private void OnOpenCardMenu(InputValue value)
         {
             OnOpenCardMenu(value.isPressed);
+        }
+
+        private void OnUIClick(InputValue value)
+        {
+            OnUIClick(value.isPressed);
+        }
+
+        private void OnUIPoint(InputValue value)
+        {
+            Vector2 inputVector = value.Get<Vector2>();
+
+            // Assuming that any movement of the pointer should be considered as "active"
+            // For example, if the pointer moves from one position to another
+            bool isPointerActive = inputVector != Vector2.zero;
+
+            OnUIPoint(isPointerActive);
         }
 
 #endif

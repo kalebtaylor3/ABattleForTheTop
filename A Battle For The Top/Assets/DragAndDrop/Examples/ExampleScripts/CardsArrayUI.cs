@@ -65,6 +65,5 @@ public class CardsArrayUI : ObjectContainerArray {
     public override void OnDraggableExit()
     {
         base.OnDraggableExit();
-        Debug.Log("let go");
     }
 }

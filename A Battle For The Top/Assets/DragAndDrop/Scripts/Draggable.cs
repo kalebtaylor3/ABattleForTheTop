@@ -17,6 +17,8 @@ namespace DragAndDrop
         // default to left dragging
         public InputAction InputAction;
 
+        public InputAction AssignAction;
+
         [HideInInspector]
         public Slot slot;
         [HideInInspector]

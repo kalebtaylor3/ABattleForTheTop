@@ -148,6 +148,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "UIClick",
+                    "type": "PassThrough",
+                    "id": "2ad89840-f781-44f4-9fe1-96dcec80539b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "UIPoint",
+                    "type": "PassThrough",
+                    "id": "ea043c1c-c5a8-4747-96ae-a46d1079a035",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -632,6 +650,28 @@
                     "processors": "",
                     "groups": "Keyboard Scheme",
                     "action": "OpenCardMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8d377acf-bab8-4085-ba74-6ba3ee9f613a",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Scheme",
+                    "action": "UIPoint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "29544321-44e4-48af-affe-d314f4215f24",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller;Keyboard Scheme",
+                    "action": "UIClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

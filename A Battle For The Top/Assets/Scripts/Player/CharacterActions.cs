@@ -18,6 +18,8 @@ namespace BFTT.Abilities
         public bool NextCard = false;
         public bool PreviousCard = false;
         public bool OpenCardMenu = false;
+        public bool UIClick = false;
+        public bool UIPoint = false;
 
         public bool zoom = false;
     }
