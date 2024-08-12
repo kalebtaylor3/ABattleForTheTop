@@ -230,9 +230,12 @@ namespace DragAndDrop
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            AbstractCombat ability = obj as AbstractCombat;
-            Debug.Log("clicked on the card" + ability);
-            OnClick?.Invoke(ability);
+            if (!dragging)
+            {
+                AbstractCombat ability = obj as AbstractCombat;
+                Debug.Log("clicked on the card" + ability);
+                OnClick?.Invoke(ability);
+            }
         }
     }
 }

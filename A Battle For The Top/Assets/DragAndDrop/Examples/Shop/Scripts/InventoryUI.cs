@@ -40,22 +40,6 @@ namespace DragAndDropShop
             if (dragged.slot.container == this)
                 return true;
 
-            // if this is the player inventory, make sure we have enough money to drop the item in there.
-            if (inventory.isPlayer)
-            {
-                // work out the total cost of this transaction
-                int cost = 0;
-                Item item = dragged.obj as Item;
-                if (item)
-                    cost += item.cost;
-
-                Item itemOut = slot.item.obj as Item;
-                if (itemOut)
-                    cost -= itemOut.cost;
-
-                return cost <= inventory.gold;
-            }
-
             return true;
         }
 
