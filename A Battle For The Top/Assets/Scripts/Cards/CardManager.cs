@@ -327,6 +327,8 @@ public class CardManager : MonoBehaviour
 
             // Update the UI to reflect the changes
             UpdateCardUI();
+            handUI.UpdateUI();
+            deckUI.UpdateUI();
 
             // Activate the current card's ability, if applicable
             if (currentCard != null && currentCard.abilityProp)
