@@ -143,19 +143,31 @@ public class CardManager : MonoBehaviour
 
     void Update()
     {
+        // Ensure there's a valid list of active cards before proceeding
+        List<int> activeIndices = new List<int>();
+        for (int i = 0; i < Cards.Length; i++)
+        {
+            if (Cards[i] != null)
+            {
+                activeIndices.Add(i);
+            }
+        }
+
+        if (activeIndices.Count == 0) return;
+
         if (_controller._scheduler.characterActions.NextCard && currentCard.ReadyToExit())
         {
             currentCard.StopCombat();
             if (currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(false);
 
-            // Move to the next non-null card
+            // Move to the next active card
             do
             {
-                currentIndex = (currentIndex + 1) % Cards.Length;
-            } while (Cards[currentIndex] == null);
+                currentIndex = (currentIndex + 1) % activeIndices.Count;
+            } while (Cards[activeIndices[currentIndex]] == null);
 
-            currentCard = Cards[currentIndex];
+            currentCard = Cards[activeIndices[currentIndex]];
             if (currentCard != null && currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(true);
 
@@ -168,19 +180,20 @@ public class CardManager : MonoBehaviour
             if (currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(false);
 
-            // Move to the previous non-null card
+            // Move to the previous active card
             do
             {
-                currentIndex = (currentIndex - 1 + Cards.Length) % Cards.Length;
-            } while (Cards[currentIndex] == null);
+                currentIndex = (currentIndex - 1 + activeIndices.Count) % activeIndices.Count;
+            } while (Cards[activeIndices[currentIndex]] == null);
 
-            currentCard = Cards[currentIndex];
+            currentCard = Cards[activeIndices[currentIndex]];
             if (currentCard != null && currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(true);
 
             UpdateCardUI();
         }
     }
+
 
     void InitializeCardUI()
     {
@@ -206,15 +219,13 @@ public class CardManager : MonoBehaviour
     public void UpdateCardUI()
     {
         float cardWidth = 140f; // Width of the card.
-        int nonNullCardCount = 0;
+        List<RectTransform> activeCardRects = new List<RectTransform>();
 
-        // Count non-null cards and ensure the cardRects list matches the Cards array
+        // Collect all active (non-null) card rects
         for (int i = 0; i < Cards.Length; i++)
         {
             if (Cards[i] != null)
             {
-                nonNullCardCount++;
-
                 if (i >= cardRects.Count || cardRects[i] == null)
                 {
                     // Instantiate UI for the current card if it doesn't already exist
@@ -239,6 +250,7 @@ public class CardManager : MonoBehaviour
                     cardRect.GetComponent<CanvasGroup>().alpha = 0;
                     cardRect.gameObject.SetActive(false);
                 }
+                activeCardRects.Add(cardRects[i]);
             }
             else if (i < cardRects.Count && cardRects[i] != null)
             {
@@ -248,33 +260,46 @@ public class CardManager : MonoBehaviour
             }
         }
 
-        float centerPositionX = (scrollRect.rect.width + (nonNullCardCount * cardWidth)) / 2 + cardWidth / 2 - 150;
-
-        // Update positions and visibility for all non-null cards
-        int visibleCardIndex = 0;
-        for (int i = 0; i < Cards.Length; i++)
+        // No need to continue if there are no active cards
+        if (activeCardRects.Count == 0)
         {
-            if (Cards[i] == null)
-                continue;
-
-            RectTransform cardRect = cardRects[i];
-            if (cardRect == null)
-                continue;
-
-            int offsetIndex = (visibleCardIndex - currentIndex + nonNullCardCount) % nonNullCardCount;
-            float newPositionX = centerPositionX + (offsetIndex - nonNullCardCount / 2) * cardWidth;
-
-            if (offsetIndex > nonNullCardCount / 2)
+            if (currentCard != null)
             {
-                newPositionX -= nonNullCardCount * cardWidth;
+                if(currentCard.abilityProp)
+                    currentCard.abilityProp.SetActive(false);
+                currentCard.StopCombat();
+            }
+            currentCard = null;
+            return;
+        }
+
+        // Correct the current index if it's out of bounds
+        if (currentIndex >= activeCardRects.Count)
+        {
+            currentIndex = activeCardRects.Count - 1;
+        }
+
+        float centerPositionX = (scrollRect.rect.width + (activeCardRects.Count * cardWidth)) / 2 + cardWidth / 2 - 150;
+
+        // Update positions and visibility for all active cards
+        for (int i = 0; i < activeCardRects.Count; i++)
+        {
+            RectTransform cardRect = activeCardRects[i];
+
+            int offsetIndex = (i - currentIndex + activeCardRects.Count) % activeCardRects.Count;
+            float newPositionX = centerPositionX + (offsetIndex - activeCardRects.Count / 2) * cardWidth;
+
+            if (offsetIndex > activeCardRects.Count / 2)
+            {
+                newPositionX -= activeCardRects.Count * cardWidth;
             }
 
-            bool isNeighbor = offsetIndex == 1 || offsetIndex == nonNullCardCount - 1;
+            bool isNeighbor = offsetIndex == 1 || offsetIndex == activeCardRects.Count - 1;
 
-            if (visibleCardIndex == currentIndex || isNeighbor)
+            if (i == currentIndex || isNeighbor)
             {
-                cardRect.DOScale(visibleCardIndex == currentIndex ? selectedScale : deselectedScale, tweenDuration);
-                cardRect.DOAnchorPos3DZ(visibleCardIndex == currentIndex ? selectedZPosition : deselectedZPosition, tweenDuration);
+                cardRect.DOScale(i == currentIndex ? selectedScale : deselectedScale, tweenDuration);
+                cardRect.DOAnchorPos3DZ(i == currentIndex ? selectedZPosition : deselectedZPosition, tweenDuration);
                 cardRect.GetComponent<CanvasGroup>().DOFade(1, tweenDuration);
                 cardRect.gameObject.SetActive(true);
             }
@@ -285,20 +310,25 @@ public class CardManager : MonoBehaviour
             }
 
             cardRect.DOAnchorPosX(newPositionX, tweenDuration).SetEase(Ease.OutQuad);
-            visibleCardIndex++;
         }
 
-        // Set current card to the first non-null card if it's null
-        if (currentCard == null)
+        // Ensure currentCard is correctly set to a valid card
+        if (currentCard == null || !System.Array.Exists(Cards, card => card == currentCard))
         {
-            for (int i = 0; i < Cards.Length; i++)
+            if (activeCardRects.Count > 0)
             {
-                if (Cards[i] != null)
+                if (currentCard != null)
                 {
-                    currentCard = Cards[i];
-                    currentIndex = i;
-                    break;
+                    if (currentCard.abilityProp)
+                        currentCard.abilityProp.SetActive(false);
+                    currentCard.StopCombat();
                 }
+                currentCard = Cards[System.Array.IndexOf(cardRects.ToArray(), activeCardRects[0])];
+                currentIndex = 0; // Reset to the first active card
+            }
+            else
+            {
+                currentCard = null;
             }
         }
 
@@ -308,7 +338,6 @@ public class CardManager : MonoBehaviour
             currentCard.abilityProp.SetActive(true);
         }
     }
-
 
 
     public void RemoveCard(AbstractCombat cardToRemove)

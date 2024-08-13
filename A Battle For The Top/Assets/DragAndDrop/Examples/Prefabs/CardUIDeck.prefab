@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 114730482118942294}
   - component: {fileID: 114601802247327726}
   m_Layer: 5
-  m_Name: CharmUI
+  m_Name: CardUIDeck
   m_TagString: UIDraggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
