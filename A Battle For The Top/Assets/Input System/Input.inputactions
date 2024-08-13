@@ -655,11 +655,22 @@
                 },
                 {
                     "name": "",
+                    "id": "6c26a062-6632-47c0-9710-3f066c8d64e2",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenCardMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8d377acf-bab8-4085-ba74-6ba3ee9f613a",
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard Scheme",
+                    "groups": "Keyboard Scheme;Controller",
                     "action": "UIPoint",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -671,6 +682,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Controller;Keyboard Scheme",
+                    "action": "UIClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7b7b2fa1-753e-4bf8-ab5d-0d3995504fcc",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "UIClick",
                     "isComposite": false,
                     "isPartOfComposite": false

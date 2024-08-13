@@ -148,7 +148,13 @@ public class CardManager : MonoBehaviour
             currentCard.StopCombat();
             if (currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(false);
-            currentIndex = (currentIndex + 1) % Cards.Length;
+
+            // Move to the next non-null card
+            do
+            {
+                currentIndex = (currentIndex + 1) % Cards.Length;
+            } while (Cards[currentIndex] == null);
+
             currentCard = Cards[currentIndex];
             if (currentCard != null && currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(true);
@@ -161,7 +167,13 @@ public class CardManager : MonoBehaviour
             currentCard.StopCombat();
             if (currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(false);
-            currentIndex = (currentIndex - 1 + Cards.Length) % Cards.Length;
+
+            // Move to the previous non-null card
+            do
+            {
+                currentIndex = (currentIndex - 1 + Cards.Length) % Cards.Length;
+            } while (Cards[currentIndex] == null);
+
             currentCard = Cards[currentIndex];
             if (currentCard != null && currentCard.abilityProp)
                 currentCard.abilityProp.SetActive(true);
@@ -194,92 +206,110 @@ public class CardManager : MonoBehaviour
     public void UpdateCardUI()
     {
         float cardWidth = 140f; // Width of the card.
-        float centerPositionX = (scrollRect.rect.width + (cardRects.Count * cardWidth)) / 2 + cardWidth / 2 - 150;
+        int nonNullCardCount = 0;
 
-        for (int i = 0; i < cardRects.Count; i++)
+        // Count non-null cards and ensure the cardRects list matches the Cards array
+        for (int i = 0; i < Cards.Length; i++)
         {
-            // Handle cases where a new card is assigned to a previously null slot
-            if (cardRects[i] == null && Cards[i] != null)
+            if (Cards[i] != null)
             {
-                // Instantiate the UI for the new card
-                GameObject cardObj = Instantiate(cardPrefab, cardParent);
-                RectTransform cardRect = cardObj.GetComponent<RectTransform>();
-                cardRects[i] = cardRect;
+                nonNullCardCount++;
 
-                // Assign cardIcon image
-                Image cardIcon1 = cardRect.GetComponent<Image>();
-                cardIcon1.sprite = Cards[i].cardIcon;
+                if (i >= cardRects.Count || cardRects[i] == null)
+                {
+                    // Instantiate UI for the current card if it doesn't already exist
+                    GameObject cardObj = Instantiate(cardPrefab, cardParent);
+                    RectTransform cardRect = cardObj.GetComponent<RectTransform>();
 
-                // Set the initial state of the card UI
-                cardRect.localScale = deselectedScale * 0.8f;
-                cardRect.GetComponent<CanvasGroup>().alpha = 0;
-                cardRect.gameObject.SetActive(false);
+                    if (i < cardRects.Count)
+                    {
+                        cardRects[i] = cardRect;
+                    }
+                    else
+                    {
+                        cardRects.Add(cardRect);
+                    }
+
+                    // Assign cardIcon image
+                    Image cardIcon = cardRect.GetComponent<Image>();
+                    cardIcon.sprite = Cards[i].cardIcon;
+
+                    // Set initial state
+                    cardRect.localScale = deselectedScale * 0.8f;
+                    cardRect.GetComponent<CanvasGroup>().alpha = 0;
+                    cardRect.gameObject.SetActive(false);
+                }
             }
+            else if (i < cardRects.Count && cardRects[i] != null)
+            {
+                // If the card is null but the UI exists, remove the UI element
+                Destroy(cardRects[i].gameObject);
+                cardRects[i] = null;
+            }
+        }
 
-            if (cardRects[i] == null) // Skip null entries
+        float centerPositionX = (scrollRect.rect.width + (nonNullCardCount * cardWidth)) / 2 + cardWidth / 2 - 150;
+
+        // Update positions and visibility for all non-null cards
+        int visibleCardIndex = 0;
+        for (int i = 0; i < Cards.Length; i++)
+        {
+            if (Cards[i] == null)
                 continue;
 
-            // Compute the offset index considering the current index as the center.
-            int offsetIndex = (i - currentIndex + cardRects.Count) % cardRects.Count;
-            float newPositionX = centerPositionX + (offsetIndex - cardRects.Count / 2) * cardWidth;
+            RectTransform cardRect = cardRects[i];
+            if (cardRect == null)
+                continue;
 
-            Image cardIcon = cardRects[i].GetComponent<Image>();
-            if (Cards[i] != null) // Check if the slot is not empty
+            int offsetIndex = (visibleCardIndex - currentIndex + nonNullCardCount) % nonNullCardCount;
+            float newPositionX = centerPositionX + (offsetIndex - nonNullCardCount / 2) * cardWidth;
+
+            if (offsetIndex > nonNullCardCount / 2)
             {
-                cardIcon.sprite = Cards[i].cardIcon;
+                newPositionX -= nonNullCardCount * cardWidth;
             }
 
-            if (offsetIndex > cardRects.Count / 2)
-            {
-                newPositionX -= cardRects.Count * cardWidth;
-            }
+            bool isNeighbor = offsetIndex == 1 || offsetIndex == nonNullCardCount - 1;
 
-            bool isNeighbor = offsetIndex == 1 || offsetIndex == cardRects.Count - 1;
-
-            if (i == currentIndex || isNeighbor)
+            if (visibleCardIndex == currentIndex || isNeighbor)
             {
-                cardRects[i].DOScale(i == currentIndex ? selectedScale : deselectedScale, tweenDuration);
-                cardRects[i].DOAnchorPos3DZ(i == currentIndex ? selectedZPosition : deselectedZPosition, tweenDuration);
-                cardRects[i].GetComponent<CanvasGroup>().DOFade(1, tweenDuration);
-                cardRects[i].gameObject.SetActive(true);
+                cardRect.DOScale(visibleCardIndex == currentIndex ? selectedScale : deselectedScale, tweenDuration);
+                cardRect.DOAnchorPos3DZ(visibleCardIndex == currentIndex ? selectedZPosition : deselectedZPosition, tweenDuration);
+                cardRect.GetComponent<CanvasGroup>().DOFade(1, tweenDuration);
+                cardRect.gameObject.SetActive(true);
             }
             else
             {
-                cardRects[i].DOScale(deselectedScale * 0.8f, tweenDuration);
-                cardRects[i].GetComponent<CanvasGroup>().DOFade(0, tweenDuration);
+                cardRect.DOScale(deselectedScale * 0.8f, tweenDuration);
+                cardRect.GetComponent<CanvasGroup>().DOFade(0, tweenDuration);
             }
 
-            cardRects[i].DOAnchorPosX(newPositionX, tweenDuration).SetEase(Ease.OutQuad);
+            cardRect.DOAnchorPosX(newPositionX, tweenDuration).SetEase(Ease.OutQuad);
+            visibleCardIndex++;
         }
 
+        // Set current card to the first non-null card if it's null
         if (currentCard == null)
-            currentCard = Cards[0];
+        {
+            for (int i = 0; i < Cards.Length; i++)
+            {
+                if (Cards[i] != null)
+                {
+                    currentCard = Cards[i];
+                    currentIndex = i;
+                    break;
+                }
+            }
+        }
 
+        // Activate current card's ability property if it exists
         if (currentCard != null && currentCard.abilityProp != null)
+        {
             currentCard.abilityProp.SetActive(true);
+        }
     }
 
 
-
-    public void AddCard(AbstractCombat newCard)
-    {
-        // Resize the Cards array
-        AbstractCombat[] newCardsArray = new AbstractCombat[Cards.Length + 1];
-        Cards.CopyTo(newCardsArray, 0);
-        newCardsArray[Cards.Length] = newCard;
-        Cards = newCardsArray;
-
-        // Instantiate the new card UI
-        GameObject cardObj = Instantiate(cardPrefab, cardParent);
-        RectTransform cardRect = cardObj.GetComponent<RectTransform>();
-        cardRects.Add(cardRect);
-
-        // Assign cardIcon image
-        Image cardIcon = cardRect.GetComponent<Image>();
-        cardIcon.sprite = newCard.cardIcon;
-
-        UpdateCardUI();
-    }
 
     public void RemoveCard(AbstractCombat cardToRemove)
     {
