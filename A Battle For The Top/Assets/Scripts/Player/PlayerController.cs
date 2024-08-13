@@ -46,6 +46,7 @@ namespace BFTT.Controller
         private float recoilReturnVel = 0;
 
         [HideInInspector] public bool canControl = true;
+        [HideInInspector] public bool menuOpen = false;
 
         private void Awake()
         {
@@ -108,7 +109,8 @@ namespace BFTT.Controller
 
         private void LateUpdate()
         {
-            CameraRotation();
+            if(!menuOpen)
+                CameraRotation();
         }
 
         private void Die()

@@ -27,6 +27,7 @@ public class OpenCardMenuAbility : AbstractAbility
         Cursor.lockState = CursorLockMode.None;
         menu.SetActive(true);
         _player.canControl = false;
+        _player.menuOpen = true;
     }
 
     public override bool ReadyToRun()
@@ -47,6 +48,7 @@ public class OpenCardMenuAbility : AbstractAbility
         Cursor.lockState = CursorLockMode.Locked;
         menu.SetActive(false);
         _player.canControl = true;
+        _player.menuOpen = false;
     }
 
     public override void UpdateAbility()

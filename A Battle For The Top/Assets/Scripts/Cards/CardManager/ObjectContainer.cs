@@ -34,9 +34,6 @@ namespace DragAndDrop
         [Tooltip("Invoked when the dragged item no longer lies over our slots")]
         public UnityEvent onDragExit;
 
-        [Tooltip("Invoked when the container is clicked")]
-        public UnityEvent onClick;
-
         // in the general class, we can drag and drop anything anywhere
         public virtual bool CanDrag(Draggable dragged) { return true; }
         public virtual bool CanDrop(Draggable dragged, Slot slot) { return true; }

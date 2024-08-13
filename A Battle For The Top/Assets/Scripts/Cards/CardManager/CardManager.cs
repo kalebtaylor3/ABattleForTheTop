@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using DragAndDrop;
+using UnityEngine.Events;
 
 public class CardManager : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class CardManager : MonoBehaviour
 
     public CardsArrayUI deckUI;
     public CardsArrayUI handUI;
+
+    public UnityEvent OnClickCard;
 
     public enum CardList
     {
@@ -109,6 +112,7 @@ public class CardManager : MonoBehaviour
                     UpdateCardUI();
                     handUI.UpdateUI();
                     deckUI.UpdateUI();
+                    OnClickCard.Invoke();
                     return;
                 }
             }
@@ -128,6 +132,7 @@ public class CardManager : MonoBehaviour
                     UpdateCardUI();
                     handUI.UpdateUI();
                     deckUI.UpdateUI();
+                    OnClickCard.Invoke();
                     return;
                 }
             }
