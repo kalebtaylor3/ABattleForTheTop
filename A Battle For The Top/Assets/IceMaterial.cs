@@ -64,7 +64,7 @@ public class IceMaterial : MonoBehaviour
 
         while (initialDissolve < 1f)
         {
-            initialDissolve += dissolveRate * Time.deltaTime;
+            initialDissolve += dissolveRate * Time.unscaledDeltaTime;
             iceMaterial.SetFloat("_Dissolve", Mathf.Clamp(initialDissolve, 0f, 1f));
 
             // Failsafe: If the dissolve value is very close to 1, smoothly transition it to 1
@@ -77,7 +77,7 @@ public class IceMaterial : MonoBehaviour
 
                 while (smoothElapsedTime < smoothDuration)
                 {
-                    smoothElapsedTime += Time.deltaTime;
+                    smoothElapsedTime += Time.unscaledDeltaTime;
                     float smoothDissolve = Mathf.Lerp(initialDissolve, 1f, smoothElapsedTime / smoothDuration);
                     iceMaterial.SetFloat("_Dissolve", smoothDissolve);
                     yield return null;
@@ -110,7 +110,7 @@ public class IceMaterial : MonoBehaviour
 
         while (elapsedTime < freezeDuration)
         {
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime;
             float newDissolve = Mathf.Lerp(initialDissolve, 0f, elapsedTime / freezeDuration);
             iceMaterial.SetFloat("_Dissolve", newDissolve);
             yield return null;

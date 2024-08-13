@@ -2222,7 +2222,7 @@ MonoBehaviour:
   cardIcon: {fileID: 21300000, guid: fb7ea449a413f6641b8a3f9e18fc9fd0, type: 3}
   _manager: {fileID: 9009967721863243831}
   cardType: 127
-  wandDurability: 10000
+  wandDurability: 8
   flame: {fileID: 4308459285429565286}
   durabilityDecreaseAmount: 1
   decreaseInterval: 0.1
@@ -4582,6 +4582,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 139.604
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 72a5819c33eb2cd478b5d0ef4f82ba08, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e83a7f3b890292644a88e318d5fe1246, type: 2}
+    - target: {fileID: -1081237460163219890, guid: 72a5819c33eb2cd478b5d0ef4f82ba08, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e83a7f3b890292644a88e318d5fe1246, type: 2}
     - target: {fileID: 919132149155446097, guid: 72a5819c33eb2cd478b5d0ef4f82ba08, type: 3}
       propertyPath: m_Name
       value: GrappleGun
@@ -4590,6 +4598,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6303999673196198604, guid: 72a5819c33eb2cd478b5d0ef4f82ba08, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e83a7f3b890292644a88e318d5fe1246, type: 2}
+    - target: {fileID: 7083095599672219895, guid: 72a5819c33eb2cd478b5d0ef4f82ba08, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e83a7f3b890292644a88e318d5fe1246, type: 2}
+    - target: {fileID: 7851690696071124955, guid: 72a5819c33eb2cd478b5d0ef4f82ba08, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e83a7f3b890292644a88e318d5fe1246, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

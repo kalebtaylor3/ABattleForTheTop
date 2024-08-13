@@ -56,14 +56,19 @@ public class FlameWand : AbstractCombat
         if (isDecreasingDurability)
         {
             isDecreasingDurability = false;
-            CancelInvoke(nameof(DecreaseDurability));
+            //CancelInvoke(nameof(DecreaseDurability));
         }
     }
 
     public override void UpdateCombat()
     {
         Debug.Log("Fire is going down");
-        InvokeRepeating(nameof(DecreaseDurability), 0f, decreaseInterval);
+
+        if (wandDurability > 0)
+        {
+            wandDurability -= durabilityDecreaseAmount * Time.unscaledDeltaTime;
+        }
+        //InvokeRepeating(nameof(DecreaseDurability), 0f, decreaseInterval);
         HandleIK();
 
         if (wandDurability <= 0)
@@ -82,7 +87,7 @@ public class FlameWand : AbstractCombat
     {
         if (wandDurability > 0)
         {
-            wandDurability -= durabilityDecreaseAmount;
+            wandDurability -= durabilityDecreaseAmount * Time.unscaledDeltaTime;
         }
     }
 

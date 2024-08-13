@@ -17,15 +17,18 @@ public class FlameCollisionHandler : MonoBehaviour
 
     private void Update()
     {
-        // Check if any ice material is still being hit by particles
-        foreach (var iceMaterial in iceMaterials)
+        if (iceMaterials.Count > 0)
         {
-            if (iceMaterial != null)
+            // Check if any ice material is still being hit by particles
+            foreach (var iceMaterial in iceMaterials)
             {
-                iceMaterial.StopMelting();
+                if (iceMaterial != null)
+                {
+                    iceMaterial.StopMelting();
+                }
             }
+            iceMaterials.Clear();
         }
-        iceMaterials.Clear();
     }
 
     private void OnParticleCollision(GameObject other)
