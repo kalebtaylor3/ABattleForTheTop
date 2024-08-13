@@ -893,6 +893,9 @@
     "m_ActiveTargets": [
         {
             "m_Id": "cbb7000d65304d2380af3a84e3ce3e97"
+        },
+        {
+            "m_Id": "31b68d9b85274bda911e167895c7f078"
         }
     ]
 }
@@ -1986,6 +1989,28 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalTarget",
+    "m_ObjectId": "31b68d9b85274bda911e167895c7f078",
+    "m_Datas": [],
+    "m_ActiveSubTarget": {
+        "m_Id": "a7b3d923ba424434b69d5fa2b72ea6ad"
+    },
+    "m_AllowMaterialOverride": false,
+    "m_SurfaceType": 0,
+    "m_ZTestMode": 4,
+    "m_ZWriteControl": 0,
+    "m_AlphaMode": 0,
+    "m_RenderFace": 2,
+    "m_AlphaClip": false,
+    "m_CastShadows": true,
+    "m_ReceiveShadows": true,
+    "m_SupportsLODCrossFade": false,
+    "m_CustomEditorGUI": "",
+    "m_SupportVFX": false
 }
 
 {
@@ -4673,6 +4698,12 @@
         "y": 0.0
     },
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalSpriteCustomLitSubTarget",
+    "m_ObjectId": "a7b3d923ba424434b69d5fa2b72ea6ad"
 }
 
 {
