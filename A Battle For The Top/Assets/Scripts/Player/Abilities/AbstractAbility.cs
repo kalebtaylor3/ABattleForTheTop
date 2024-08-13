@@ -23,6 +23,7 @@ namespace BFTT.Abilities
 
         // actions reference
         protected CharacterActions _action;
+        [HideInInspector] public bool canMove = true;
 
         /// <summary>
         /// Set reference to get actions for character (for input)

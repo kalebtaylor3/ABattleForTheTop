@@ -79,7 +79,6 @@ public class GrappleBeam : AbstractCombat
             _isGrappling = true;
             _manager._controller.canControl = false;
             _manager._controller.ResetActions();
-
             Debug.Log("Grapple point calculated: " + _grapplePoint);
             rope.lineRenderer.enabled = true; // Enable the LineRenderer
             Durability = Durability - 1;
@@ -157,16 +156,9 @@ public class GrappleBeam : AbstractCombat
         _mover.SetIsGrappling(true);
         grappleStartTime = Time.time;
         _cameraSpeedEffect.SetActive(true);
-
+        _abilityRunning.canMove = false;
         // Calculate the direction and rotation to the grapple point
-        Vector3 directionToGrapplePoint = (_grapplePoint - transform.position).normalized;
-        Quaternion targetRotation = Quaternion.LookRotation(directionToGrapplePoint);
-
-        // Apply the desired rotation offset
-        targetRotation *= grappleRotation;
-
-        // Set the mover's rotation
-        _mover.SetRotation(targetRotation);
+        
 
         // Determine which animation state to use based on the angle
         if (_grapplePoint.y > transform.position.y)
@@ -181,6 +173,27 @@ public class GrappleBeam : AbstractCombat
         }
 
         shouldMoveTowardsGrapplePoint = true;
+
+        Vector3 playerDirection = (_grapplePoint - _mover.transform.position).normalized;
+        playerDirection.y = 0; // Flatten the direction on the Y-axis
+
+        if (playerDirection != Vector3.zero) // Ensure we don't create an invalid rotation
+        {
+            // Calculate the Y-axis rotation
+            Quaternion targetRotation = Quaternion.LookRotation(playerDirection);
+
+            // Adjust the X-axis rotation (tilt)
+            float tiltAngle;
+
+            if (grappleUp)
+                tiltAngle = -25; // Adjust this value to control the amount of tilt
+            else
+                tiltAngle = 30;
+            Quaternion tiltRotation = Quaternion.Euler(tiltAngle, targetRotation.eulerAngles.y, targetRotation.eulerAngles.z);
+
+            // Apply the rotation with tilt
+            _mover.transform.rotation = tiltRotation;
+        }
 
         // Calculate the fixed increment for consistent movement
         Vector3 direction = (_grapplePoint - transform.position).normalized;
@@ -203,6 +216,7 @@ public class GrappleBeam : AbstractCombat
                 Debug.Log("Reached grapple point");
                 GetComponent<Animator>().CrossFadeInFixedTime("Air.Falling", 0.1f);
                 _manager._controller.canControl = true;
+                _abilityRunning.canMove = true;
                 if (Durability <= 0)
                 {
                     abilityProp.SetActive(false);
@@ -216,6 +230,7 @@ public class GrappleBeam : AbstractCombat
             {
                 Debug.LogWarning("Grapple duration exceeded, stopping grapple");
                 GetComponent<Animator>().CrossFadeInFixedTime("Air.Falling", 0.1f);
+                _abilityRunning.canMove = true;
                 _manager._controller.canControl = true;
                 StopCombat();
             }

@@ -248,13 +248,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1248222989188530443}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.48463908, y: 0.012244612, z: 0.024388358, w: 0.87428844}
-  m_LocalPosition: {x: 0.09999766, y: -0.318, z: 1.609999}
+  m_LocalRotation: {x: -0.26290688, y: 0.16097687, z: -0.0021422205, w: 0.9512949}
+  m_LocalPosition: {x: 0.5900005, y: -0.0900003, z: 1.4599993}
   m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3797456225819413307}
-  m_LocalEulerAnglesHint: {x: -57.998, y: -0.241, z: 3.329}
+  m_LocalEulerAnglesHint: {x: -29.968, y: 20.784, z: -5.878}
 --- !u!1 &1297523035812783681
 GameObject:
   m_ObjectHideFlags: 0
@@ -992,13 +992,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3594291029397116068}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.50361556, y: -0.019215554, z: 0.043759845, w: -0.86260486}
-  m_LocalPosition: {x: -0.11, y: 0.254, z: 1.72}
+  m_LocalRotation: {x: 0.34574363, y: 0.36163163, z: -0.017926507, w: -0.8656573}
+  m_LocalPosition: {x: -1.0599983, y: -0.039999604, z: 1.4900006}
   m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3797456225819413307}
-  m_LocalEulerAnglesHint: {x: -60.13, y: -351.079, z: -10.979}
+  m_LocalEulerAnglesHint: {x: -35.847, y: -411.971, z: 20.291}
 --- !u!1 &3700258263701368239
 GameObject:
   m_ObjectHideFlags: 0
@@ -1327,6 +1327,7 @@ MonoBehaviour:
   LockCameraPosition: 0
   _usingController: 0
   canControl: 1
+  menuOpen: 0
   Move: {x: 0, y: 0}
   Look: {x: 0, y: 0}
   Jump: 0
@@ -1395,6 +1396,9 @@ MonoBehaviour:
   - {fileID: 1461055670503368079}
   deckUI: {fileID: 0}
   handUI: {fileID: 0}
+  OnClickCard:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5685802461359468118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1486,6 +1490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 0
+  canMove: 1
   walkSpeed: 4
   sprintSpeed: 7
   movementByKey: 1
@@ -1533,6 +1538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 1
+  canMove: 1
   animJumpState: Air.Jump
   animFallState: Air.Falling
   animHardLandState: Air.Hard Landing
@@ -1560,6 +1566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  canMove: 1
   rollSpeed: 7
   capsuleHeightOnRoll: 1
   _audioPlayer: {fileID: 0}
@@ -1579,6 +1586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 2
+  canMove: 1
   obstaclesMask:
     serializedVersion: 2
     m_Bits: 65537
@@ -1597,6 +1605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  canMove: 1
   crawlSpeed: 1.25
   capsuleHeightOnCrawl: 0.5
   obstaclesMask:
@@ -1618,6 +1627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 1
+  canMove: 1
   speed: 1.4
   positionSmoothnessTime: 0.12
   pushAnimationBlendState: Push Blend
@@ -1650,6 +1660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 1
+  canMove: 1
   strafeWalkSpeed: 2
   strafeAnimState: Strafe
   horizontalAnimFloat: Horizontal
@@ -1757,6 +1768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  canMove: 1
   climbMask:
     serializedVersion: 2
     m_Bits: 65536
@@ -1935,6 +1947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  canMove: 1
   holdWalkButtonToDrop: 1
   ClimbLayerMask:
     serializedVersion: 2
@@ -1975,6 +1988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 2
+  canMove: 1
   vaultMask:
     serializedVersion: 2
     m_Bits: 262144
@@ -2023,6 +2037,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  canMove: 1
   ladderMask:
     serializedVersion: 2
     m_Bits: 65536
@@ -2138,6 +2153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  canMove: 1
   shortClimbMask:
     serializedVersion: 2
     m_Bits: 131072
@@ -2162,6 +2178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 4
+  canMove: 1
   wallRunMask:
     serializedVersion: 2
     m_Bits: 524288
@@ -2245,6 +2262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  canMove: 1
   smoothnessTime: 0.12
   swingForce: 10
   maxSwingSpeed: 5
@@ -2342,6 +2360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 3
+  canMove: 1
   ridingHorse: 0
   rideState: Ride
   detectionRange: 1
@@ -2522,6 +2541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityPriority: 1
+  canMove: 1
   menu: {fileID: 0}
   _player: {fileID: 7488160260164627778}
 --- !u!1 &4240283749775208963

@@ -44,21 +44,24 @@ namespace BFTT.Abilities
 
         public override void UpdateAbility()
         {
-            float targetSpeed = 0;
-            switch (movementByKey)
+            if (canMove)
             {
-                case MovementStyle.HoldToWalk:
-                    targetSpeed = _action.walk ? walkSpeed : sprintSpeed;
-                    break;
-                case MovementStyle.HoldToRun:
-                    targetSpeed = _action.walk ? sprintSpeed : walkSpeed;
-                    break;
-                case MovementStyle.DoNothing:
-                    targetSpeed = sprintSpeed;
-                    break;
-            }
+                float targetSpeed = 0;
+                switch (movementByKey)
+                {
+                    case MovementStyle.HoldToWalk:
+                        targetSpeed = _action.walk ? walkSpeed : sprintSpeed;
+                        break;
+                    case MovementStyle.HoldToRun:
+                        targetSpeed = _action.walk ? sprintSpeed : walkSpeed;
+                        break;
+                    case MovementStyle.DoNothing:
+                        targetSpeed = sprintSpeed;
+                        break;
+                }
 
-            _mover.Move(_action.move, targetSpeed);
+                _mover.Move(_action.move, targetSpeed);
+            }
         }
 
     }

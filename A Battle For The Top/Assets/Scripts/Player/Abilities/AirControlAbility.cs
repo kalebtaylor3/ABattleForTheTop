@@ -124,10 +124,13 @@ namespace BFTT.Abilities
             if (transform.position.y > _highestPosition)
                 _highestPosition = transform.position.y;
 
-            _startInput = Vector2.SmoothDamp(_startInput, _action.move, ref _inputVel, airControl);
-            _mover.Move(_startInput, _startSpeed, false);
+            if (canMove)
+            {
+                _startInput = Vector2.SmoothDamp(_startInput, _action.move, ref _inputVel, airControl);
+                _mover.Move(_startInput, _startSpeed, false);
 
-            RotateCharacter();
+                RotateCharacter();
+            }
         }
 
         private void RotateCharacter()
