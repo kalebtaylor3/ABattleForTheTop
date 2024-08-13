@@ -8,7 +8,7 @@ using BFTT.Combat;
 using System;
 
 // specialisation of Draggable that displays charms
-public class CharmUI : Draggable, IToolTip
+public class CardUIDeck : Draggable, IToolTip
 {
     public Image image;
 

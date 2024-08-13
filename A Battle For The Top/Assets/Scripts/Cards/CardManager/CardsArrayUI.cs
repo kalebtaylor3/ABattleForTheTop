@@ -36,7 +36,7 @@ public class CardsArrayUI : ObjectContainerArray {
     // to be able to drop, it must be a charm of the appropriate type
     public override bool CanDrop(Draggable dragged, Slot slot)
     {
-        CharmUI charm = dragged as CharmUI;
+        CardUIDeck charm = dragged as CardUIDeck;
 
         // must be a charm
         if (charm == null)
@@ -59,7 +59,7 @@ public class CardsArrayUI : ObjectContainerArray {
         base.OnDragBegin();
         if (description)
         {
-            CharmUI charmUi = Draggable.current as CharmUI;
+            CardUIDeck charmUi = Draggable.current as CardUIDeck;
             if (charmUi)
             {
                 AbstractCombat charm = charmUi.obj as AbstractCombat;
