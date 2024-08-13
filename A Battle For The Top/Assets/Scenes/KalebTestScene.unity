@@ -20013,7 +20013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1796482351376166265, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000094771385
+      value: -0.0000821501
       objectReference: {fileID: 0}
     - target: {fileID: 2213316373576877719, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: m_IsActive
@@ -20362,10 +20362,6 @@ PrefabInstance:
     - target: {fileID: 7362789856182820838, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7519382985265451664, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
-      propertyPath: _animator
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7519382985265451664, guid: 854e83e7e1eb0824f9eab68c5fb9e43a, type: 3}
       propertyPath: iceLayer.m_Bits
