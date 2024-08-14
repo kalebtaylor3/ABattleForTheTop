@@ -180,6 +180,7 @@ public class KnightCard : AbstractCombat
         rb.isKinematic = true;
         throwSword = false;
         rb.excludeLayers = originalExcludeLayer;
+        rb.GetComponent<MeshCollider>().excludeLayers = originalExcludeLayer;
         rb.GetComponent<BoxCollider>().excludeLayers = originalExcludeLayer;
         abilityProp.layer = LayerMask.NameToLayer("Character");
 
@@ -215,18 +216,18 @@ public class KnightCard : AbstractCombat
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Sword") && swordOut)
+        if (other.gameObject.CompareTag("Sword") && swordOut)
         {
             // If the player lands on the sword, apply the bending effect
-            effects.ApplyBend(collision.rigidbody.mass);
+            effects.ApplyBend(other.GetComponent<Rigidbody>().mass);
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (collision.gameObject.CompareTag("Sword") && swordOut)
+        if (other.gameObject.CompareTag("Sword") && swordOut)
         {
             // When the player jumps off the sword, apply the diving board effect
             Rigidbody playerRb = GetComponent<Rigidbody>();

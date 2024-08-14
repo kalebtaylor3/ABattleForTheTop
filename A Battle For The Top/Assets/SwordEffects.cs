@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SwordEffects : MonoBehaviour
 {
@@ -11,7 +12,8 @@ public class SwordEffects : MonoBehaviour
     public Vector3 rotationOffset = new Vector3(0, 0, 0);
     public float positionOffset = 0.1f;
 
-    private BoxCollider boxCollider;
+    private MeshCollider meshCollider;
+    private BoxCollider boxColliderTrigger;
     private Rigidbody rb;
 
     public float bendStrength = 1f;
@@ -25,7 +27,9 @@ public class SwordEffects : MonoBehaviour
 
     private void Start()
     {
-        boxCollider = GetComponent<BoxCollider>();
+        meshCollider = GetComponent<MeshCollider>();
+        boxColliderTrigger = GetComponent<BoxCollider>();
+        meshCollider.convex = true; // Set to true if interacting with rigidbody
         rb = GetComponent<Rigidbody>();
 
         mesh = GetComponent<MeshFilter>().mesh;
@@ -62,7 +66,9 @@ public class SwordEffects : MonoBehaviour
             transform.position = collision.contacts[0].point - transform.forward * positionOffset;
 
             rb.excludeLayers = 0;
-            boxCollider.excludeLayers = 0;
+            //boxCollider.excludeLayers = 0;
+            meshCollider.excludeLayers = 0;
+            boxColliderTrigger.excludeLayers = 0;
         }
     }
 
@@ -95,6 +101,14 @@ public class SwordEffects : MonoBehaviour
         mesh.vertices = modifiedVertices;
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
+        UpdateCollider();
+    }
+
+    private void UpdateCollider()
+    {
+        // Update the mesh collider to match the modified mesh
+        meshCollider.sharedMesh = null; // Reset the collider
+        meshCollider.sharedMesh = mesh; // Reassign the updated mesh
     }
 
     float GetBoardLength()
