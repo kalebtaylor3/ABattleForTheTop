@@ -23,11 +23,14 @@ public class KnightCard : AbstractCombat
 
     public ParticleSystem[] trail;
 
+    public Vector3 origionalScale;
+
     private void Awake()
     {
         _ikScheduler = GetComponent<IKScheduler>();
         _strafe = GetComponent<Strafe>();
         abilityProp.layer = LayerMask.NameToLayer("Character");
+        origionalScale = abilityProp.transform.localScale;
     }
 
     public override bool CombatReadyToRun()
@@ -107,6 +110,7 @@ public class KnightCard : AbstractCombat
         if (_manager.currentCard == this && throwSword && effects.hitSomething)
         {
             abilityProp.layer = LayerMask.NameToLayer("Short Climb");
+            abilityProp.transform.localScale = transform.localScale * 2;
             _strafe.canMove = true;
             for (int i = 0; i < trail.Length; i++)
             {
@@ -118,7 +122,16 @@ public class KnightCard : AbstractCombat
 
         if (isReturning)
         {
-            if (time < 1.0f)
+            // Failsafe threshold distance
+            float thresholdDistance = 0.1f;
+
+            if (Vector3.Distance(rb.position, target.position) <= thresholdDistance)
+            {
+                // Snap to the target position and rotation if within the threshold
+                ResetSword();
+                abilityProp.transform.position = target.position;
+            }
+            else if (time < 1.0f)
             {
                 rb.position = getBQCPoint(time, oldPosition, curvePoint.position, target.position);
                 rb.rotation = Quaternion.Slerp(rb.transform.rotation, target.rotation, 50 * Time.unscaledDeltaTime);
@@ -150,6 +163,7 @@ public class KnightCard : AbstractCombat
     {
         Debug.Log("returning sword");
         isReturning = true;
+        abilityProp.transform.localScale = origionalScale * 2.2f;
         oldPosition = rb.position;
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
@@ -180,6 +194,7 @@ public class KnightCard : AbstractCombat
         rb.position = target.position;
         rb.rotation = target.rotation;
         time = 0;
+        abilityProp.transform.localScale = origionalScale;
         GetComponent<Animator>().SetBool("Sword", true);
         throwSword = false;
         effects.activated = false;
