@@ -87,7 +87,7 @@ public class IceMaterial : MonoBehaviour
                 iceMaterial.SetFloat("_Dissolve", 1f);
                 meltCoroutine = null;  // Reset the coroutine reference
                 collider.enabled = false;
-                Debug.Log("ice is melted you wont slide now");
+                Debug.Log("Ice is melted, you won't slide now");
                 yield break;
             }
 
@@ -99,9 +99,6 @@ public class IceMaterial : MonoBehaviour
         isFullyMelted = true;  // Mark as fully melted
         meltCoroutine = null;  // Reset the coroutine reference
     }
-
-
-
 
     private IEnumerator RefreezeIce()
     {
