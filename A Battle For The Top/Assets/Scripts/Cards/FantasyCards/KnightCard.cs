@@ -1,15 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using BFTT.Abilities;
 using BFTT.Combat;
 using BFTT.IK;
-using BFTT.Abilities;
+using UnityEngine;
 
 public class KnightCard : AbstractCombat
 {
     bool throwSword = false;
     bool swordOut = false;
     bool isReturning = false;
+    bool readyToReturn = false; // Flag to check if the sword is ready to return
+    bool zoomWasReleased = false; // New flag to track if zoom was released
     public Transform target, curvePoint;
     private Vector3 oldPosition;
     Rigidbody rb;
@@ -61,6 +61,7 @@ public class KnightCard : AbstractCombat
         if (_manager.currentCard == this && _action.UseCard && _action.zoom)
         {
             throwSword = true;
+            zoomWasReleased = false; // Reset zoom release state
             return true;
         }
 
@@ -116,14 +117,22 @@ public class KnightCard : AbstractCombat
             {
                 trail[i].Stop();
             }
-            if (_action.zoom)
+
+            if (!_action.zoom && !zoomWasReleased) // Check if zoom was released
+            {
+                zoomWasReleased = true;
+            }
+
+            if (_action.zoom && zoomWasReleased) // Return sword if zoom was released and then zoom is true again
+            {
                 ReturnSword();
+            }
         }
 
         if (isReturning)
         {
             // Failsafe threshold distance
-            float thresholdDistance = 0.1f;
+            float thresholdDistance = 0.15f;
 
             if (Vector3.Distance(rb.position, target.position) <= thresholdDistance)
             {
@@ -148,12 +157,13 @@ public class KnightCard : AbstractCombat
     {
         GetComponent<Animator>().SetBool("Sword", false);
         isReturning = false;
+        readyToReturn = false; // Reset the return readiness
         effects.activated = true;
         rb.isKinematic = false;
         rb.transform.parent = null;
         rb.AddForce(Camera.main.transform.TransformDirection(Vector3.forward) * 25, ForceMode.Impulse);
 
-        for(int i = 0; i < trail.Length; i++)
+        for (int i = 0; i < trail.Length; i++)
         {
             trail[i].Play();
         }
@@ -163,6 +173,7 @@ public class KnightCard : AbstractCombat
     {
         Debug.Log("returning sword");
         isReturning = true;
+        zoomWasReleased = false; // Reset zoom release state after return
         abilityProp.transform.localScale = origionalScale * 2.2f;
         oldPosition = rb.position;
         rb.velocity = Vector3.zero;
@@ -227,3 +238,4 @@ public class KnightCard : AbstractCombat
         }
     }
 }
+
