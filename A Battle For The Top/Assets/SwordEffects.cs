@@ -8,24 +8,42 @@ public class SwordEffects : MonoBehaviour
     public float rotationSpeed;
     public bool hitSomething = false;
 
-    // Desired rotation offset when the sword lands
-    public Vector3 rotationOffset = new Vector3(0, 0, 0);  // Adjust this based on your sword's model orientation
-
-    // Position offset to pull the sword back from the wall
-    public float positionOffset = 0.1f;  // Adjust this to control how far back the sword is pulled after hitting
+    public Vector3 rotationOffset = new Vector3(0, 0, 0);
+    public float positionOffset = 0.1f;
 
     private BoxCollider boxCollider;
+    private Rigidbody rb;
+
+    public float bendStrength = 1f;
+    public int hingePoints = 5;
+    public AnimationCurve bendingCurve;
+    public Vector3 bendDirection = Vector3.down; // Change to down for the handle to bend downwards
+
+    private Vector3[] originalVertices;
+    private Vector3[] modifiedVertices;
+    private Mesh mesh;
 
     private void Start()
     {
         boxCollider = GetComponent<BoxCollider>();
+        rb = GetComponent<Rigidbody>();
+
+        mesh = GetComponent<MeshFilter>().mesh;
+        originalVertices = mesh.vertices;
+        modifiedVertices = new Vector3[originalVertices.Length];
+
+        if (bendingCurve == null)
+        {
+            bendingCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (activated)
+        {
             transform.localEulerAngles += transform.right * rotationSpeed * Time.unscaledDeltaTime;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -33,28 +51,63 @@ public class SwordEffects : MonoBehaviour
         if (activated)
         {
             activated = false;
-            Rigidbody rb = GetComponent<Rigidbody>();
             rb.isKinematic = true;
             hitSomething = true;
 
-            // Get the normal of the surface where the sword collided
             Vector3 surfaceNormal = collision.contacts[0].normal;
-
-            // Align the sword's forward direction with the surface normal
             Quaternion targetRotation = Quaternion.LookRotation(-surfaceNormal, Vector3.up);
-
-            // Apply the rotation offset if needed
             targetRotation *= Quaternion.Euler(rotationOffset);
-
-            // Set the sword's rotation to the calculated target rotation
             transform.rotation = targetRotation;
 
-            // Apply position offset to prevent the sword from being stuck in the wall
             transform.position = collision.contacts[0].point - transform.forward * positionOffset;
 
-            //is in the wall so get rid of exclude layer for box collider and rigid body.
             rb.excludeLayers = 0;
             boxCollider.excludeLayers = 0;
         }
+    }
+
+    public void ApplyBend(float weight)
+    {
+        float boardLength = GetBoardLength();
+        float hingeSpacing = boardLength / hingePoints;
+
+        for (int i = 0; i < originalVertices.Length; i++)
+        {
+            Vector3 vertex = originalVertices[i];
+            Vector3 cumulativeBend = Vector3.zero;
+
+            // Ensure that vertices closer to the handle bend more than those near the tip
+            for (int hinge = 1; hinge <= hingePoints; hinge++)
+            {
+                float hingePosition = hinge * hingeSpacing;
+                if (vertex.z < hingePosition)  // Changed condition to bend vertices closer to the handle
+                {
+                    float relativePosition = (hingePosition - vertex.z) / boardLength; // Reverse the relative position calculation
+                    float bendAmount = bendingCurve.Evaluate(relativePosition) * bendStrength * weight / hingePoints;
+                    cumulativeBend += bendDirection * bendAmount;
+                }
+            }
+
+            vertex += cumulativeBend;
+            modifiedVertices[i] = vertex;
+        }
+
+        mesh.vertices = modifiedVertices;
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+    }
+
+    float GetBoardLength()
+    {
+        float minZ = float.MaxValue;
+        float maxZ = float.MinValue;
+
+        foreach (Vector3 vertex in originalVertices)
+        {
+            if (vertex.z < minZ) minZ = vertex.z;
+            if (vertex.z > maxZ) maxZ = vertex.z;
+        }
+
+        return maxZ - minZ;
     }
 }
