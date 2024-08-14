@@ -1,6 +1,7 @@
 using UnityEngine;
 using BFTT.Components;
 using BFTT.IK;
+using BFTT.Combat;
 
 namespace BFTT.Abilities
 {
@@ -22,6 +23,10 @@ namespace BFTT.Abilities
         private IKScheduler _ikScheduler;
 
         public Transform aimPosition;
+        public Transform swordAimPosition;
+
+        private CardManager _manager;
+        public AbstractCombat sword;
 
         private void Awake()
         {
@@ -31,6 +36,7 @@ namespace BFTT.Abilities
 
             _animHorizontalID = Animator.StringToHash(horizontalAnimFloat);
             _animVerticalID = Animator.StringToHash(verticalAnimFloat);
+            _manager = GetComponent<CardManager>();
         }
 
 
@@ -53,7 +59,11 @@ namespace BFTT.Abilities
             _animator.SetFloat(_animHorizontalID, _action.move.x, 0.1f, Time.deltaTime);
             _animator.SetFloat(_animVerticalID, _action.move.y, 0.1f, Time.deltaTime);
 
-            HandleIK();
+
+            if (_manager.currentCard != sword)
+                HandleIK();
+            else
+                HandleSwordIK();
 
             if (!_action.zoom || !_mover.IsGrounded())
             {
@@ -70,6 +80,15 @@ namespace BFTT.Abilities
             if (aimPosition != null && _ikScheduler != null)
             {
                 IKPass rightHandPass = new IKPass(aimPosition.position, aimPosition.rotation, AvatarIKGoal.RightHand, 1, 1);
+                _ikScheduler.ApplyIK(rightHandPass);
+            }
+        }
+
+        private void HandleSwordIK()
+        {
+            if (swordAimPosition != null && _ikScheduler != null && canMove)
+            {
+                IKPass rightHandPass = new IKPass(swordAimPosition.position, swordAimPosition.rotation, AvatarIKGoal.RightHand, 1, 1);
                 _ikScheduler.ApplyIK(rightHandPass);
             }
         }
