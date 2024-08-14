@@ -25,6 +25,7 @@ public class KnightCard : AbstractCombat
     {
         _ikScheduler = GetComponent<IKScheduler>();
         _strafe = GetComponent<Strafe>();
+        abilityProp.layer = LayerMask.NameToLayer("Character");
     }
 
     public override bool CombatReadyToRun()
@@ -97,6 +98,7 @@ public class KnightCard : AbstractCombat
 
         if (_manager.currentCard == this && throwSword && effects.hitSomething)
         {
+            abilityProp.layer = LayerMask.NameToLayer("Short Climb");
             _strafe.canMove = true;
             if (_action.zoom)
                 ReturnSword();
@@ -137,6 +139,7 @@ public class KnightCard : AbstractCombat
         throwSword = false;
         rb.excludeLayers = originalExcludeLayer;
         rb.GetComponent<BoxCollider>().excludeLayers = originalExcludeLayer;
+        abilityProp.layer = LayerMask.NameToLayer("Character");
     }
 
     Vector3 getBQCPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)
