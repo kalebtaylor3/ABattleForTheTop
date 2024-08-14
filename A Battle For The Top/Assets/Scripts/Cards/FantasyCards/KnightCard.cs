@@ -21,6 +21,8 @@ public class KnightCard : AbstractCombat
 
     public LayerMask originalExcludeLayer;
 
+    public ParticleSystem[] trail;
+
     private void Awake()
     {
         _ikScheduler = GetComponent<IKScheduler>();
@@ -33,6 +35,12 @@ public class KnightCard : AbstractCombat
         if (_manager.currentCard == this && !swordOut)
         {
             GetComponent<Animator>().SetBool("Sword", true);
+
+            for (int i = 0; i < trail.Length; i++)
+            {
+                trail[i].Stop();
+            }
+
             swordOut = true;
         }
         else if (_manager.currentCard != this && swordOut)
@@ -100,6 +108,10 @@ public class KnightCard : AbstractCombat
         {
             abilityProp.layer = LayerMask.NameToLayer("Short Climb");
             _strafe.canMove = true;
+            for (int i = 0; i < trail.Length; i++)
+            {
+                trail[i].Stop();
+            }
             if (_action.zoom)
                 ReturnSword();
         }
@@ -127,6 +139,11 @@ public class KnightCard : AbstractCombat
         rb.isKinematic = false;
         rb.transform.parent = null;
         rb.AddForce(Camera.main.transform.TransformDirection(Vector3.forward) * 25, ForceMode.Impulse);
+
+        for(int i = 0; i < trail.Length; i++)
+        {
+            trail[i].Play();
+        }
     }
 
     void ReturnSword()
@@ -140,6 +157,11 @@ public class KnightCard : AbstractCombat
         rb.excludeLayers = originalExcludeLayer;
         rb.GetComponent<BoxCollider>().excludeLayers = originalExcludeLayer;
         abilityProp.layer = LayerMask.NameToLayer("Character");
+
+        for (int i = 0; i < trail.Length; i++)
+        {
+            trail[i].Play();
+        }
     }
 
     Vector3 getBQCPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)
@@ -161,6 +183,10 @@ public class KnightCard : AbstractCombat
         GetComponent<Animator>().SetBool("Sword", true);
         throwSword = false;
         effects.activated = false;
+        for (int i = 0; i < trail.Length; i++)
+        {
+            trail[i].Stop();
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
