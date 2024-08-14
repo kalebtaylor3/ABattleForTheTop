@@ -2628,6 +2628,13 @@ MonoBehaviour:
   - {fileID: 5295543893798943764}
   - {fileID: 3797456225819413252}
   - {fileID: 2536674040576789992}
+  - {fileID: 1939822118217720700}
+  - {fileID: 3878017899592148627}
+  - {fileID: 6423809000933012547}
+  - {fileID: 1764070892886877082}
+  - {fileID: 8826966994789190160}
+  - {fileID: 7737306116547435084}
+  - {fileID: 4333128637472120592}
   abilityName: Knight
   abilityDescription: Gain a sword to use in combat or jump on!
   abilityProp: {fileID: 1963038745587674310}

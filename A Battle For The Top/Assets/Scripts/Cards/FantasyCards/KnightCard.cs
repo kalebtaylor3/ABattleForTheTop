@@ -94,6 +94,9 @@ public class KnightCard : AbstractCombat
 
     public override bool ReadyToExit()
     {
+
+        ////**************
+
         //eventually also check if the swird is currently hurdeling toward the hit point
         if (!_action.UseCard) return true;
         else return false;
