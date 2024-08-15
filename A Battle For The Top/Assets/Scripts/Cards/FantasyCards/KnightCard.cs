@@ -108,11 +108,12 @@ public class KnightCard : AbstractCombat
         {
             Debug.Log("Swung the sword");
 
-            if (noOfPresses == 0)
+            if (noOfPresses == 0 || noOfPresses == 1)
             {
                 animator.SetBool("hit1", true);
                 animator.SetBool("hit2", false);
                 animator.SetBool("hit3", false);
+                canSwing = true;
             }
 
             if (Time.time > nextSwingTime)
@@ -124,7 +125,7 @@ public class KnightCard : AbstractCombat
 
     void HandleCombo()
     {
-        if (animator.GetCurrentAnimatorStateInfo(1).normalizedTime > 0.4f && animator.GetCurrentAnimatorStateInfo(1).IsName("Attack1"))
+        if (animator.GetCurrentAnimatorStateInfo(1).normalizedTime > 0.7f && animator.GetCurrentAnimatorStateInfo(1).IsName("Attack1"))
         {
             animator.SetBool("hit1", false);
         }
