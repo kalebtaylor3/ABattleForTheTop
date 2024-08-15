@@ -1,6 +1,7 @@
 using BFTT.Abilities;
 using BFTT.Combat;
 using BFTT.IK;
+using System.Collections;
 using UnityEngine;
 
 public class KnightCard : AbstractCombat
@@ -24,6 +25,13 @@ public class KnightCard : AbstractCombat
     public ParticleSystem[] trail;
 
     public Vector3 origionalScale;
+
+    public DisplayMessage simpleMessageDisplay;
+    public float messageDisplayTime = 2f; // Time in seconds to show the message
+
+    private bool isMessageActive = false;
+
+    bool hasStoodOnSword = false;
 
     private void Awake()
     {
@@ -99,12 +107,18 @@ public class KnightCard : AbstractCombat
 
     public override bool ReadyToExit()
     {
-        if (!_action.UseCard && !isReturning &&!throwSword) return true;
+        if (!_action.UseCard && !isReturning && !throwSword) return true;
         else return false;
     }
 
     public override void UpdateCombat()
     {
+
+        if (_action.NextCard || _action.PreviousCard)
+            if (throwSword || isReturning)
+                if (!isMessageActive)
+                    StartCoroutine(HideMessageAfterTime(messageDisplayTime));
+
         if (!_action.UseCard && !throwSword && time == 0 && !isReturning)
             StopCombat();
 
@@ -151,6 +165,15 @@ public class KnightCard : AbstractCombat
                 ResetSword();
             }
         }
+    }
+
+    private IEnumerator HideMessageAfterTime(float time)
+    {
+        simpleMessageDisplay.SetShowMessage(true, "", "Return sword to change ability");
+        isMessageActive = true;
+        yield return new WaitForSeconds(time);
+        simpleMessageDisplay.SetShowMessage(false, "", "Return sword to change ability");
+        isMessageActive = false;
     }
 
     public void ThrowSword()
@@ -229,6 +252,7 @@ public class KnightCard : AbstractCombat
             if (playerPosition.y > swordPosition.y && playerPosition.y - swordPosition.y <= verticalThreshold)
             {
                 // If the player is standing on the sword, apply the bending effect
+                hasStoodOnSword = true;
                 effects.ApplyBend(other.GetComponent<Rigidbody>().mass);
             }
         }
@@ -239,14 +263,17 @@ public class KnightCard : AbstractCombat
     {
         if (other.gameObject.CompareTag("Sword") && swordOut)
         {
-            // When the player jumps off the sword, apply the diving board effect
-            Rigidbody playerRb = GetComponent<Rigidbody>();
-            Vector3 jumpForce = Vector3.up * 7f; // Adjust force as needed
-            playerRb.AddForce(jumpForce, ForceMode.Impulse);
+            if (hasStoodOnSword)
+            {
+                // When the player jumps off the sword, apply the diving board effect
+                Rigidbody playerRb = GetComponent<Rigidbody>();
+                Vector3 jumpForce = Vector3.up * 7f; // Adjust force as needed
+                playerRb.AddForce(jumpForce, ForceMode.Impulse);
 
-            // Reset the sword's bend
-            effects.ApplyBend(0f);
+                // Reset the sword's bend
+                effects.ApplyBend(0f);
+                hasStoodOnSword = false;
+            }
         }
     }
 }
-
