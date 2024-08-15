@@ -99,7 +99,7 @@ public class KnightCard : AbstractCombat
 
     public override bool ReadyToExit()
     {
-        if (!_action.UseCard) return true;
+        if (!_action.UseCard && !isReturning &&!throwSword) return true;
         else return false;
     }
 
