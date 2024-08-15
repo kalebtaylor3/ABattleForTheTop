@@ -220,10 +220,20 @@ public class KnightCard : AbstractCombat
     {
         if (other.gameObject.CompareTag("Sword") && swordOut)
         {
-            // If the player lands on the sword, apply the bending effect
-            effects.ApplyBend(other.GetComponent<Rigidbody>().mass);
+            // Check if the player's position is above the sword
+            Vector3 playerPosition = transform.position;
+            Vector3 swordPosition = other.transform.position;
+
+            // Check if the player is within a certain distance above the sword
+            float verticalThreshold = 0.5f; // Adjust this threshold as needed
+            if (playerPosition.y > swordPosition.y && playerPosition.y - swordPosition.y <= verticalThreshold)
+            {
+                // If the player is standing on the sword, apply the bending effect
+                effects.ApplyBend(other.GetComponent<Rigidbody>().mass);
+            }
         }
     }
+
 
     private void OnTriggerExit(Collider other)
     {
