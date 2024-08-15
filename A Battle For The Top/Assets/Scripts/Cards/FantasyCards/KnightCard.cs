@@ -253,7 +253,7 @@ public class KnightCard : AbstractCombat
             {
                 // If the player is standing on the sword, apply the bending effect
                 hasStoodOnSword = true;
-                effects.ApplyBend(other.GetComponent<Rigidbody>().mass);
+                effects.StartBend(other.GetComponent<Rigidbody>().mass, 0.5f);
             }
         }
     }
@@ -271,7 +271,7 @@ public class KnightCard : AbstractCombat
                 playerRb.AddForce(jumpForce, ForceMode.Impulse);
 
                 // Reset the sword's bend
-                effects.ApplyBend(0f);
+                effects.StartBend(0f, 0.5f);
                 hasStoodOnSword = false;
             }
         }

@@ -72,7 +72,30 @@ public class SwordEffects : MonoBehaviour
         }
     }
 
-    public void ApplyBend(float weight)
+    public void StartBend(float targetWeight, float duration)
+    {
+        StartCoroutine(SmoothBend(targetWeight, duration));
+    }
+
+    private IEnumerator SmoothBend(float targetWeight, float duration)
+    {
+        float initialWeight = 0f; // Assuming you start from 0 bend
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float currentWeight = Mathf.Lerp(initialWeight, targetWeight, elapsedTime / duration);
+            ApplyBend(currentWeight);
+            UpdateCollider(); // Update collider once bending is complete
+            yield return null;
+        }
+
+        ApplyBend(targetWeight); // Ensure final bend is applied
+        UpdateCollider(); // Update collider once bending is complete
+    }
+
+    void ApplyBend(float weight)
     {
         float boardLength = GetBoardLength();
         float hingeSpacing = boardLength / hingePoints;
@@ -101,7 +124,6 @@ public class SwordEffects : MonoBehaviour
         mesh.vertices = modifiedVertices;
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
-        UpdateCollider();
     }
 
     private void UpdateCollider()
