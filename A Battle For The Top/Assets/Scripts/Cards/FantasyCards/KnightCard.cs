@@ -148,7 +148,7 @@ public class KnightCard : AbstractCombat
         if (isReturning)
         {
             // Failsafe threshold distance
-            float thresholdDistance = 0.15f;
+            float thresholdDistance = 0.2f;
 
             if (Vector3.Distance(rb.position, target.position) <= thresholdDistance)
             {
@@ -160,7 +160,7 @@ public class KnightCard : AbstractCombat
             {
                 rb.position = getBQCPoint(time, oldPosition, curvePoint.position, target.position);
                 rb.rotation = Quaternion.Slerp(rb.transform.rotation, target.rotation, 50 * Time.unscaledDeltaTime);
-                time += Time.deltaTime;
+                time += Time.unscaledDeltaTime;
             }
             else
             {
