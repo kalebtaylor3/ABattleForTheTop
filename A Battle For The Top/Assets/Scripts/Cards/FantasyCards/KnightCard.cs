@@ -31,7 +31,17 @@ public class KnightCard : AbstractCombat
 
     private bool isMessageActive = false;
 
+    private Animator animator;
+
     bool hasStoodOnSword = false;
+
+    public float swingCoolDown = 2f;
+    private float nextSwingTime = 0f;
+    public static int noOfPresses = 0;
+    float lastClickedTime = 0;
+    public float maxComboDelay = 1.2f;
+    bool canSwing = true;
+    bool oneSwing = false;
 
     private void Awake()
     {
@@ -39,6 +49,7 @@ public class KnightCard : AbstractCombat
         _strafe = GetComponent<Strafe>();
         abilityProp.layer = LayerMask.NameToLayer("Character");
         origionalScale = abilityProp.transform.localScale;
+        animator = GetComponent<Animator>();
     }
 
     public override bool CombatReadyToRun()
@@ -96,15 +107,118 @@ public class KnightCard : AbstractCombat
         else
         {
             Debug.Log("Swung the sword");
-            GetComponent<Animator>().SetTrigger("Swing");
 
-            //handle combo system
+            if (noOfPresses == 0)
+            {
+                animator.SetBool("hit1", true);
+                animator.SetBool("hit2", false);
+                animator.SetBool("hit3", false);
+            }
+
+            if (Time.time > nextSwingTime)
+            {
+                OnSwing();
+            }
         }
+    }
+
+    void HandleCombo()
+    {
+        if (animator.GetCurrentAnimatorStateInfo(1).normalizedTime > 0.4f && animator.GetCurrentAnimatorStateInfo(1).IsName("Attack1"))
+        {
+            animator.SetBool("hit1", false);
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(1).normalizedTime > 0.4f && animator.GetCurrentAnimatorStateInfo(1).IsName("Attack2"))
+        {
+            animator.SetBool("hit2", false);
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(1).normalizedTime > 0.4f && animator.GetCurrentAnimatorStateInfo(1).IsName("Attack3"))
+        {
+            animator.SetBool("hit3", false);
+            noOfPresses = 0;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(1).IsName("Sword") && !animator.GetBool("hit1"))
+        {
+            noOfPresses = 0;
+            animator.SetBool("hit1", false);
+        }
+
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            noOfPresses = 0;
+            animator.SetBool("hit1", false);
+            animator.SetBool("hit2", false);
+            animator.SetBool("hit3", false);
+        }
+    }
+
+    void OnSwing()
+    {
+        lastClickedTime = Time.time;
+
+        if (animator.GetCurrentAnimatorStateInfo(1).IsName("Sword"))
+        {
+            canSwing = true;
+        }
+
+
+        if (noOfPresses == 0 && canSwing)
+        {
+            noOfPresses = 1;
+            //swordSwingAudio.PlayOneShot(swordSwoosh);
+            oneSwing = false;
+        }
+        else if (noOfPresses == 1)
+        {
+            noOfPresses = 2;
+            //swordSwingAudio.PlayOneShot(swordSwoosh);
+            canSwing = true;
+        }
+        else if (noOfPresses == 2)
+            noOfPresses = 3;
+
+        if (noOfPresses == 1 && canSwing)
+        {
+            if (!oneSwing)
+            {
+                animator.SetBool("hit1", true);
+                animator.SetBool("hit2", false);
+                animator.SetBool("hit3", false);
+                canSwing = false;
+                oneSwing = true;
+            }
+        }
+        noOfPresses = Mathf.Clamp(noOfPresses, 0, 3);
+
+        if (noOfPresses >= 2 && animator.GetCurrentAnimatorStateInfo(1).normalizedTime > 0.4f && animator.GetCurrentAnimatorStateInfo(1).IsName("Attack1"))
+        {
+            oneSwing = false;
+            if (!oneSwing)
+            {
+                animator.SetBool("hit1", false);
+                animator.SetBool("hit2", true);
+                animator.SetBool("hit3", false);
+                oneSwing = true;
+            }
+        }
+
+        if (noOfPresses >= 3 && animator.GetCurrentAnimatorStateInfo(1).normalizedTime > 0.4f && animator.GetCurrentAnimatorStateInfo(1).IsName("Attack2"))
+        {
+            oneSwing = false;
+            animator.SetBool("hit1", false);
+            animator.SetBool("hit2", false);
+            animator.SetBool("hit3", true);
+        }
+
     }
 
     public override void OnStopCombat()
     {
         Debug.Log("stopped sword swing");
+        animator.SetBool("hit1", false);
     }
 
     public override bool ReadyToExit()
@@ -116,12 +230,14 @@ public class KnightCard : AbstractCombat
     public override void UpdateCombat()
     {
 
+        HandleCombo();
+
         if (_action.NextCard || _action.PreviousCard)
             if (throwSword || isReturning)
                 if (!isMessageActive)
                     StartCoroutine(HideMessageAfterTime(messageDisplayTime));
 
-        if (!_action.UseCard && !throwSword && time == 0 && !isReturning)
+        if (!_action.UseCard && !throwSword && time == 0 && !isReturning) // && not doing combos
             StopCombat();
 
         if (_manager.currentCard == this && throwSword && effects.hitSomething)

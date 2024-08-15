@@ -2653,6 +2653,8 @@ MonoBehaviour:
   origionalScale: {x: 0, y: 0, z: 0}
   simpleMessageDisplay: {fileID: 7328961980579491469}
   messageDisplayTime: 1
+  swingCoolDown: 0.5
+  maxComboDelay: 2
 --- !u!1 &4240283749775208963
 GameObject:
   m_ObjectHideFlags: 0
