@@ -97,6 +97,8 @@ public class KnightCard : AbstractCombat
         {
             Debug.Log("Swung the sword");
             GetComponent<Animator>().SetTrigger("Swing");
+
+            //handle combo system
         }
     }
 
@@ -253,7 +255,7 @@ public class KnightCard : AbstractCombat
             {
                 // If the player is standing on the sword, apply the bending effect
                 hasStoodOnSword = true;
-                effects.StartBend(other.GetComponent<Rigidbody>().mass, 0.5f);
+                effects.StartBend(other.GetComponent<Rigidbody>().mass, 0.3f);
             }
         }
     }
@@ -271,7 +273,7 @@ public class KnightCard : AbstractCombat
                 playerRb.AddForce(jumpForce, ForceMode.Impulse);
 
                 // Reset the sword's bend
-                effects.StartBend(0f, 0.5f);
+                effects.StartBend(0f, 0.3f);
                 hasStoodOnSword = false;
             }
         }
