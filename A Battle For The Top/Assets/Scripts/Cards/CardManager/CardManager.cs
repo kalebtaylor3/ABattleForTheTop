@@ -33,6 +33,15 @@ public class CardManager : MonoBehaviour
 
     public UnityEvent OnClickCard;
 
+    [HideInInspector] public enum ZoneStatus
+    {
+        Movement,
+        Combat
+    }
+
+    public ZoneStatus _currentZone;
+
+
     public enum CardList
     {
         InHand,
@@ -57,6 +66,7 @@ public class CardManager : MonoBehaviour
         CenterInitialCard();
         InitializeCardUI();
         UpdateCardUI();
+        _currentZone = ZoneStatus.Movement;
     }
 
     private void OnEnable()

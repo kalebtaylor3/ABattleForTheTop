@@ -71,13 +71,19 @@ public class KnightCard : AbstractCombat
             swordOut = false;
         }
 
-        if (_manager.currentCard == this && _action.UseCard && !_action.zoom)
+        if (_manager.currentCard == this && _action.UseCard && !_action.zoom && _manager._currentZone == CardManager.ZoneStatus.Combat)
         {
             throwSword = false;
             return true;
         }
 
-        if (_manager.currentCard == this && _action.UseCard && _action.zoom)
+        if (_manager.currentCard == this && _action.UseCard && !_action.zoom && _manager._currentZone == CardManager.ZoneStatus.Movement)
+        {
+            throwSword = true;
+            zoomWasReleased = false; // Reset zoom release state
+            return true;
+        }
+        else if (_manager.currentCard == this && _action.UseCard && _action.zoom)
         {
             throwSword = true;
             zoomWasReleased = false; // Reset zoom release state
