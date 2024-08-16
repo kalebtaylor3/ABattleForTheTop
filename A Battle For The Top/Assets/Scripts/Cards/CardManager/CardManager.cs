@@ -41,7 +41,6 @@ public class CardManager : MonoBehaviour
 
     public ZoneStatus _currentZone;
 
-
     public enum CardList
     {
         InHand,
@@ -80,6 +79,24 @@ public class CardManager : MonoBehaviour
     {
         FlameWand.OnWandBreak -= RemoveCard;
         GrappleBeam.OnGrappleBreak -= RemoveCard;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Combat");
+        if (other.gameObject.layer == LayerMask.NameToLayer("Combat"))
+        {
+            Debug.Log("Combat is working");
+            _currentZone = ZoneStatus.Combat;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Combat"))
+        {
+            _currentZone = ZoneStatus.Movement;
+        }
     }
 
     void SwapCard(AbstractCombat card)

@@ -15,6 +15,8 @@ TagManager:
   - Rope
   - Ice
   - Horse
+  - UIDraggable
+  - Sword
   layers:
   - Default
   - TransparentFX
@@ -38,7 +40,7 @@ TagManager:
   - Wall Run
   - Rope
   - Ice
-  - 
+  - Combat
   - 
   - 
   - 
