@@ -417,6 +417,9 @@ namespace BFTT.Components
 
         public void SetNoClip()
         {
+            StopMovement();
+            Grounded = true; 
+            _rigidbody.velocity = Vector3.zero;
             NoClipEnabled = !NoClipEnabled;
         }
     }
