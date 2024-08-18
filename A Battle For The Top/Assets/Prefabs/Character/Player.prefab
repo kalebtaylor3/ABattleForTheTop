@@ -521,7 +521,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 4286315519120752009}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3417,7 +3417,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5389312938347298543}
   m_HandleRect: {fileID: 8525523724383283884}
   m_Direction: 2
-  m_Value: 1.0000018
+  m_Value: 1.0000045
   m_Size: 0.9149999
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3702,6 +3702,10 @@ PrefabInstance:
       propertyPath: shimmyClips.Array.data[0]
       value: 
       objectReference: {fileID: 8300000, guid: 5528c152ed219e34ba3442e133519e2b, type: 3}
+    - target: {fileID: 728698708942723040, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
+      propertyPath: origionalParent
+      value: 
+      objectReference: {fileID: 5039049669618638573}
     - target: {fileID: 728698708942723040, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
       propertyPath: _cameraSpeedEffect
       value: 

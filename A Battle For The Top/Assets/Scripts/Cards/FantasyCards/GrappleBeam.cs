@@ -46,6 +46,7 @@ public class GrappleBeam : AbstractCombat
     public Quaternion grappleRotation = new Quaternion(60, 0, 0, 1);
 
     public GameObject _cameraSpeedEffect;
+    public Transform origionalParent;
 
     bool grappleUp = false;
 
@@ -76,6 +77,7 @@ public class GrappleBeam : AbstractCombat
 
         if (_grapplePoint != Vector3.zero)
         {
+            transform.parent = origionalParent;
             _isGrappling = true;
             _manager._controller.canControl = false;
             _manager._controller.ResetActions();
