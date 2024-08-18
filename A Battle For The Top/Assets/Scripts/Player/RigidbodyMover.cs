@@ -414,5 +414,10 @@ namespace BFTT.Components
         {
             grappling = value;
         }
+
+        public void SetNoClip()
+        {
+            NoClipEnabled = !NoClipEnabled;
+        }
     }
 }

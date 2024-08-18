@@ -20,6 +20,7 @@ namespace BFTT.Abilities
         public bool OpenCardMenu = false;
         public bool UIClick = false;
         public bool UIPoint = false;
+        public bool ToggleNoClip = false;
 
         public bool zoom = false;
     }

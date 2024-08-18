@@ -166,6 +166,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "ToggleNoClip",
+                    "type": "Button",
+                    "id": "81617524-2fe1-4625-83d2-b86765d3c698",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -694,6 +703,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "UIClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c0d58d93-20ac-4e1b-8820-51715cf55192",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleNoClip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "912c0721-c34c-4ccf-b55d-3649df81f698",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Scheme",
+                    "action": "ToggleNoClip",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

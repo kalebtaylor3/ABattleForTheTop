@@ -470,5 +470,10 @@ namespace BFTT.Components
         {
             grappling = value;
         }
+
+        public void SetNoClip()
+        {
+            Debug.Log("Ur on  a horse");
+        }
     }
 }

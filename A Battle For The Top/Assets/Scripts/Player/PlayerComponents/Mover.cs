@@ -398,5 +398,10 @@ namespace BFTT.Components
 			//
 			return false;
         }
+
+        public void SetNoClip()
+        {
+            //
+        }
     }
 }

@@ -27,5 +27,6 @@ namespace BFTT.Components
         void ApplyRootMotion(Vector3 multiplier, bool applyRotation = false);
         void StopRootMotion();
         Vector3 GetRelativeInput(Vector2 input);
+        void SetNoClip();
     }
 }

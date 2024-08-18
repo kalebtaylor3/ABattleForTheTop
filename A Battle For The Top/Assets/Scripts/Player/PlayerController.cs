@@ -178,8 +178,13 @@ namespace BFTT.Controller
                 _scheduler.characterActions.PreviousCard = PreviousCard;
                 _scheduler.characterActions.UIClick = UIClick;
                 _scheduler.characterActions.UIPoint = UIPoint;
+                _scheduler.characterActions.ToggleNoClip = ToggleNoClip;
                 // weapon
                 _scheduler.characterActions.zoom = Zoom;
+
+                if (_scheduler.characterActions.ToggleNoClip)
+                    _mover.SetNoClip();
+
             }
             _scheduler.characterActions.OpenCardMenu = OpenCardMenu;
         }
@@ -204,6 +209,7 @@ namespace BFTT.Controller
         public bool OpenCardMenu = false;
         public bool UIClick = false;
         public bool UIPoint = false;
+        public bool ToggleNoClip = false;
 
         public void ResetActions()
         {
@@ -216,7 +222,8 @@ namespace BFTT.Controller
             NextCard = false;
             PreviousCard = false;
             OpenCardMenu = false;
-    }
+            ToggleNoClip = false;
+        }
 
         public void OnMove(Vector2 value)
         {
@@ -291,6 +298,11 @@ namespace BFTT.Controller
         public void OnUIPoint(bool value)
         {
             UIPoint = value;
+        }
+
+        public void OnToggleNoClip(bool value)
+        {
+            ToggleNoClip = value;
         }
 
 #if ENABLE_INPUT_SYSTEM
@@ -385,6 +397,12 @@ namespace BFTT.Controller
 
             OnUIPoint(isPointerActive);
         }
+
+        private void OnToggleNoClip(InputValue value)
+        {
+            OnToggleNoClip(value.isPressed);
+        }
+
 
 #endif
 
