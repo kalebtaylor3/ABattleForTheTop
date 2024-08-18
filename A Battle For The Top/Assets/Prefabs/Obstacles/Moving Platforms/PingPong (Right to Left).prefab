@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 389563569916604698}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.9999761, z: -0, w: -0.006916075}
-  m_LocalPosition: {x: -0.5304146, y: -3.6660652, z: -13.802565}
+  m_LocalPosition: {x: -10, y: -3.6660652, z: -13.802565}
   m_LocalScale: {x: 3.5721004, y: 1, z: 3.5721004}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -121,8 +121,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints:
-  - {fileID: 1061554731859889597}
   - {fileID: 8413287896447148740}
+  - {fileID: 1061554731859889597}
   moveDuration: 0.3
   waitTime: 1
   loop: 0
@@ -216,7 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3383759508444423354}
   m_Layer: 0
-  m_Name: PingPong
+  m_Name: PingPong (Right to Left)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -236,8 +236,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4035909489229731330}
-  - {fileID: 1061554731859889597}
   - {fileID: 8413287896447148740}
+  - {fileID: 1061554731859889597}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8484863977210237662
