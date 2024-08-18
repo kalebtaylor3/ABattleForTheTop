@@ -29,12 +29,17 @@ namespace BFTT.Components
         [Tooltip("Sliding force applied on ice platforms")]
         [SerializeField] private float slidingForce = 1f;
 
+        [Header("No Clip")]
+        [Tooltip("Toggle No Clip mode")]
+        public bool NoClipEnabled = false;
+
         private float _speed;
         private float _animationBlend;
         private float _targetRotation = 0.0f;
         private float _rotationVelocity;
         private float _initialCapsuleHeight = 2f;
         private float _initialCapsuleRadius = 0.28f;
+        private bool _wasNoClipEnabled = false;
 
         private bool _useRootMotion = false;
         private Vector3 _rootMotionMultiplier = Vector3.one;
@@ -84,11 +89,28 @@ namespace BFTT.Components
 
         private void FixedUpdate()
         {
-            GroundedCheck();
-            GravityControl();
-            HandleSliding();
+            // Manage collision and gravity only if there's a change in NoClip status
+            if (NoClipEnabled != _wasNoClipEnabled)
+            {
+                if (NoClipEnabled)
+                {
+                    DisableCollision();
+                    DisableGravity();
+                }
+                else
+                {
+                    EnableCollision();
+                    EnableGravity();
+                }
+                _wasNoClipEnabled = NoClipEnabled;
+            }
 
-            // Debug the grounded state
+            if (!NoClipEnabled)
+            {
+                GroundedCheck();
+                GravityControl();
+                HandleSliding();
+            }
         }
 
         private void OnAnimatorMove()
@@ -164,6 +186,12 @@ namespace BFTT.Components
 
         public void Move(Vector2 moveInput, float targetSpeed, Quaternion cameraRotation, bool rotateCharacter = true)
         {
+            if (NoClipEnabled)
+            {
+                NoClipMove(moveInput, targetSpeed, cameraRotation);
+                return;
+            }
+
             if (moveInput == Vector2.zero) targetSpeed = 0.0f;
 
             float currentHorizontalSpeed = new Vector3(_rigidbody.velocity.x, 0.0f, _rigidbody.velocity.z).magnitude;
@@ -212,9 +240,38 @@ namespace BFTT.Components
             }
         }
 
+        private void NoClipMove(Vector2 moveInput, float targetSpeed, Quaternion cameraRotation)
+        {
+            float inputMagnitude = moveInput.magnitude;
+
+            Vector3 inputDirection = new Vector3(moveInput.x, 0.0f, moveInput.y).normalized;
+            Vector3 forwardMovement = cameraRotation * Vector3.forward * moveInput.y;
+            Vector3 strafeMovement = cameraRotation * Vector3.right * moveInput.x;
+
+            // Handle vertical movement only when the camera is angled up or down
+            Vector3 cameraForward = cameraRotation * Vector3.forward;
+            float cameraAngle = Vector3.Angle(cameraForward, Vector3.up);
+            Vector3 verticalMovement = Vector3.zero;
+
+            if (cameraAngle < 90) // Looking up
+            {
+                verticalMovement = Vector3.up * inputMagnitude * Mathf.Cos(cameraAngle * Mathf.Deg2Rad);
+            }
+            else if (cameraAngle > 90) // Looking down
+            {
+                verticalMovement = Vector3.down * inputMagnitude * Mathf.Cos((180 - cameraAngle) * Mathf.Deg2Rad);
+            }
+
+            Vector3 moveDirection = (forwardMovement + strafeMovement + verticalMovement).normalized;
+            Vector3 velocity = moveDirection * (targetSpeed * 2);
+
+            _rigidbody.velocity = velocity;
+        }
+
+
         public void Move(Vector3 velocity)
         {
-            if (_rigidbody.useGravity)
+            if (_rigidbody.useGravity && !NoClipEnabled)
                 velocity.y = _rigidbody.velocity.y;
 
             _rigidbody.velocity = velocity;
@@ -355,7 +412,7 @@ namespace BFTT.Components
 
         public void SetIsGrappling(bool value)
         {
-            grappling = value;  
+            grappling = value;
         }
     }
 }
