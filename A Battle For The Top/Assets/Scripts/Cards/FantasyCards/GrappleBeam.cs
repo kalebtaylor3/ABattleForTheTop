@@ -77,7 +77,6 @@ public class GrappleBeam : AbstractCombat
 
         if (_grapplePoint != Vector3.zero)
         {
-            transform.parent = origionalParent;
             _isGrappling = true;
             _manager._controller.canControl = false;
             _manager._controller.ResetActions();
@@ -159,8 +158,9 @@ public class GrappleBeam : AbstractCombat
         grappleStartTime = Time.time;
         _cameraSpeedEffect.SetActive(true);
         _abilityRunning.canMove = false;
+        transform.parent = origionalParent;
         // Calculate the direction and rotation to the grapple point
-        
+
 
         // Determine which animation state to use based on the angle
         if (_grapplePoint.y > transform.position.y)
