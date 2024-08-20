@@ -101,6 +101,7 @@ namespace BFTT.Abilities
             _mover.EnableGravity();
             _mover.StopRootMotion();
             _mover.StopMovement();
+            transform.SetParent(_controller.GetOriginalParent());
         }
 
         private bool HasShortClimb()
