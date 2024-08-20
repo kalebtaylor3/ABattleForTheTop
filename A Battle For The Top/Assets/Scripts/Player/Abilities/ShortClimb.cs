@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BFTT.Components;
 using BFTT.Debugging;
+using BFTT.Controller;
 
 namespace BFTT.Abilities
 {
@@ -30,6 +31,7 @@ namespace BFTT.Abilities
 
         bool movingPlatform = false;
         Transform movingPlatformTransform;
+        private PlayerController _controller;
 
         private void Awake()
         {
@@ -37,6 +39,7 @@ namespace BFTT.Abilities
             _capsule = GetComponent<ICapsule>();
             _audioPlayer = GetComponent<CharacterAudioPlayer>();
             _debug = GetComponent<CastDebug>();
+            _controller = GetComponent<PlayerController>();
         }
 
         public override bool ReadyToRun()
@@ -70,7 +73,7 @@ namespace BFTT.Abilities
                 if (movingPlatform)
                     transform.SetParent(movingPlatformTransform);
                 else
-                    transform.SetParent(null);
+                    transform.SetParent(_controller.GetOriginalParent());
 
                 // calculate target position
                 Vector3 targetPosition = _targetHit.point - _targetHit.normal * _capsule.GetCapsuleRadius() * 0.5f;
@@ -98,7 +101,6 @@ namespace BFTT.Abilities
             _mover.EnableGravity();
             _mover.StopRootMotion();
             _mover.StopMovement();
-            transform.SetParent(null);
         }
 
         private bool HasShortClimb()

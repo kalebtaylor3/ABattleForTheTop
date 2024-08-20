@@ -48,6 +48,18 @@ namespace BFTT.Controller
         [HideInInspector] public bool canControl = true;
         [HideInInspector] public bool menuOpen = false;
 
+        private Transform originalParent;
+
+        private void Start()
+        {
+            originalParent = transform.parent;
+        }
+
+        public Transform GetOriginalParent()
+        {
+            return originalParent;
+        }
+
         private void Awake()
         {
             _scheduler = GetComponent<AbilityScheduler>();

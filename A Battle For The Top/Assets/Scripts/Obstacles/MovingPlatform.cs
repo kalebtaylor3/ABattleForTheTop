@@ -1,3 +1,4 @@
+using BFTT.Controller;
 using System.Collections;
 using UnityEngine;
 
@@ -15,6 +16,13 @@ public class MovingPlatform : MonoBehaviour
 
     private void Start()
     {
+
+        PlayerController playerController = FindAnyObjectByType<PlayerController>();
+        if (playerController != null)
+        {
+           playersOriginalParent = playerController.GetOriginalParent();
+        }
+
         if (waypoints.Length > 1)
         {
             StartCoroutine(MovePlatform());
@@ -80,7 +88,6 @@ public class MovingPlatform : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playersOriginalParent = other.transform.parent;
             other.transform.SetParent(transform); // Make the player a child of the platform
         }
     }
