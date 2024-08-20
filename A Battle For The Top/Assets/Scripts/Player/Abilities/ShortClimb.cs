@@ -28,6 +28,9 @@ namespace BFTT.Abilities
 
         public AudioClip climbEffect;
 
+        bool movingPlatform = false;
+        Transform movingPlatformTransform;
+
         private void Awake()
         {
             _mover = GetComponent<IMover>();
@@ -63,6 +66,12 @@ namespace BFTT.Abilities
             var normalizedTime = Mathf.Repeat(state.normalizedTime, 1f);
             if (!_animator.isMatchingTarget && !_hasMatchTarget)
             {
+
+                if (movingPlatform)
+                    transform.SetParent(movingPlatformTransform);
+                else
+                    transform.SetParent(null);
+
                 // calculate target position
                 Vector3 targetPosition = _targetHit.point - _targetHit.normal * _capsule.GetCapsuleRadius() * 0.5f;
                 _animator.MatchTarget(targetPosition, Quaternion.identity, AvatarTarget.Root,
@@ -89,6 +98,7 @@ namespace BFTT.Abilities
             _mover.EnableGravity();
             _mover.StopRootMotion();
             _mover.StopMovement();
+            transform.SetParent(null);
         }
 
         private bool HasShortClimb()
@@ -106,6 +116,17 @@ namespace BFTT.Abilities
                 if(Physics.CapsuleCast(p1,p2, capsuleCastRadius, castDirection, out RaycastHit forwardHit,
                     overlapRadius, shortClimbMask, QueryTriggerInteraction.Collide))
                 {
+
+                    if (forwardHit.collider.CompareTag("MovingPlatform"))
+                    {
+                        movingPlatform = true;
+                        movingPlatformTransform = forwardHit.collider.transform;
+                    }
+                    else
+                    {
+                        movingPlatform = false;
+                    }
+
                     Vector3 sphereStart = forwardHit.point;
                     sphereStart.y = transform.position.y + maxClimbHeight + capsuleCastRadius;
 
