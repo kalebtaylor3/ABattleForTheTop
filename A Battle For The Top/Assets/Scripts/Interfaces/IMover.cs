@@ -20,7 +20,7 @@ namespace BFTT.Components
         void SetRotation(Quaternion newRotation);
         Quaternion GetRotationFromDirection(Vector3 direction);
 
-        bool IsGrounded();
+        public bool IsGrounded();
         void SetIsGrappling(bool value);
         bool IsGrappling();
         Collider GetGroundCollider();
