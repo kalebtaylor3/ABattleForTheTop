@@ -2684,6 +2684,12 @@ MonoBehaviour:
   _card: {fileID: 7755365390542480511}
   playerModel: {fileID: 5822361961041886685}
   tumbleWeedModel: {fileID: 5305536631802860096}
+  Grounded: 1
+  GroundedCheckDistance: 0.24
+  GroundedRadius: 0.38
+  GroundLayers:
+    serializedVersion: 2
+    m_Bits: 458753
 --- !u!114 &7755365390542480511
 MonoBehaviour:
   m_ObjectHideFlags: 0

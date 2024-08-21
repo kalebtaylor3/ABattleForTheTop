@@ -18,6 +18,15 @@ namespace BFTT.Abilities
         public GameObject playerModel;
         public GameObject tumbleWeedModel;
 
+        [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
+        public bool Grounded = true;
+        [Tooltip("Distance that should cast for ground")]
+        public float GroundedCheckDistance = 0.24f;
+        [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
+        public float GroundedRadius = 0.38f;
+        [Tooltip("What layers the character uses as ground")]
+        public LayerMask GroundLayers;
+
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -42,6 +51,14 @@ namespace BFTT.Abilities
             _animator.CrossFadeInFixedTime("Ball", 0.1f);
         }
 
+        private void GroundedCheck()
+        {
+            Vector3 spherePosition = transform.position + Vector3.up * GroundedRadius * 2;
+            RaycastHit groundHit;
+            Grounded = Physics.SphereCast(spherePosition, GroundedRadius, Vector3.down, out groundHit,
+                GroundedCheckDistance + GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+        }
+
         public override void UpdateAbility()
         {
             if (_manager.currentCard != _card)
@@ -49,6 +66,8 @@ namespace BFTT.Abilities
 
             if (_isRolling && canMove)
             {
+
+                GroundedCheck();
                 // Calculate movement relative to the camera's direction
                 Vector3 forward = Camera.main.transform.forward;
                 Vector3 right = Camera.main.transform.right;
@@ -69,9 +88,9 @@ namespace BFTT.Abilities
                 RotateModel();
 
                 // Handle jump if grounded
-                if (_action.jump && _mover.Grounded)
+                if (_action.jump && Grounded)
                 {
-                    PerformJump();
+                    Jump();
                 }
             }
         }
@@ -92,13 +111,9 @@ namespace BFTT.Abilities
             _rigidbody.AddForce(transform.forward * 10, ForceMode.VelocityChange);
         }
 
-        private void PerformJump()
+        private void Jump()
         {
-            Debug.Log("Jumped as a ball");
-            Vector3 velocity = _mover.GetVelocity();
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * _mover.GetGravity());
-
-            _mover.SetVelocity(velocity);
+            _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
         private void ApplyMovement(Vector3 movement)
