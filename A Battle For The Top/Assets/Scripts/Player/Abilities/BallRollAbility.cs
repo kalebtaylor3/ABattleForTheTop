@@ -25,7 +25,7 @@ namespace BFTT.Abilities
         public override bool ReadyToRun()
         {
             // Check if the ability can be started (e.g., if grounded)
-            return !_isRolling &&_manager.currentCard == _card && _card.activated;
+            return !_isRolling && _manager.currentCard == _card && _card.activated;
         }
 
         public override void OnStartAbility()
@@ -60,6 +60,9 @@ namespace BFTT.Abilities
                 Vector3 movement = forward * _action.move.y + right * _action.move.x;
                 _rigidbody.AddForce(movement * rollSpeed, ForceMode.Acceleration);
 
+                // Rotate the model based on movement
+                RotateModel(movement);
+
                 // Handle jump if grounded
                 if (_action.jump && _mover.Grounded)
                 {
@@ -67,7 +70,6 @@ namespace BFTT.Abilities
                 }
             }
         }
-
 
         public override void OnStopAbility()
         {
@@ -92,6 +94,16 @@ namespace BFTT.Abilities
             velocity.y = Mathf.Sqrt(jumpForce * -2f * _mover.GetGravity());
 
             _mover.SetVelocity(velocity);
+        }
+
+        private void RotateModel(Vector3 movement)
+        {
+            // Calculate the rotation based on the movement
+            Vector3 rotationAxis = Vector3.Cross(Vector3.up, movement).normalized;
+            float rotationAmount = movement.magnitude * rollSpeed * Time.deltaTime;
+
+            // Rotate the model around the calculated axis
+            tumbleWeedModel.transform.Rotate(rotationAxis, rotationAmount, Space.World);
         }
     }
 }
