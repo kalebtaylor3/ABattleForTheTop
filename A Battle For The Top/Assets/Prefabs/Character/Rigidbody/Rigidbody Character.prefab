@@ -2676,8 +2676,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityPriority: 1
   canMove: 1
-  rollSpeed: 10
+  rollSpeed: 20
   jumpForce: 8
+  maxSpeed: 25
+  accelerationRate: 6
+  decelerationRate: 1
   _card: {fileID: 7755365390542480511}
   playerModel: {fileID: 5822361961041886685}
   tumbleWeedModel: {fileID: 5305536631802860096}

@@ -7,6 +7,9 @@ namespace BFTT.Abilities
     {
         [SerializeField] private float rollSpeed = 10f; // Speed of the ball when rolling
         [SerializeField] private float jumpForce = 8f; // Force applied for jumping
+        [SerializeField] private float maxSpeed = 15f; // Maximum speed of the ball
+        [SerializeField] private float accelerationRate = 5f; // Rate of acceleration to reach max speed
+        [SerializeField] private float decelerationRate = 7f; // Rate of deceleration when not moving
         private Rigidbody _rigidbody;
         private bool _isRolling = false;
         private RigidbodyMover _mover;
@@ -58,10 +61,12 @@ namespace BFTT.Abilities
 
                 // Combine the forward and right vectors with the input
                 Vector3 movement = forward * _action.move.y + right * _action.move.x;
-                _rigidbody.AddForce(movement * rollSpeed, ForceMode.Acceleration);
+
+                // Apply force with acceleration control
+                ApplyMovement(movement);
 
                 // Rotate the model based on movement
-                RotateModel(movement);
+                RotateModel();
 
                 // Handle jump if grounded
                 if (_action.jump && _mover.Grounded)
@@ -84,7 +89,7 @@ namespace BFTT.Abilities
         private void StartRolling()
         {
             // Initial rolling movement if needed
-            _rigidbody.AddForce(transform.forward * rollSpeed, ForceMode.VelocityChange);
+            _rigidbody.AddForce(transform.forward * 10, ForceMode.VelocityChange);
         }
 
         private void PerformJump()
@@ -96,14 +101,39 @@ namespace BFTT.Abilities
             _mover.SetVelocity(velocity);
         }
 
-        private void RotateModel(Vector3 movement)
+        private void ApplyMovement(Vector3 movement)
         {
-            // Calculate the rotation based on the movement
-            Vector3 rotationAxis = Vector3.Cross(Vector3.up, movement).normalized;
-            float rotationAmount = movement.magnitude * rollSpeed * Time.deltaTime;
+            // Calculate current speed
+            float currentSpeed = _rigidbody.velocity.magnitude;
 
-            // Rotate the model around the calculated axis
-            tumbleWeedModel.transform.Rotate(rotationAxis, rotationAmount, Space.World);
+            // Adjust the applied force based on current speed
+            if (currentSpeed < maxSpeed)
+            {
+                _rigidbody.AddForce(movement * rollSpeed * (accelerationRate / maxSpeed), ForceMode.Acceleration);
+            }
+            else
+            {
+                // Apply deceleration if over max speed
+                _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, movement.normalized * maxSpeed, decelerationRate * Time.deltaTime);
+            }
+        }
+
+        private void RotateModel()
+        {
+            Vector3 velocity = _rigidbody.velocity;
+
+            if (velocity != Vector3.zero)
+            {
+                // Calculate the rotation axis, which is perpendicular to the velocity vector
+                Vector3 rotationAxis = Vector3.Cross(Vector3.up, velocity).normalized;
+
+                // Calculate the rotation amount based on the ball's velocity
+                // Increase the rotation speed by multiplying by a larger factor if needed
+                float rotationAmount = (velocity.magnitude / tumbleWeedModel.transform.localScale.x) * Mathf.Rad2Deg * Time.deltaTime;
+
+                // Apply the rotation to the model
+                tumbleWeedModel.transform.Rotate(rotationAxis, rotationAmount, Space.World);
+            }
         }
     }
 }
