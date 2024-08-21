@@ -2702,8 +2702,8 @@ MonoBehaviour:
   - {fileID: 3797456225819413310}
   - {fileID: 6242216404687843183}
   - {fileID: 3797456225819413252}
-  abilityName: Ball Roll
-  abilityDescription: Turn into  a tumble weed
+  abilityName: Tumble Weed
+  abilityDescription: Turn into a Tumble Weed
   abilityProp: {fileID: 0}
   cardIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   _manager: {fileID: 9009967721863243831}
