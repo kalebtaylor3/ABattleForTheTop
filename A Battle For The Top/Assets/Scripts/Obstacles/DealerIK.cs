@@ -23,11 +23,13 @@ public class DealerIK : MonoBehaviour
     private IKScheduler _scheduler;
     private bool dealerLost = false;
     private bool transitionComplete = false;
+    private bool returningToIdle = false; // Flag to track if we're returning to idle
     private float transitionProgress = 0f;    // Progress of the transition
     private float neckBangProgress = 0f;      // Progress of the neck-banging animation
     private float elapsedTime = 0f;           // Time elapsed since the head-banging started
 
-    [SerializeField] private float transitionDuration = 1.0f;  // Duration of the transition
+    [SerializeField] private float transitionDuration = 1.0f;  // Duration of the transition to "lost"
+    [SerializeField] private float returnToIdleDuration = 0.5f;  // Duration of the transition from "lost" to "idle"
     [SerializeField] private float neckBangDuration = 0.5f;    // Duration of one head-bang cycle
     [SerializeField] private float maxBangTime = 3.0f;         // Maximum time for the head-banging animation
 
@@ -44,24 +46,25 @@ public class DealerIK : MonoBehaviour
 
     private void Update()
     {
-        // If the dealer has lost, transition to the lost pose
-        if (dealerLost && transitionProgress < 1f)
+        // Transition to "lost" position
+        if (dealerLost && !returningToIdle && transitionProgress < 1f)
         {
             transitionProgress += Time.deltaTime / transitionDuration;
         }
-        else if (!dealerLost && transitionProgress > 0f) // If transitioning back to idle, reduce the transitionProgress
+        // Transition back to "idle" position, skipping the middle position
+        else if (returningToIdle && transitionProgress > 0f)
         {
-            transitionProgress -= Time.deltaTime / transitionDuration;
+            transitionProgress -= Time.deltaTime / returnToIdleDuration;
         }
 
         // Determine if the transition to the lost position is complete
         transitionComplete = transitionProgress >= 1f;
 
-        // Use the transition progress to determine which phase of the transition we're in
+        // Use the transition progress to determine the current position
         Vector3 leftHandPos, rightHandPos;
         Quaternion leftHandRot, rightHandRot, spineRot;
 
-        if (transitionProgress < 0.5f)
+        if (!returningToIdle && transitionProgress < 0.5f)
         {
             // First half: Idle -> Middle
             float t = transitionProgress * 2f;
@@ -71,7 +74,7 @@ public class DealerIK : MonoBehaviour
             rightHandRot = Quaternion.Slerp(rightHandTargetIdle.rotation, rightHandTargetMiddle.rotation, t);
             spineRot = Quaternion.Slerp(spineTargetIdle.rotation, spineTargetMiddle.rotation, t);
         }
-        else
+        else if (!returningToIdle)
         {
             // Second half: Middle -> Lost
             float t = (transitionProgress - 0.5f) * 2f;
@@ -80,6 +83,16 @@ public class DealerIK : MonoBehaviour
             rightHandPos = Vector3.Lerp(rightHandTargetMiddle.position, rightHandTargetLost.position, t);
             rightHandRot = Quaternion.Slerp(rightHandTargetMiddle.rotation, rightHandTargetLost.rotation, t);
             spineRot = Quaternion.Slerp(spineTargetMiddle.rotation, spineTargetLost.rotation, t);
+        }
+        else
+        {
+            // Directly transition from Lost to Idle, skipping the Middle
+            float t = 1f - transitionProgress;
+            leftHandPos = Vector3.Lerp(leftHandTargetLost.position, leftHandTargetIdle.position, t);
+            leftHandRot = Quaternion.Slerp(leftHandTargetLost.rotation, leftHandTargetIdle.rotation, t);
+            rightHandPos = Vector3.Lerp(rightHandTargetLost.position, rightHandTargetIdle.position, t);
+            rightHandRot = Quaternion.Slerp(rightHandTargetLost.rotation, rightHandTargetIdle.rotation, t);
+            spineRot = Quaternion.Slerp(spineTargetLost.rotation, spineTargetIdle.rotation, t);
         }
 
         // Apply IK passes for hands and spine
@@ -132,11 +145,13 @@ public class DealerIK : MonoBehaviour
         transitionProgress = 0f;  // Reset progress for the smooth transition to lost pose
         neckBangProgress = 0f;    // Reset progress for the head-banging animation
         elapsedTime = 0f;         // Reset the elapsed time for the head-banging animation
+        returningToIdle = false;
     }
 
     public void ResetToIdle()
     {
         dealerLost = false;
-        transitionProgress = 1f;  // Reset progress for the smooth transition to idle pose
+        returningToIdle = true;
+        transitionProgress = 1f;  // Start progress for the smooth transition to idle pose
     }
 }
