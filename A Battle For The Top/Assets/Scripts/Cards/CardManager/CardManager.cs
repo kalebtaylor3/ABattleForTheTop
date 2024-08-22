@@ -83,7 +83,6 @@ public class CardManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Combat");
         if (other.gameObject.layer == LayerMask.NameToLayer("Combat"))
         {
             Debug.Log("Combat is working");

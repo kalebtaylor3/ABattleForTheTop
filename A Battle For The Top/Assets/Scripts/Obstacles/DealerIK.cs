@@ -67,13 +67,27 @@ public class DealerIK : MonoBehaviour
 
     public void StartDealingSequence()
     {
-        StartCoroutine(DealCardSequence());
+        StartCoroutine(DealCardSequence()); // for the player
     }
 
     private IEnumerator DealCardSequence()
     {
         isDealing = true;
 
+        // First, deal to the player
+        yield return DealCard(true); // Deal to player
+
+        // Wait a moment before dealing to the dealer
+        yield return new WaitForSeconds(0.1f); // Adjust the wait time as needed
+
+        // Then, deal to the dealer
+        yield return DealCard(false); // Deal to dealer
+
+        isDealing = false;
+    }
+
+    private IEnumerator DealCard(bool dealToPlayer)
+    {
         // Move hand to deal position
         yield return MoveHandToPosition(rightHandTargetIdle, rightHandTargetDeal, handMoveToDealDuration);
 
@@ -86,14 +100,20 @@ public class DealerIK : MonoBehaviour
         // Move hand to toss position
         yield return MoveHandToPosition(rightHandTargetDeal, rightHandTargetToss, handMoveToTossDuration);
 
-        // Now move the card to the center of the table
-        _dealer.MoveLastCardToTable();
+        // Move the card to the correct position based on whether it's for the player or the dealer
+        if (dealToPlayer)
+        {
+            _dealer.MoveLastCardToPlayerPosition();
+        }
+        else
+        {
+            _dealer.MoveLastCardToDealerPosition();
+        }
 
         // Move hand back to idle position
         yield return MoveHandToPosition(rightHandTargetToss, rightHandTargetIdle, handReturnDuration);
-
-        isDealing = false;
     }
+
 
     private IEnumerator MoveHandToPosition(Transform start, Transform target, float duration)
     {

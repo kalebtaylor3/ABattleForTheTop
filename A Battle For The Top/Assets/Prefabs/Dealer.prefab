@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7948111263067494100}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &718830048192678479
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4261502112241739497}
+  m_Layer: 0
+  m_Name: TablePos Dealer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4261502112241739497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718830048192678479}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.133, y: 0.305, z: 0.255}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7948111263067494100}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1152573193437125600
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,6 +496,122 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7948111263067494100}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8502120640092882532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2277884593110879316}
+  - component: {fileID: 7069616217969380287}
+  m_Layer: 0
+  m_Name: cm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2277884593110879316
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8502120640092882532}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.100127704, y: -0.89250076, z: 0.24442288, w: 0.36561495}
+  m_LocalPosition: {x: 0.24224865, y: -5.3661947, z: 1.8314676}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1270052090545807329}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7069616217969380287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8502120640092882532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8572714910638458174
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1270052090545807329}
+  - component: {fileID: 162817858949095865}
+  m_Layer: 0
+  m_Name: DealerCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1270052090545807329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8572714910638458174}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7911168, z: -0.61166525, w: 0}
+  m_LocalPosition: {x: 0, y: 1.13, z: 0.62}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2277884593110879316}
+  m_Father: {fileID: 7948111263067494100}
+  m_LocalEulerAnglesHint: {x: 75.42, y: 180, z: 0}
+--- !u!114 &162817858949095865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8572714910638458174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExcludedPropertiesInInspector:
+  - m_Script
+  m_LockStageInInspector: 
+  m_StreamingVersion: 20170927
+  m_Priority: 10
+  m_StandbyUpdate: 2
+  m_LookAt: {fileID: 0}
+  m_Follow: {fileID: 0}
+  m_Lens:
+    FieldOfView: 60
+    OrthographicSize: 5
+    NearClipPlane: 0.1
+    FarClipPlane: 1000
+    Dutch: 0
+    ModeOverride: 0
+    LensShift: {x: 0, y: 0}
+    GateFit: 2
+    FocusDistance: 10
+    m_SensorSize: {x: 1, y: 1}
+  m_Transitions:
+    m_BlendHint: 0
+    m_InheritPosition: 0
+    m_OnCameraLive:
+      m_PersistentCalls:
+        m_Calls: []
+  m_LegacyBlendHint: 0
+  m_ComponentOwner: {fileID: 2277884593110879316}
 --- !u!1001 &7622312030897582399
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -610,10 +757,16 @@ PrefabInstance:
       addedObject: {fileID: 689119749608821076}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 4261502112241739497}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 5518460016152630162}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2268275973354700100}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1270052090545807329}
     - targetCorrespondingSourceObject: {fileID: 1852576806548013000, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7032927139697313723}
@@ -659,9 +812,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 100ee33e3022c42faa4d87b04dbac236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 8261599967108268627, guid: b43b8b047648d420e91e3430a55c51e2, type: 3}
+  dealerCardPrefab: {fileID: 8261599967108268627, guid: b43b8b047648d420e91e3430a55c51e2, type: 3}
   handPosition: {fileID: 7032927139697313723}
-  tableCenter: {fileID: 689119749608821076}
+  playerCardPosition: {fileID: 689119749608821076}
+  dealerCardPosition: {fileID: 4261502112241739497}
   cardMoveSpeed: 150
   finalCardRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!114 &127802513627177487

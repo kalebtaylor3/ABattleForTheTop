@@ -2145,15 +2145,15 @@ MonoBehaviour:
   m_LayerIndex: 0
   m_ShowDebugText: 0
   m_ChildCameras:
-  - {fileID: 6538669317476573847}
-  - {fileID: 7940529870963990524}
-  - {fileID: 7261334386235856999}
-  - {fileID: 6826935976096053008}
-  - {fileID: 6298160949431556862}
-  - {fileID: 5116622453611338105}
-  - {fileID: 3967010337433801954}
-  - {fileID: 551310429169350621}
-  - {fileID: 6538669316430560220}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   m_Instructions:
   - m_FullHash: 0
     m_VirtualCamera: {fileID: 6538669317476573847}
@@ -2189,10 +2189,6 @@ MonoBehaviour:
     m_MinDuration: 0
   - m_FullHash: -498616817
     m_VirtualCamera: {fileID: 7261334386235856999}
-    m_ActivateAfter: 0
-    m_MinDuration: 0
-  - m_FullHash: -41960137
-    m_VirtualCamera: {fileID: 0}
     m_ActivateAfter: 0
     m_MinDuration: 0
   m_DefaultBlend:
