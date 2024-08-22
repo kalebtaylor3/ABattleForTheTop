@@ -9,11 +9,13 @@ public class StandPlatform : MonoBehaviour
     private bool playerOnPlatform = false;
     public Image progressBar; // Optional: Visual feedback for confirmation progress
 
-    private DealerIK dealer;
+    private DealerIK dealerIK;
+    private Dealer dealer;
 
     private void Start()
     {
-        dealer = FindObjectOfType<DealerIK>(); // Find the Dealer in the scene
+        dealerIK = FindObjectOfType<DealerIK>(); // Find the DealerIK in the scene
+        dealer = FindObjectOfType<Dealer>(); // Get the Dealer component from DealerIK
         progressBar.fillAmount = 0f;
     }
 
@@ -53,8 +55,8 @@ public class StandPlatform : MonoBehaviour
 
     private void PerformStand()
     {
-        // Logic for standing (dealer does not deal any more cards to the player)
-        // This could involve ending the player's turn or triggering dealer logic for their turn
+        // Dealer's turn to draw cards
+        dealer.StandAndDraw();
 
         // Reset the platform state
         currentTime = 0f;

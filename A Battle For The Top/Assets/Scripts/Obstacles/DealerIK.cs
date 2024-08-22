@@ -42,6 +42,9 @@ public class DealerIK : MonoBehaviour
     [SerializeField] private float holdDealPoseDuration = 0.5f; // Duration to hold the deal pose
     [SerializeField] private float handReturnDuration = 0.5f;   // Duration of the hand return to idle position
 
+    public enum GameState { PlayerTurn, DealerTurn, GameOver }
+    public GameState currentState;
+
     private void Awake()
     {
         _scheduler = GetComponent<IKScheduler>();
@@ -50,7 +53,7 @@ public class DealerIK : MonoBehaviour
 
     private void Start()
     {
-        StartDealingSequence();
+        //StartDealingSequence();
     }
 
     private void Update()
@@ -65,22 +68,28 @@ public class DealerIK : MonoBehaviour
         }
     }
 
-    public void StartDealingSequence()
+    public void StartDealingSequence(bool both)
     {
-        StartCoroutine(DealCardSequence()); // for the player
+        StartCoroutine(DealCardSequence(both)); // for the player
     }
 
-    private IEnumerator DealCardSequence()
+    private IEnumerator DealCardSequence(bool both)
     {
         isDealing = true;
 
         // First, deal to the player
-        yield return DealCard(true); // Deal to player
+        if (both)
+        {
+            currentState = GameState.PlayerTurn;
+            yield return DealCard(true); // Deal to player
+        }
 
         // Wait a moment before dealing to the dealer
-        yield return new WaitForSeconds(0.1f); // Adjust the wait time as needed
+        if(both)
+            yield return new WaitForSeconds(0.1f); // Adjust the wait time as needed
 
         // Then, deal to the dealer
+        currentState = GameState.DealerTurn;
         yield return DealCard(false); // Deal to dealer
 
         isDealing = false;
@@ -104,10 +113,14 @@ public class DealerIK : MonoBehaviour
         if (dealToPlayer)
         {
             _dealer.MoveLastCardToPlayerPosition();
+            DealerCard lastCard = _dealer.GetLastCard();
+            _dealer.AddCardToPlayerHand(lastCard); // Add the card to the player's hand
         }
         else
         {
             _dealer.MoveLastCardToDealerPosition();
+            DealerCard lastCard = _dealer.GetLastCard();
+            _dealer.AddCardToDealerHand(lastCard); // Add the card to the dealer's hand
         }
 
         // Move hand back to idle position
