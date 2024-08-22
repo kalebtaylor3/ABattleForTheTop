@@ -20221,8 +20221,8 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 127802513627177487, guid: c8d1948fa044d47769ef5c9b520fea17, type: 3}
-      propertyPath: returnToIdleDuration
-      value: 0.5
+      propertyPath: handMoveDuration
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 2334350720968633559, guid: c8d1948fa044d47769ef5c9b520fea17, type: 3}
       propertyPath: m_Name

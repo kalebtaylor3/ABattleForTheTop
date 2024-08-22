@@ -20,10 +20,15 @@ public class DealerIK : MonoBehaviour
     public Transform neckTargetDown;       // Position where the neck is fully down (head on the table)
     public Transform neckTargetUp;         // Position where the neck is up (head raised)
 
+    public Transform rightHandTargetDeal;  // Position for the right hand during the deal
+    public Transform rightHandTargetToss;  // Position for the right hand during the toss
+
     private IKScheduler _scheduler;
+    private Dealer _dealer;
     private bool dealerLost = false;
     private bool transitionComplete = false;
     private bool returningToIdle = false; // Flag to track if we're returning to idle
+    private bool isDealing = false;
     private float transitionProgress = 0f;    // Progress of the transition
     private float neckBangProgress = 0f;      // Progress of the neck-banging animation
     private float elapsedTime = 0f;           // Time elapsed since the head-banging started
@@ -32,19 +37,99 @@ public class DealerIK : MonoBehaviour
     [SerializeField] private float returnToIdleDuration = 0.5f;  // Duration of the transition from "lost" to "idle"
     [SerializeField] private float neckBangDuration = 0.5f;    // Duration of one head-bang cycle
     [SerializeField] private float maxBangTime = 3.0f;         // Maximum time for the head-banging animation
+    [SerializeField] private float handMoveToDealDuration = 0.7f;  // Duration of the hand movement to deal position
+    [SerializeField] private float handMoveToTossDuration = 0.5f;  // Duration of the hand movement to toss position
+    [SerializeField] private float holdDealPoseDuration = 0.5f; // Duration to hold the deal pose
+    [SerializeField] private float handReturnDuration = 0.5f;   // Duration of the hand return to idle position
 
     private void Awake()
     {
         _scheduler = GetComponent<IKScheduler>();
+        _dealer = GetComponent<Dealer>();
     }
 
     private void Start()
     {
-        StartCoroutine(WaitToLose());
-        StartCoroutine(WaitToIdle());
+        StartDealingSequence();
     }
 
     private void Update()
+    {
+        if (isDealing)
+        {
+            HandleDealAnimation();
+        }
+        else
+        {
+            HandleTransitions();
+        }
+    }
+
+    public void StartDealingSequence()
+    {
+        StartCoroutine(DealCardSequence());
+    }
+
+    private IEnumerator DealCardSequence()
+    {
+        isDealing = true;
+
+        // Move hand to deal position
+        yield return MoveHandToPosition(rightHandTargetIdle, rightHandTargetDeal, handMoveToDealDuration);
+
+        // Spawn the card in the dealer's hand
+        _dealer.SpawnCardInHand();
+
+        // Hold the deal pose for a moment
+        yield return new WaitForSeconds(holdDealPoseDuration);
+
+        // Move hand to toss position
+        yield return MoveHandToPosition(rightHandTargetDeal, rightHandTargetToss, handMoveToTossDuration);
+
+        // Now move the card to the center of the table
+        _dealer.MoveLastCardToTable();
+
+        // Move hand back to idle position
+        yield return MoveHandToPosition(rightHandTargetToss, rightHandTargetIdle, handReturnDuration);
+
+        isDealing = false;
+    }
+
+    private IEnumerator MoveHandToPosition(Transform start, Transform target, float duration)
+    {
+        Vector3 startPos = start.position;
+        Quaternion startRot = start.rotation;
+
+        Vector3 endPos = target.position;
+        Quaternion endRot = target.rotation;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            float t = elapsedTime / duration;
+            Vector3 currentPos = Vector3.Lerp(startPos, endPos, t);
+            Quaternion currentRot = Quaternion.Slerp(startRot, endRot, t);
+
+            // Apply IK for right hand
+            IKPass rightHandPass = new IKPass(currentPos, currentRot, AvatarIKGoal.RightHand, 1, 1);
+            _scheduler.ApplyIK(rightHandPass);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure final position and rotation are set
+        IKPass finalPass = new IKPass(endPos, endRot, AvatarIKGoal.RightHand, 1, 1);
+        _scheduler.ApplyIK(finalPass);
+    }
+
+    private void HandleDealAnimation()
+    {
+        // Additional IK handling during the dealing sequence if necessary
+    }
+
+    private void HandleTransitions()
     {
         // Transition to "lost" position
         if (dealerLost && !returningToIdle && transitionProgress < 1f)
@@ -125,18 +210,6 @@ public class DealerIK : MonoBehaviour
             NeckIKPass neckPass = new NeckIKPass(Vector3.zero, neckTargetUp.rotation, HumanBodyBones.Neck, 0, 1);
             _scheduler.ApplyNeckIK(neckPass);
         }
-    }
-
-    IEnumerator WaitToLose()
-    {
-        yield return new WaitForSeconds(3);
-        DealerLose();
-    }
-
-    IEnumerator WaitToIdle()
-    {
-        yield return new WaitForSeconds(6);
-        ResetToIdle();
     }
 
     public void DealerLose()
