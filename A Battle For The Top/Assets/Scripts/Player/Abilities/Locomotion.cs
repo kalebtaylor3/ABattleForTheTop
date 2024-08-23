@@ -64,5 +64,11 @@ namespace BFTT.Abilities
             }
         }
 
+        public void SetSpeeds(float walk, float run)
+        {
+            walkSpeed = walk;
+            sprintSpeed = run;
+        }
+
     }
 }

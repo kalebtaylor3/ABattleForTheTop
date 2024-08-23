@@ -496,6 +496,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7948111263067494100}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8308926317433444322
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4952066755592277977}
+  - component: {fileID: 1531061970295489858}
+  - component: {fileID: 726936876596099104}
+  m_Layer: 0
+  m_Name: DealerZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4952066755592277977
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8308926317433444322}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.00021324, y: 0.393, z: 0.423}
+  m_LocalScale: {x: 125.103004, y: 44.349, z: 137.61014}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7948111263067494100}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1531061970295489858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8308926317433444322}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25705bcd1aeb4462984384e3744ce209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoneColor: {r: 0, g: 1, b: 0.038576365, a: 0.5}
+  dealerCamera: {fileID: 8572714910638458174}
+--- !u!65 &726936876596099104
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8308926317433444322}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0049905227, y: 0.005191829, z: 0.0050234855}
+  m_Center: {x: -0.000018727838, y: -0.0001181684, z: -0.000007505107}
 --- !u!1 &8502120640092882532
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,6 +835,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1270052090545807329}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4952066755592277977}
     - targetCorrespondingSourceObject: {fileID: 1852576806548013000, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7032927139697313723}
@@ -851,6 +922,7 @@ MonoBehaviour:
   handMoveToTossDuration: 0.2
   holdDealPoseDuration: 1.5
   handReturnDuration: 0.5
+  currentState: 0
 --- !u!4 &7948111263067494100 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
