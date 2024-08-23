@@ -27,10 +27,9 @@ public class Dealer : MonoBehaviour
     {
         CreateDeck();
         ShuffleDeck();
-        StartGame();
     }
 
-    private void StartGame()
+    public void StartGame()
     {
         _dealer.StartDealingSequence(true);
     }

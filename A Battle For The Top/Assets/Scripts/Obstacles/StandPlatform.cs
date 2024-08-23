@@ -11,6 +11,7 @@ public class StandPlatform : MonoBehaviour
 
     private DealerIK dealerIK;
     private Dealer dealer;
+    bool canStand = true;
 
     private void Start()
     {
@@ -21,10 +22,11 @@ public class StandPlatform : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && canStand)
         {
             playerOnPlatform = true;
             StartCoroutine(ConfirmAction());
+            canStand = false;
         }
     }
 
@@ -35,6 +37,7 @@ public class StandPlatform : MonoBehaviour
             playerOnPlatform = false;
             currentTime = 0f;
             progressBar.fillAmount = 0f; // Reset visual feedback
+            canStand = true;
         }
     }
 

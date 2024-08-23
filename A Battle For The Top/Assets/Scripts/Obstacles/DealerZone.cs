@@ -11,6 +11,7 @@ public class DealerZone : MonoBehaviour
     public GameObject dealerCamera;
     private Vector3 originalScale;
     bool InZone = false;
+    public Dealer _dealer;
 
     private void Awake()
     {
@@ -45,6 +46,7 @@ public class DealerZone : MonoBehaviour
             other.GetComponent<PlayerController>().CinemachineCameraTarget.SetActive(false);
             dealerCamera.SetActive(true);
             InZone = true;
+            _dealer.StartGame();
         }
     }
 
