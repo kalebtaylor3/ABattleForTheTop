@@ -8,7 +8,8 @@ public class HitPlatform : MonoBehaviour
     private float currentTime = 0f;
     private bool playerOnPlatform = false;
     public Image progressBar; // Optional: Visual feedback for confirmation progress
-    bool canHit = true;
+    [HideInInspector] public bool canHit = true;
+    [HideInInspector] public bool canReset = true;
 
     private DealerIK dealer;
 
@@ -30,7 +31,7 @@ public class HitPlatform : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && canReset)
         {
             playerOnPlatform = false;
             currentTime = 0f;

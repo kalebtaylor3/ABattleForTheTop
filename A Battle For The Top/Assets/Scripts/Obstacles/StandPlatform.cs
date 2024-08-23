@@ -11,7 +11,8 @@ public class StandPlatform : MonoBehaviour
 
     private DealerIK dealerIK;
     private Dealer dealer;
-    bool canStand = true;
+    [HideInInspector] public bool canStand = true;
+    [HideInInspector] public bool canReset = true;
 
     private void Start()
     {
@@ -32,7 +33,7 @@ public class StandPlatform : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && canReset)
         {
             playerOnPlatform = false;
             currentTime = 0f;

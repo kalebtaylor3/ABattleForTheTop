@@ -45,6 +45,9 @@ public class DealerIK : MonoBehaviour
     public enum GameState { PlayerTurn, DealerTurn, GameOver }
     public GameState currentState;
 
+    public HitPlatform hitPlatform;
+    public StandPlatform standPlatform;
+
     private void Awake()
     {
         _scheduler = GetComponent<IKScheduler>();
@@ -77,6 +80,10 @@ public class DealerIK : MonoBehaviour
     {
         isDealing = true;
 
+        hitPlatform.canHit = false;
+        standPlatform.canStand = false;
+        hitPlatform.canReset = false;
+        standPlatform.canReset = false;
         // First, deal to the player
         if (both)
         {
@@ -92,6 +99,8 @@ public class DealerIK : MonoBehaviour
         currentState = GameState.DealerTurn;
         yield return DealCard(false); // Deal to dealer
 
+        hitPlatform.canReset = true;
+        standPlatform.canReset = true;
         isDealing = false;
     }
 
