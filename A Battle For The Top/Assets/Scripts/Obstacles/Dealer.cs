@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Dealer : MonoBehaviour
 {
-    public GameObject dealerCardPrefab; // Prefab of the DealerCard to be dealt
-    public Transform handPosition; // Position where the card is spawned in the dealer's hand
-    public Transform playerCardPosition; // Position where the player's cards are placed on the table
-    public Transform dealerCardPosition; // Position where the dealer's cards are placed on the table
-    public float cardMoveSpeed = 5f; // Speed at which the card moves to the table
-    public Quaternion finalCardRotation = Quaternion.Euler(0, 0, 0); // Final rotation of the card on the table
+    public GameObject dealerCardPrefab;
+    public Transform handPosition;
+    public Transform playerCardPosition;
+    public Transform dealerCardPosition;
+    public float cardMoveSpeed = 5f;
+    public Quaternion finalCardRotation = Quaternion.Euler(0, 0, 0);
 
-    private List<DealerCard> deck = new List<DealerCard>(); // The deck of cards
-    private List<GameObject> dealtCards = new List<GameObject>(); // List to keep track of dealt cards
-    private List<DealerCard> playerHand = new List<DealerCard>(); // Player's hand
-    private List<DealerCard> dealerHand = new List<DealerCard>(); // Dealer's hand
+    private List<DealerCard> deck = new List<DealerCard>();
+    private List<GameObject> dealtCards = new List<GameObject>();
+    private List<DealerCard> playerHand = new List<DealerCard>();
+    private List<DealerCard> dealerHand = new List<DealerCard>();
 
     private DealerIK _dealer;
 
@@ -31,19 +31,22 @@ public class Dealer : MonoBehaviour
 
     public void StartGame()
     {
+        if (_dealer.currentState == DealerIK.GameState.GameOver) return;
         _dealer.StartDealingSequence(true);
     }
 
     private void CreateDeck()
     {
         string[] suits = { "Hearts", "Diamonds", "Clubs", "Spades" };
-        for (int i = 1; i <= 13; i++) // 1 to 13 for Ace to King
+        for (int i = 1; i <= 13; i++)
         {
             foreach (string suit in suits)
             {
-                DealerCard card = new DealerCard();
-                card.suit = suit;
-                card.value = i;
+                DealerCard card = new DealerCard
+                {
+                    suit = suit,
+                    value = i
+                };
                 deck.Add(card);
             }
         }
@@ -62,6 +65,7 @@ public class Dealer : MonoBehaviour
 
     public void StandAndDraw()
     {
+        if (_dealer.currentState == DealerIK.GameState.GameOver) return;
         StartCoroutine(DealerTurnRoutine());
     }
 
@@ -69,46 +73,41 @@ public class Dealer : MonoBehaviour
     {
         _dealer.currentState = DealerIK.GameState.DealerTurn;
 
-        // Dealer must keep drawing until they reach at least 17
         while (CalculateHandValue(dealerHand) < 17)
         {
             _dealer.StartDealingSequence(false);
-            yield return new WaitForSeconds(4f); // Optional: Add a short delay between each card dealt
+            yield return new WaitForSeconds(4f);
         }
 
-        // Once dealer reaches 17 or higher, compare hands
         int playerValue = CalculateHandValue(playerHand);
         int dealerValue = CalculateHandValue(dealerHand);
 
         if (dealerValue > 21 || playerValue > dealerValue)
         {
-            EndGame(true); // Player wins
+            EndGame(true);
         }
         else
         {
-            EndGame(false); // Dealer wins
+            EndGame(false);
         }
     }
 
-
-    // Deal the top card from the deck
     public void SpawnCardInHand()
     {
+        if (_dealer.currentState == DealerIK.GameState.GameOver) return;
+
         if (deck.Count > 0)
         {
-            DealerCard cardData = deck[0]; // Take the top card
-            deck.RemoveAt(0); // Remove it from the deck
+            DealerCard cardData = deck[0];
+            deck.RemoveAt(0);
 
-            // Instantiate the card at the hand position
             GameObject cardObject = Instantiate(dealerCardPrefab, handPosition.position, handPosition.rotation);
             cardObject.transform.SetParent(handPosition);
 
-            // Assign the card data to the DealerCard component
             DealerCard dealerCardComponent = cardObject.GetComponent<DealerCard>();
             dealerCardComponent.suit = cardData.suit;
             dealerCardComponent.value = cardData.value;
 
-            // Update the card visuals
             dealerCardComponent.UpdateCardVisuals();
 
             dealtCards.Add(cardObject);
@@ -148,7 +147,7 @@ public class Dealer : MonoBehaviour
 
     private Vector3 GetCardStackPosition(Transform basePosition)
     {
-        Vector3 offset = new Vector3(0, 0.5f * dealtCards.Count, 0); // Adjust the offset as needed
+        Vector3 offset = new Vector3(0, 0.5f * dealtCards.Count, 0);
         return basePosition.position + offset;
     }
 
@@ -179,7 +178,7 @@ public class Dealer : MonoBehaviour
     private void CheckPlayerState()
     {
         int playerValue = CalculateHandValue(playerHand);
-        Debug.Log("Player" + playerValue);
+        Debug.Log("Player: " + playerValue);
 
         if (playerValue > 21)
         {
@@ -200,29 +199,20 @@ public class Dealer : MonoBehaviour
         {
             EndGame(true);
         }
-        
     }
 
     private void EndGame(bool playerWon)
     {
-        _dealer.currentState = DealerIK.GameState.GameOver;
-
         if (playerWon)
         {
             Debug.Log("Player Wins!");
             _dealer.DealerLose();
-            //setup logic to reset
         }
         else
         {
             Debug.Log("Dealer Wins!");
-            _dealer.DealerLose();
+            _dealer.DealerWin();
         }
-
-        // Reset hands and start a new game if needed
-        //playerHand.Clear();
-        //dealerHand.Clear();
-        //StartGame();
     }
 
     private int CalculateHandValue(List<DealerCard> hand)
@@ -232,28 +222,26 @@ public class Dealer : MonoBehaviour
 
         foreach (var card in hand)
         {
-            if (card.value > 10)  // 10, J, Q, K are worth 10 points
+            if (card.value > 10)
             {
                 value += 10;
             }
-            else if (card.value == 1)  // Aces are worth 11 initially
+            else if (card.value == 1)
             {
                 aces++;
                 value += 11;
             }
-            else  // Cards 2 through 10 are worth their face value
+            else
             {
                 value += card.value;
             }
         }
 
-        // Adjust for aces if the total value exceeds 21
         while (value > 21 && aces > 0)
         {
-            value -= 10;  // Count ace as 1 instead of 11
+            value -= 10;
             aces--;
         }
         return value;
     }
-
 }
