@@ -18,6 +18,8 @@ public class Dealer : MonoBehaviour
 
     private DealerIK _dealer;
 
+    public float ResetTime; 
+
     private void Awake()
     {
         _dealer = GetComponent<DealerIK>();
@@ -61,6 +63,32 @@ public class Dealer : MonoBehaviour
             deck[i] = deck[randomIndex];
             deck[randomIndex] = temp;
         }
+    }
+
+    public void ResetDeckAndHands()
+    {
+        // Clear all cards on the table
+        foreach (var card in dealtCards)
+        {
+            Destroy(card);
+        }
+
+        dealtCards.Clear();
+        playerHand.Clear();
+        dealerHand.Clear();
+
+        // Reshuffle the deck
+        ShuffleDeck();
+
+        // Set the game state back to PlayerTurn
+        _dealer.currentState = DealerIK.GameState.PlayerTurn;
+        StartCoroutine(DealDelay());
+    }
+
+    IEnumerator DealDelay()
+    {
+        yield return new WaitForSeconds(2);
+        _dealer.StartDealingSequence(true);
     }
 
     public void StandAndDraw()
@@ -207,12 +235,20 @@ public class Dealer : MonoBehaviour
         {
             Debug.Log("Player Wins!");
             _dealer.DealerLose();
+            StartCoroutine(WaitForReset(false));
         }
         else
         {
             Debug.Log("Dealer Wins!");
             _dealer.DealerWin();
+            StartCoroutine(WaitForReset(true));
         }
+    }
+
+    IEnumerator WaitForReset(bool dealerWin)
+    {
+        yield return new WaitForSeconds(ResetTime);
+        _dealer.ResetGame(dealerWin);
     }
 
     private int CalculateHandValue(List<DealerCard> hand)

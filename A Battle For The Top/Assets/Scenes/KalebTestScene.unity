@@ -20175,6 +20175,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5822570506944359568, guid: c8d1948fa044d47769ef5c9b520fea17, type: 3}
+      propertyPath: ResetTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7279661676299488366, guid: c8d1948fa044d47769ef5c9b520fea17, type: 3}
       propertyPath: m_Name
       value: Dealer

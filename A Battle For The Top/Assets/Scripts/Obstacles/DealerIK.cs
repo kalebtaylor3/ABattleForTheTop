@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BFTT.IK;
+using System.Threading;
 
 public class DealerIK : MonoBehaviour
 {
@@ -50,11 +51,14 @@ public class DealerIK : MonoBehaviour
     public StandPlatform standPlatform;
     private Animator _animator;
 
+    private CancellationTokenSource _cancellationTokenSource;
+
     private void Awake()
     {
         _scheduler = GetComponent<IKScheduler>();
         _dealer = GetComponent<Dealer>();
         _animator = GetComponent<Animator>();
+        _cancellationTokenSource = new CancellationTokenSource();
     }
 
     private void Start()
@@ -83,11 +87,12 @@ public class DealerIK : MonoBehaviour
     {
         if (currentState != GameState.GameOver)
         {
-            StartCoroutine(DealCardSequence(both));
+            _cancellationTokenSource = new CancellationTokenSource(); // Create a new token source each time we start dealing
+            StartCoroutine(DealCardSequence(both, _cancellationTokenSource.Token));
         }
     }
 
-    private IEnumerator DealCardSequence(bool both)
+    private IEnumerator DealCardSequence(bool both, CancellationToken cancellationToken)
     {
         isDealing = true;
 
@@ -99,29 +104,35 @@ public class DealerIK : MonoBehaviour
         if (both)
         {
             currentState = GameState.PlayerTurn;
-            yield return DealCard(true);
+            yield return DealCard(true, cancellationToken);
         }
 
         if (both)
             yield return new WaitForSeconds(0.1f);
 
         currentState = GameState.DealerTurn;
-        yield return DealCard(false);
+        yield return DealCard(false, cancellationToken);
 
         hitPlatform.canReset = true;
         standPlatform.canReset = true;
         isDealing = false;
     }
 
-    private IEnumerator DealCard(bool dealToPlayer)
+    private IEnumerator DealCard(bool dealToPlayer, CancellationToken cancellationToken)
     {
-        yield return MoveHandToPosition(rightHandTargetIdle, rightHandTargetDeal, handMoveToDealDuration);
+        yield return MoveHandToPosition(rightHandTargetIdle, rightHandTargetDeal, handMoveToDealDuration, cancellationToken);
+
+        if (cancellationToken.IsCancellationRequested) yield break;
 
         _dealer.SpawnCardInHand();
 
         yield return new WaitForSeconds(holdDealPoseDuration);
 
-        yield return MoveHandToPosition(rightHandTargetDeal, rightHandTargetToss, handMoveToTossDuration);
+        if (cancellationToken.IsCancellationRequested) yield break;
+
+        yield return MoveHandToPosition(rightHandTargetDeal, rightHandTargetToss, handMoveToTossDuration, cancellationToken);
+
+        if (cancellationToken.IsCancellationRequested) yield break;
 
         if (dealToPlayer)
         {
@@ -136,10 +147,12 @@ public class DealerIK : MonoBehaviour
             _dealer.AddCardToDealerHand(lastCard);
         }
 
-        yield return MoveHandToPosition(rightHandTargetToss, rightHandTargetIdle, handReturnDuration);
+        if (cancellationToken.IsCancellationRequested) yield break;
+
+        yield return MoveHandToPosition(rightHandTargetToss, rightHandTargetIdle, handReturnDuration, cancellationToken);
     }
 
-    private IEnumerator MoveHandToPosition(Transform start, Transform target, float duration)
+    private IEnumerator MoveHandToPosition(Transform start, Transform target, float duration, CancellationToken cancellationToken)
     {
         Vector3 startPos = start.position;
         Quaternion startRot = start.rotation;
@@ -150,6 +163,8 @@ public class DealerIK : MonoBehaviour
 
         while (elapsedTime < duration)
         {
+            if (cancellationToken.IsCancellationRequested) yield break;
+
             float t = elapsedTime / duration;
             Vector3 currentPos = Vector3.Lerp(startPos, endPos, t);
             Quaternion currentRot = Quaternion.Slerp(startRot, endRot, t);
@@ -160,6 +175,8 @@ public class DealerIK : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+
+        if (cancellationToken.IsCancellationRequested) yield break;
 
         IKPass finalPass = new IKPass(endPos, endRot, AvatarIKGoal.RightHand, 1, 1);
         _scheduler.ApplyIK(finalPass);
@@ -243,12 +260,17 @@ public class DealerIK : MonoBehaviour
     {
         if (currentState == GameState.GameOver) return;
 
+        _cancellationTokenSource.Cancel();
         dealerLost = true;
         dealerWon = false;
         transitionProgress = 0f;
         neckBangProgress = 0f;
         elapsedTime = 0f;
         returningToIdle = false;
+        hitPlatform.canHit = false;
+        standPlatform.canStand = false;
+        hitPlatform.canReset = false;
+        standPlatform.canReset = false;
         currentState = GameState.GameOver;
     }
 
@@ -256,9 +278,14 @@ public class DealerIK : MonoBehaviour
     {
         if (currentState == GameState.GameOver) return;
 
+        _cancellationTokenSource.Cancel();
         dealerLost = false;
         dealerWon = true;
         returningToIdle = false;
+        hitPlatform.canHit = false;
+        standPlatform.canStand = false;
+        hitPlatform.canReset = false;
+        standPlatform.canReset = false;
         transitionProgress = 0f;
 
         _scheduler.StopIK(AvatarIKGoal.RightHand);
@@ -267,12 +294,24 @@ public class DealerIK : MonoBehaviour
         currentState = GameState.GameOver;
     }
 
-    public void ResetToIdle()
+    public void ResetToIdle(bool dealerWin)
     {
         dealerLost = false;
         dealerWon = false;
-        returningToIdle = true;
-        transitionProgress = 1f;
+        if (!dealerWin)
+        {
+            returningToIdle = true;
+            transitionProgress = 1f;
+        }
+        hitPlatform.canReset = true;
+        standPlatform.canReset = true;
+        _animator.CrossFade("Grounded", 0.1f);
         currentState = GameState.PlayerTurn; // Or reset to a neutral state if applicable
+    }
+
+    public void ResetGame(bool dealerWin)
+    {
+        ResetToIdle(dealerWin);
+        _dealer.ResetDeckAndHands();
     }
 }
