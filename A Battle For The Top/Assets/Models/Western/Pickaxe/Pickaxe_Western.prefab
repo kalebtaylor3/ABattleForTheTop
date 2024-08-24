@@ -60,6 +60,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pickaxe_Western
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d39e77a01f7d0204aaf9ce9f37b02064, type: 3}
+      propertyPath: m_Layer
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d39e77a01f7d0204aaf9ce9f37b02064, type: 3}
+      propertyPath: m_TagString
+      value: Metal
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
