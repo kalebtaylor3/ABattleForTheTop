@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Dealer : MonoBehaviour
 {
@@ -18,7 +19,10 @@ public class Dealer : MonoBehaviour
 
     private DealerIK _dealer;
 
-    public float ResetTime; 
+    public float ResetTime;
+
+    public TextMeshProUGUI playerHandValueText;
+    public TextMeshProUGUI dealerHandValueText;
 
     private void Awake()
     {
@@ -29,7 +33,18 @@ public class Dealer : MonoBehaviour
     {
         CreateDeck();
         ShuffleDeck();
+        UpdateHandValues();
     }
+
+    private void UpdateHandValues()
+    {
+        int playerValue = CalculateHandValue(playerHand);
+        int dealerValue = CalculateHandValue(dealerHand);
+
+        playerHandValueText.text = playerValue.ToString();
+        dealerHandValueText.text = dealerValue.ToString();
+    }
+
 
     public void StartGame()
     {
@@ -209,11 +224,13 @@ public class Dealer : MonoBehaviour
     {
         playerHand.Add(card);
         CheckPlayerState();
+        UpdateHandValues();
     }
 
     public void AddCardToDealerHand(DealerCard card)
     {
         dealerHand.Add(card);
+        UpdateHandValues();
         if (_dealer.currentState == DealerIK.GameState.DealerTurn)
         {
             CheckDealerState();
