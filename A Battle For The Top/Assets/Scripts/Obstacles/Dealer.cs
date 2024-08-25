@@ -148,7 +148,7 @@ public class Dealer : MonoBehaviour
         {
             GameObject card = dealtCards[dealtCards.Count - 1];
             card.transform.SetParent(null);
-            StartCoroutine(MoveCardToPosition(card, GetCardStackPosition(playerCardPosition), finalCardRotation));
+            StartCoroutine(MoveCardToPosition(card, GetCardStackPosition(playerCardPosition), GetCardStackRotation(playerCardPosition)));
         }
     }
 
@@ -158,7 +158,7 @@ public class Dealer : MonoBehaviour
         {
             GameObject card = dealtCards[dealtCards.Count - 1];
             card.transform.SetParent(null);
-            StartCoroutine(MoveCardToPosition(card, GetCardStackPosition(dealerCardPosition), finalCardRotation));
+            StartCoroutine(MoveCardToPosition(card, GetCardStackPosition(dealerCardPosition), GetCardStackRotation(dealerCardPosition)));
         }
     }
 
@@ -178,6 +178,23 @@ public class Dealer : MonoBehaviour
         Vector3 offset = new Vector3(0, 0.5f * dealtCards.Count, 0);
         return basePosition.position + offset;
     }
+
+    private Quaternion GetCardStackRotation(Transform basePosition)
+    {
+        // No rotation offset for the first card
+        if (dealtCards.Count == 1 || dealtCards.Count == 2)
+        {
+            return basePosition.rotation;
+        }
+
+        // Rotate each subsequent card slightly around the Y-axis based on its stack position
+        float rotationAngle = -5f * (dealtCards.Count - 1); // Start applying rotation from the second card onward
+
+        // Apply rotation around the Y-axis
+        return Quaternion.Euler(0, rotationAngle, 0) * basePosition.rotation;
+    }
+
+
 
     public DealerCard GetLastCard()
     {

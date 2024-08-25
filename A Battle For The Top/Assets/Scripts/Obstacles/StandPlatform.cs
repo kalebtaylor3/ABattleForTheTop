@@ -14,6 +14,9 @@ public class StandPlatform : MonoBehaviour
     [HideInInspector] public bool canStand = true;
     [HideInInspector] public bool canReset = true;
 
+    public BoxCollider[] colliders;
+
+
     private void Start()
     {
         dealerIK = FindObjectOfType<DealerIK>(); // Find the DealerIK in the scene
@@ -23,7 +26,8 @@ public class StandPlatform : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && canStand)
+        // Check if the game is over or if standing is allowed
+        if (other.CompareTag("Player") && canStand && dealerIK.currentState != DealerIK.GameState.GameOver)
         {
             playerOnPlatform = true;
             StartCoroutine(ConfirmAction());
@@ -33,7 +37,8 @@ public class StandPlatform : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && canReset)
+        // Check if the game is over or if resetting is allowed
+        if (other.CompareTag("Player") && canReset && dealerIK.currentState != DealerIK.GameState.GameOver)
         {
             playerOnPlatform = false;
             currentTime = 0f;
@@ -41,6 +46,17 @@ public class StandPlatform : MonoBehaviour
             canStand = true;
         }
     }
+
+    public void DisableColliders()
+    {
+        colliders[1].enabled = false;
+    }
+
+    public void EnableColliders()
+    {
+        colliders[1].enabled = true;
+    }
+
 
     private IEnumerator ConfirmAction()
     {

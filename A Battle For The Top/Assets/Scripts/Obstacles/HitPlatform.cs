@@ -11,6 +11,8 @@ public class HitPlatform : MonoBehaviour
     [HideInInspector] public bool canHit = true;
     [HideInInspector] public bool canReset = true;
 
+    public BoxCollider[] colliders;
+
     private DealerIK dealer;
 
     private void Start()
@@ -21,7 +23,8 @@ public class HitPlatform : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && canHit)
+        // Check if the game is over or if hitting is allowed
+        if (other.CompareTag("Player") && canHit && dealer.currentState != DealerIK.GameState.GameOver)
         {
             playerOnPlatform = true;
             StartCoroutine(ConfirmAction());
@@ -31,13 +34,24 @@ public class HitPlatform : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && canReset)
+        // Check if the game is over or if resetting is allowed
+        if (other.CompareTag("Player") && canReset && dealer.currentState != DealerIK.GameState.GameOver)
         {
             playerOnPlatform = false;
             currentTime = 0f;
             progressBar.fillAmount = 0f; // Reset visual feedback
             canHit = true;
         }
+    }
+
+    public void DisableColliders()
+    {
+        colliders[1].enabled = false;
+    }
+
+    public void EnableColliders()
+    {
+        colliders[1].enabled = true;
     }
 
     private IEnumerator ConfirmAction()

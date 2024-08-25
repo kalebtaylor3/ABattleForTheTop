@@ -100,6 +100,8 @@ public class DealerIK : MonoBehaviour
         standPlatform.canStand = false;
         hitPlatform.canReset = false;
         standPlatform.canReset = false;
+        hitPlatform.EnableColliders();
+        standPlatform.EnableColliders();
 
         if (both)
         {
@@ -113,8 +115,11 @@ public class DealerIK : MonoBehaviour
         currentState = GameState.DealerTurn;
         yield return DealCard(false, cancellationToken);
 
-        hitPlatform.canReset = true;
-        standPlatform.canReset = true;
+        if (currentState != GameState.GameOver)
+        {
+            hitPlatform.canReset = true;
+            standPlatform.canReset = true;
+        }
         isDealing = false;
     }
 
@@ -260,6 +265,8 @@ public class DealerIK : MonoBehaviour
     {
         if (currentState == GameState.GameOver) return;
 
+        hitPlatform.DisableColliders();
+        standPlatform.DisableColliders();
         _cancellationTokenSource.Cancel();
         dealerLost = true;
         dealerWon = false;
@@ -268,9 +275,6 @@ public class DealerIK : MonoBehaviour
         elapsedTime = 0f;
         returningToIdle = false;
         hitPlatform.canHit = false;
-        standPlatform.canStand = false;
-        hitPlatform.canReset = false;
-        standPlatform.canReset = false;
         currentState = GameState.GameOver;
     }
 
@@ -278,16 +282,13 @@ public class DealerIK : MonoBehaviour
     {
         if (currentState == GameState.GameOver) return;
 
+        hitPlatform.DisableColliders();
+        standPlatform.DisableColliders();
         _cancellationTokenSource.Cancel();
         dealerLost = false;
         dealerWon = true;
         returningToIdle = false;
-        hitPlatform.canHit = false;
-        standPlatform.canStand = false;
-        hitPlatform.canReset = false;
-        standPlatform.canReset = false;
         transitionProgress = 0f;
-
         _scheduler.StopIK(AvatarIKGoal.RightHand);
         _scheduler.StopIK(AvatarIKGoal.LeftHand);
         _animator.CrossFade("WinState", 0.1f);
@@ -303,8 +304,6 @@ public class DealerIK : MonoBehaviour
             returningToIdle = true;
             transitionProgress = 1f;
         }
-        hitPlatform.canReset = true;
-        standPlatform.canReset = true;
         _animator.CrossFade("Grounded", 0.1f);
         currentState = GameState.PlayerTurn; // Or reset to a neutral state if applicable
     }

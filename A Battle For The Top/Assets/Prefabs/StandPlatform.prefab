@@ -455,3 +455,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   confirmTime: 3
   progressBar: {fileID: 7088768039085540810}
+  canStand: 1
+  canReset: 1
+  colliders:
+  - {fileID: 232412390488024514}
+  - {fileID: 29167644087539952}

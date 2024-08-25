@@ -225,6 +225,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   confirmTime: 3
   progressBar: {fileID: 6352416180468758319}
+  canHit: 1
+  canReset: 1
+  colliders:
+  - {fileID: 2583129374212062400}
+  - {fileID: 6495725195554667358}
 --- !u!65 &6495725195554667358
 BoxCollider:
   m_ObjectHideFlags: 0
