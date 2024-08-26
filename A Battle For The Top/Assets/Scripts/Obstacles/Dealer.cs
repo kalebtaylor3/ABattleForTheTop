@@ -103,6 +103,8 @@ public class Dealer : MonoBehaviour
     IEnumerator DealDelay()
     {
         yield return new WaitForSeconds(2);
+        playerHandValueText.text = "0";
+        dealerHandValueText.text = "0";
         _dealer.StartDealingSequence(true, true);
     }
 
@@ -118,9 +120,15 @@ public class Dealer : MonoBehaviour
 
         while (CalculateHandValue(dealerHand) < 17)
         {
+            // Check if the game is over before continuing
+            if (_dealer.currentState == DealerIK.GameState.GameOver) yield break;
+
             _dealer.StartDealingSequence(false, false);
             yield return new WaitForSeconds(4f);
         }
+
+        // Check if the game is over before continuing
+        if (_dealer.currentState == DealerIK.GameState.GameOver) yield break;
 
         int playerValue = CalculateHandValue(playerHand);
         int dealerValue = CalculateHandValue(dealerHand);
@@ -197,7 +205,7 @@ public class Dealer : MonoBehaviour
     private Quaternion GetCardStackRotation(Transform basePosition)
     {
         // No rotation offset for the first card
-        if (dealtCards.Count == 1 || dealtCards.Count == 2)
+        if (dealtCards.Count == 1 || dealtCards.Count == 3)
         {
             return basePosition.rotation;
         }
