@@ -83,19 +83,20 @@ public class DealerIK : MonoBehaviour
         // Additional IK handling during the dealing sequence if necessary
     }
 
-    public void StartDealingSequence(bool both)
+    public void StartDealingSequence(bool initialDeal, bool dealToBoth)
     {
         if (currentState != GameState.GameOver)
         {
             _cancellationTokenSource = new CancellationTokenSource(); // Create a new token source each time we start dealing
-            StartCoroutine(DealCardSequence(both, _cancellationTokenSource.Token));
+            StartCoroutine(DealCardSequence(initialDeal, dealToBoth, _cancellationTokenSource.Token));
         }
     }
 
-    private IEnumerator DealCardSequence(bool both, CancellationToken cancellationToken)
+    private IEnumerator DealCardSequence(bool initialDeal, bool dealToBoth, CancellationToken cancellationToken)
     {
         isDealing = true;
 
+        // Disable player actions while dealing cards
         hitPlatform.canHit = false;
         standPlatform.canStand = false;
         hitPlatform.canReset = false;
@@ -103,25 +104,59 @@ public class DealerIK : MonoBehaviour
         hitPlatform.EnableColliders();
         standPlatform.EnableColliders();
 
-        if (both)
+        if (initialDeal)
         {
+            // Deal two cards to player first
             currentState = GameState.PlayerTurn;
             yield return DealCard(true, cancellationToken);
+            yield return new WaitForSeconds(0.1f);
+            yield return DealCard(true, cancellationToken);
+
+            // Deal two cards to dealer
+            currentState = GameState.DealerTurn;
+            yield return DealCard(false, cancellationToken);
+            yield return new WaitForSeconds(0.1f);
+            yield return DealCard(false, cancellationToken);
+
+            // Back to PlayerTurn for player actions
+                if(currentState != GameState.GameOver)
+                    currentState = GameState.PlayerTurn;
+        }
+        else if (dealToBoth)
+        {
+            // Deal one card to player
+            currentState = GameState.PlayerTurn;
+            yield return DealCard(true, cancellationToken);
+
+            // Deal one card to dealer
+            yield return new WaitForSeconds(0.1f);
+            currentState = GameState.DealerTurn;
+            yield return DealCard(false, cancellationToken);
+        }
+        else
+        {
+            // Handle dealing only to the player
+            if (currentState == GameState.PlayerTurn)
+            {
+                yield return DealCard(true, cancellationToken);
+            }
+            // Handle dealing only to the dealer
+            else if (currentState == GameState.DealerTurn)
+            {
+                yield return DealCard(false, cancellationToken);
+            }
         }
 
-        if (both)
-            yield return new WaitForSeconds(0.1f);
-
-        currentState = GameState.DealerTurn;
-        yield return DealCard(false, cancellationToken);
-
+        // Re-enable player actions after dealing
         if (currentState != GameState.GameOver)
         {
             hitPlatform.canReset = true;
             standPlatform.canReset = true;
         }
+
         isDealing = false;
     }
+
 
     private IEnumerator DealCard(bool dealToPlayer, CancellationToken cancellationToken)
     {

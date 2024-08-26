@@ -72,7 +72,7 @@ public class HitPlatform : MonoBehaviour
     private void PerformHit()
     {
         // Dealer logic to deal a new card to the player
-        dealer.StartDealingSequence(true);
+        dealer.StartDealingSequence(false, false);
 
         // Reset the platform state
         currentTime = 0f;

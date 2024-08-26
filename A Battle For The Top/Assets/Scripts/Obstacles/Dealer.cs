@@ -49,7 +49,7 @@ public class Dealer : MonoBehaviour
     public void StartGame()
     {
         if (_dealer.currentState == DealerIK.GameState.GameOver) return;
-        _dealer.StartDealingSequence(true);
+        _dealer.StartDealingSequence(true, true);
     }
 
     private void CreateDeck()
@@ -103,7 +103,7 @@ public class Dealer : MonoBehaviour
     IEnumerator DealDelay()
     {
         yield return new WaitForSeconds(2);
-        _dealer.StartDealingSequence(true);
+        _dealer.StartDealingSequence(true, true);
     }
 
     public void StandAndDraw()
@@ -118,7 +118,7 @@ public class Dealer : MonoBehaviour
 
         while (CalculateHandValue(dealerHand) < 17)
         {
-            _dealer.StartDealingSequence(false);
+            _dealer.StartDealingSequence(false, false);
             yield return new WaitForSeconds(4f);
         }
 
