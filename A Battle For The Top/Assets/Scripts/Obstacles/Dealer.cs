@@ -177,7 +177,7 @@ public class Dealer : MonoBehaviour
                 rb.isKinematic = true; // Start as kinematic so it's not affected by physics initially
             }
 
-            StartCoroutine(ScaleCardToSize(cardObject, originalScale, 0.6f)); // Scale to original size over 0.5 seconds
+            StartCoroutine(ScaleCardToSize(cardObject, originalScale, 0.4f)); // Scale to original size over 0.5 seconds
 
             dealtCards.Add(cardObject);
         }
