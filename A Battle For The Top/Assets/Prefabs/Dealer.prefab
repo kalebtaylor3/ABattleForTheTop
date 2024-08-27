@@ -1544,7 +1544,8 @@ MonoBehaviour:
   dealerCardPosition: {fileID: 4261502112241739497}
   cardMoveSpeed: 150
   finalCardRotation: {x: 0, y: 0, z: 0, w: 1}
-  ResetTime: 5
+  ResetTime: 10
+  WinResetTime: 5
   playerHandValueText: {fileID: 8773654954582810500}
   dealerHandValueText: {fileID: 7758419609162412701}
 --- !u!114 &127802513627177487

@@ -20,6 +20,7 @@ public class Dealer : MonoBehaviour
     private DealerIK _dealer;
 
     public float ResetTime;
+    public float WinResetTime;
 
     public TextMeshProUGUI playerHandValueText;
     public TextMeshProUGUI dealerHandValueText;
@@ -277,19 +278,19 @@ public class Dealer : MonoBehaviour
         {
             Debug.Log("Player Wins!");
             _dealer.DealerLose();
-            StartCoroutine(WaitForReset(false));
+            StartCoroutine(WaitForReset(false, ResetTime));
         }
         else
         {
             Debug.Log("Dealer Wins!");
             _dealer.DealerWin();
-            StartCoroutine(WaitForReset(true));
+            StartCoroutine(WaitForReset(true, WinResetTime));
         }
     }
 
-    IEnumerator WaitForReset(bool dealerWin)
+    IEnumerator WaitForReset(bool dealerWin, float _resetTime)
     {
-        yield return new WaitForSeconds(ResetTime);
+        yield return new WaitForSeconds(_resetTime);
         _dealer.ResetGame(dealerWin);
     }
 
