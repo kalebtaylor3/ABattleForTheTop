@@ -1577,7 +1577,7 @@ MonoBehaviour:
   transitionDuration: 0.7
   returnToIdleDuration: 0.5
   neckBangDuration: 0.3
-  maxBangTime: 2.5
+  maxBangTime: 1.75
   handMoveToDealDuration: 0.6
   handMoveToTossDuration: 0.2
   holdDealPoseDuration: 1.5

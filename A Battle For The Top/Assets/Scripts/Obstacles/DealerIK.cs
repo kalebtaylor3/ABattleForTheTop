@@ -238,7 +238,7 @@ public class DealerIK : MonoBehaviour
         transitionComplete = transitionProgress >= 1f;
 
         Vector3 leftHandPos, rightHandPos;
-        Quaternion leftHandRot, rightHandRot, spineRot;
+        Quaternion leftHandRot, rightHandRot, spineRot, neckRot;
 
         if (!returningToIdle && transitionProgress < 0.5f)
         {
@@ -280,23 +280,26 @@ public class DealerIK : MonoBehaviour
         SpineIKPass spinePass = new SpineIKPass(Vector3.zero, spineRot, HumanBodyBones.Spine, 0, 1);
         _scheduler.ApplySpineIK(spinePass);
 
+        // Smooth transition for neck position when returning to idle
         if (dealerLost && transitionComplete && elapsedTime < maxBangTime)
         {
             neckBangProgress += Time.deltaTime / neckBangDuration;
             elapsedTime += Time.deltaTime;
 
             float t = Mathf.PingPong(neckBangProgress, 1f);
-
-            Quaternion neckRot = Quaternion.Slerp(neckTargetUp.rotation, neckTargetDown.rotation, t);
-            NeckIKPass neckPass = new NeckIKPass(Vector3.zero, neckRot, HumanBodyBones.Neck, 0, 1);
-            _scheduler.ApplyNeckIK(neckPass);
+            neckRot = Quaternion.Slerp(neckTargetUp.rotation, neckTargetDown.rotation, t);
         }
         else
         {
-            NeckIKPass neckPass = new NeckIKPass(Vector3.zero, neckTargetUp.rotation, HumanBodyBones.Neck, 0, 1);
-            _scheduler.ApplyNeckIK(neckPass);
+            // Smooth return to idle position
+            float t = Time.deltaTime / neckBangDuration;
+            neckRot = Quaternion.Slerp(Quaternion.identity, neckTargetUp.rotation, t);
         }
+
+        NeckIKPass neckPass = new NeckIKPass(Vector3.zero, neckRot, HumanBodyBones.Neck, 0, 1);
+        _scheduler.ApplyNeckIK(neckPass);
     }
+
 
     public void DealerLose()
     {
