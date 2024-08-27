@@ -24,6 +24,8 @@ public class DealerIK : MonoBehaviour
     public Transform rightHandTargetDeal;
     public Transform rightHandTargetToss;
 
+    public Transform tableSlamIK;
+
     private IKScheduler _scheduler;
     private Dealer _dealer;
     private bool dealerLost = false;
@@ -347,5 +349,16 @@ public class DealerIK : MonoBehaviour
     {
         ResetToIdle(dealerWin);
         _dealer.ResetDeckAndHands();
+    }
+
+    public void SlamIK()
+    {
+        IKPass rightHandPass = new IKPass(tableSlamIK.position, tableSlamIK.rotation, AvatarIKGoal.RightHand, 1, 1);
+        _scheduler.ApplyIK(rightHandPass);
+    }
+
+    public void RestSlamIK()
+    {
+        _scheduler.StopIK(AvatarIKGoal.RightHand);
     }
 }

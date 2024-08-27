@@ -330,6 +330,37 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1453575472451801360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7994574427257448603}
+  m_Layer: 0
+  m_Name: SlamPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7994574427257448603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453575472451801360}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.3483, z: 0.368}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7948111263067494100}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1489772608873013473
 GameObject:
   m_ObjectHideFlags: 0
@@ -1434,6 +1465,9 @@ PrefabInstance:
       addedObject: {fileID: 689119749608821076}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 7994574427257448603}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 4261502112241739497}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1154aeb4abe7c00489321784bc4c3109, type: 3}
       insertIndex: -1
@@ -1538,6 +1572,7 @@ MonoBehaviour:
   neckTargetUp: {fileID: 1435117870750228077}
   rightHandTargetDeal: {fileID: 5518460016152630162}
   rightHandTargetToss: {fileID: 2268275973354700100}
+  tableSlamIK: {fileID: 7994574427257448603}
   transitionDuration: 0.7
   returnToIdleDuration: 0.5
   neckBangDuration: 0.3
