@@ -155,7 +155,10 @@ public class Dealer : MonoBehaviour
             DealerCard cardData = deck[0];
             deck.RemoveAt(0);
 
-            poofParticles.SetActive(true);
+            GameObject poof = Instantiate(poofParticles, handPosition);
+            poof.SetActive(true);
+            Destroy(poof, 5);
+            //poofParticles.SetActive(true);
 
             GameObject cardObject = Instantiate(dealerCardPrefab, handPosition.position, handPosition.rotation);
             cardObject.transform.SetParent(handPosition);
