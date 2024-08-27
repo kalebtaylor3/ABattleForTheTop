@@ -25,6 +25,8 @@ public class Dealer : MonoBehaviour
     public TextMeshProUGUI playerHandValueText;
     public TextMeshProUGUI dealerHandValueText;
 
+    public GameObject poofParticles;
+
     private void Awake()
     {
         _dealer = GetComponent<DealerIK>();
@@ -152,6 +154,8 @@ public class Dealer : MonoBehaviour
         {
             DealerCard cardData = deck[0];
             deck.RemoveAt(0);
+
+            poofParticles.SetActive(true);
 
             GameObject cardObject = Instantiate(dealerCardPrefab, handPosition.position, handPosition.rotation);
             cardObject.transform.SetParent(handPosition);
