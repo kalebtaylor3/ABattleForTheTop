@@ -162,6 +162,7 @@ public class Dealer : MonoBehaviour
 
             GameObject cardObject = Instantiate(dealerCardPrefab, handPosition.position, handPosition.rotation);
             cardObject.transform.SetParent(handPosition);
+            Vector3 originalScale = cardObject.transform.localScale;
 
             DealerCard dealerCardComponent = cardObject.GetComponent<DealerCard>();
             dealerCardComponent.suit = cardData.suit;
@@ -176,8 +177,30 @@ public class Dealer : MonoBehaviour
                 rb.isKinematic = true; // Start as kinematic so it's not affected by physics initially
             }
 
+            StartCoroutine(ScaleCardToSize(cardObject, originalScale, 0.6f)); // Scale to original size over 0.5 seconds
+
             dealtCards.Add(cardObject);
         }
+    }
+
+    private IEnumerator ScaleCardToSize(GameObject cardObject, Vector3 targetScale, float duration)
+    {
+        Vector3 initialScale = Vector3.zero;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            // Interpolate the scale
+            cardObject.transform.localScale = Vector3.Lerp(initialScale, targetScale, t);
+
+            yield return null;
+        }
+
+        // Ensure the final scale is exactly the target scale
+        cardObject.transform.localScale = targetScale;
     }
 
 
