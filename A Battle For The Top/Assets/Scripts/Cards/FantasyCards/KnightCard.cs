@@ -42,6 +42,7 @@ public class KnightCard : AbstractCombat
     public float maxComboDelay = 1.2f;
     bool canSwing = true;
     bool oneSwing = false;
+    public ParticleSystem swingparticle;
 
     private void Awake()
     {
@@ -93,6 +94,11 @@ public class KnightCard : AbstractCombat
         return false;
     }
 
+    public void SwordParticles()
+    {
+        swingparticle.Play();
+    }
+
     public override void OnStartCombat()
     {
         rb = abilityProp.GetComponent<Rigidbody>();
@@ -113,7 +119,6 @@ public class KnightCard : AbstractCombat
         else
         {
             Debug.Log("Swung the sword");
-
             if (noOfPresses == 0 || noOfPresses == 1)
             {
                 animator.SetBool("hit1", true);
