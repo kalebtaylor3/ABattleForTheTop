@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BFTT.IK;
 using System.Threading;
+using Cinemachine;
 
 public class DealerIK : MonoBehaviour
 {
@@ -52,6 +53,8 @@ public class DealerIK : MonoBehaviour
     public HitPlatform hitPlatform;
     public StandPlatform standPlatform;
     private Animator _animator;
+    public CinemachineVirtualCamera virtualCamera;
+    private CinemachineBasicMultiChannelPerlin cameraNoise;
 
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -63,6 +66,9 @@ public class DealerIK : MonoBehaviour
         _dealer = GetComponent<Dealer>();
         _animator = GetComponent<Animator>();
         _cancellationTokenSource = new CancellationTokenSource();
+        cameraNoise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        cameraNoise.m_AmplitudeGain = 0f;
+        cameraNoise.m_FrequencyGain = 0f;
     }
 
     private void Start()
@@ -265,6 +271,7 @@ public class DealerIK : MonoBehaviour
                 if (!happenOnce)
                 {
                     _dealer.TriggerCardPhysics();
+                    ApplyCameraShake(2f, 2f, 0.5f); // Shake with amplitude 2, frequency 2, for 0.5 seconds
                     happenOnce = true;
                 }
             }
@@ -364,6 +371,27 @@ public class DealerIK : MonoBehaviour
         ResetToIdle(dealerWin);
         _dealer.ResetDeckAndHands();
         happenOnce = false;
+    }
+
+    public void ApplyCameraShake(float amplitude, float frequency, float duration)
+    {
+        if (cameraNoise == null) return;
+
+        StartCoroutine(ShakeCameraRoutine(amplitude, frequency, duration));
+    }
+
+    private IEnumerator ShakeCameraRoutine(float amplitude, float frequency, float duration)
+    {
+        if (cameraNoise != null)
+        {
+            cameraNoise.m_AmplitudeGain = amplitude;
+            cameraNoise.m_FrequencyGain = frequency;
+
+            yield return new WaitForSeconds(duration);
+
+            cameraNoise.m_AmplitudeGain = 0f;
+            cameraNoise.m_FrequencyGain = 0f;
+        }
     }
 
     public void SlamIK()
