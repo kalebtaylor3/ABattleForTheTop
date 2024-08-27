@@ -55,6 +55,8 @@ public class DealerIK : MonoBehaviour
 
     private CancellationTokenSource _cancellationTokenSource;
 
+    bool happenOnce = false;
+
     private void Awake()
     {
         _scheduler = GetComponent<IKScheduler>();
@@ -257,6 +259,15 @@ public class DealerIK : MonoBehaviour
             rightHandPos = Vector3.Lerp(rightHandTargetMiddle.position, rightHandTargetLost.position, t);
             rightHandRot = Quaternion.Slerp(rightHandTargetMiddle.rotation, rightHandTargetLost.rotation, t);
             spineRot = Quaternion.Slerp(spineTargetMiddle.rotation, spineTargetLost.rotation, t);
+
+            if (t >= 1.0f)  // When the hands reach the lost positions
+            {
+                if (!happenOnce)
+                {
+                    _dealer.TriggerCardPhysics();
+                    happenOnce = true;
+                }
+            }
         }
         else
         {
@@ -352,6 +363,7 @@ public class DealerIK : MonoBehaviour
     {
         ResetToIdle(dealerWin);
         _dealer.ResetDeckAndHands();
+        happenOnce = false;
     }
 
     public void SlamIK()

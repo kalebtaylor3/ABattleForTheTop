@@ -166,9 +166,17 @@ public class Dealer : MonoBehaviour
 
             dealerCardComponent.UpdateCardVisuals();
 
+            // Enable the Rigidbody on the card for physics interactions
+            Rigidbody rb = cardObject.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = true; // Start as kinematic so it's not affected by physics initially
+            }
+
             dealtCards.Add(cardObject);
         }
     }
+
 
     public void MoveLastCardToPlayerPosition()
     {
@@ -297,6 +305,23 @@ public class Dealer : MonoBehaviour
         yield return new WaitForSeconds(_resetTime);
         _dealer.ResetGame(dealerWin);
     }
+
+    public void TriggerCardPhysics()
+    {
+        // Apply force to all dealt cards when the dealer slams the table
+        foreach (var card in dealtCards)
+        {
+            Rigidbody rb = card.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = false; // Ensure the Rigidbody is not kinematic
+                Vector3 forceDirection = new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)); // Randomize force direction
+                float forceMagnitude = Random.Range(5f, 10f); // Randomize force magnitude
+                rb.AddForce((forceDirection * forceMagnitude) * 25, ForceMode.Impulse);
+            }
+        }
+    }
+
 
     private int CalculateHandValue(List<DealerCard> hand)
     {
