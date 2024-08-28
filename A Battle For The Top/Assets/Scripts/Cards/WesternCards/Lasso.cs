@@ -29,9 +29,12 @@ public class Lasso : AbstractCombat
     public Transform handPullPosition; // Add this field for the pull position
     public float windUpDelay = 0.3f; // Delay before launching the lasso
 
+    private Animator _animator;
+
     private void Awake()
     {
         _ikScheduler = GetComponent<IKScheduler>();
+        _animator = GetComponent<Animator>();
     }
 
     public override bool CombatReadyToRun()
@@ -67,20 +70,25 @@ public class Lasso : AbstractCombat
     private IEnumerator LassoHandIKSequence()
     {
         // Step 1: Raise the hand above the head
-        yield return StartCoroutine(SmoothIKTransition(handRaisePosition, 0.2f, startPosition)); // Smoothly transition to the raise position
+        //yield return StartCoroutine(SmoothIKTransition(handRaisePosition, 0.2f, startPosition)); // Smoothly transition to the raise position
 
         // Step 2: Move the hand back to wind up
-        yield return StartCoroutine(SmoothIKTransition(handBackPosition, windUpDelay, handRaisePosition)); // Smoothly transition to the back position
+        //yield return StartCoroutine(SmoothIKTransition(handBackPosition, windUpDelay, handRaisePosition)); // Smoothly transition to the back position
+
+
 
         // Step 3: Launch the lasso
-        yield return StartCoroutine(SmoothIKTransition(handRestPosition, 0.2f, handBackPosition)); // Smoothly transition to the rest position
-        ShootLasso(); // Launch the lasso after the hand has moved forward
+        //yield return StartCoroutine(SmoothIKTransition(handRestPosition, 0.2f, handBackPosition)); // Smoothly transition to the rest position
+        //ShootLasso(); // Launch the lasso after the hand has moved forward
+
+        ApplyIK(handBackPosition, 1);
+
+        _animator.SetTrigger("Lasso");
 
         // Wait until the lasso action is complete
         yield return activeLassoRoutine;
 
         // Step 4: Ensure the IK stops after the action is complete
-        _ikScheduler.StopIK(AvatarIKGoal.RightHand);
     }
 
 
@@ -124,7 +132,7 @@ public class Lasso : AbstractCombat
         }
     }
 
-    private void ShootLasso()
+    public void ShootLasso()
     {
         // Cancel any active retraction or previous lasso routine
         if (activeLassoRoutine != null)
@@ -173,6 +181,7 @@ public class Lasso : AbstractCombat
 
         // Wait for a brief moment while the lasso is attached
         yield return new WaitForSeconds(0.5f);
+        _animator.SetTrigger("Retract");
 
         // Step 4: Transition to pull position right before the actual pull starts
         yield return StartCoroutine(SmoothIKTransition(handPullPosition, 0.2f, handRestPosition));
