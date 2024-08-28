@@ -1285,6 +1285,8 @@ GameObject:
   - component: {fileID: 6254568198665322700}
   - component: {fileID: 3494764486375703371}
   - component: {fileID: 7755365390542480511}
+  - component: {fileID: 430527868498751938}
+  - component: {fileID: 1092352403981925577}
   m_Layer: 15
   m_Name: Rigidbody Character
   m_TagString: Player
@@ -1319,6 +1321,7 @@ Transform:
   - {fileID: 8685629045512354813}
   - {fileID: 2992006094229545134}
   - {fileID: 4771728290877718954}
+  - {fileID: 8973297275971696679}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!54 &6166703247035367854
@@ -1448,7 +1451,7 @@ MonoBehaviour:
   - {fileID: 1461055670503368079}
   - {fileID: 6254568198665322700}
   - {fileID: 7755365390542480511}
-  - {fileID: 1461055670503368079}
+  - {fileID: 1092352403981925577}
   - {fileID: 1461055670503368079}
   - {fileID: 1461055670503368079}
   - {fileID: 1461055670503368079}
@@ -2717,6 +2720,59 @@ MonoBehaviour:
   cardType: 127
   ballRollAbility: {fileID: 3494764486375703371}
   activated: 0
+--- !u!114 &430527868498751938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797456225819413306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 264fbeb1bb9e44601bdb9d7f221edf4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityPriority: 3
+  canMove: 1
+  _lasso: {fileID: 1092352403981925577}
+--- !u!114 &1092352403981925577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797456225819413306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac9a4acbdcc7b458db1329f9fa0fb569, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatPriority: 0
+  AllowedAbilities:
+  - {fileID: 3797456225819413310}
+  - {fileID: 5295543893798943764}
+  - {fileID: 3797456225819413252}
+  - {fileID: 2536674040576789992}
+  - {fileID: 1939822118217720700}
+  - {fileID: 3878017899592148627}
+  - {fileID: 6423809000933012547}
+  - {fileID: 1764070892886877082}
+  - {fileID: 8826966994789190160}
+  - {fileID: 7737306116547435084}
+  - {fileID: 4333128637472120592}
+  abilityName: Lasso
+  abilityDescription: Get a Lasso
+  abilityProp: {fileID: 0}
+  cardIcon: {fileID: 21300080, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  _manager: {fileID: 9009967721863243831}
+  cardType: 127
+  lassoSpawn: {fileID: 5024304425624354628}
+  lassoSpeed: 20
+  maxLassoDistance: 30
+  lassoLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  rope: {fileID: 1160107634182697011}
 --- !u!1 &4240283749775208963
 GameObject:
   m_ObjectHideFlags: 0
@@ -4291,6 +4347,79 @@ Transform:
   - {fileID: 5590982607561869053}
   m_Father: {fileID: 3797456225461131174}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8260326411628260658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8973297275971696679}
+  - component: {fileID: 1160107634182697011}
+  m_Layer: 15
+  m_Name: LassoRope
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8973297275971696679
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8260326411628260658}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3797456225819413307}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1160107634182697011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8260326411628260658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4893cb9cd02544fa84d4c7d8fe33ba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 0}
+  segments: 20
+  lassoRadius: 2
+  rotationSpeed: 5
+  lassoTightness: 1
+  radiusCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.6652207
+      outSlope: 2.6652207
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.1461622
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8373669597184144712
 GameObject:
   m_ObjectHideFlags: 0
