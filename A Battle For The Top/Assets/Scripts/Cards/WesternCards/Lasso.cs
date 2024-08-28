@@ -81,8 +81,6 @@ public class Lasso : AbstractCombat
         //yield return StartCoroutine(SmoothIKTransition(handRestPosition, 0.2f, handBackPosition)); // Smoothly transition to the rest position
         //ShootLasso(); // Launch the lasso after the hand has moved forward
 
-        ApplyIK(handBackPosition, 1);
-
         _animator.SetTrigger("Lasso");
 
         // Wait until the lasso action is complete
