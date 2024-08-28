@@ -56,7 +56,7 @@ public class Lasso : AbstractCombat
             isLassoActive = true;
 
             rope.EnableLasso(); // Enable the LineRenderer for the rope
-            rope.UpdateLassoRope(lassoSpawn, lassoPoint); // Initial rope update
+            rope.UpdateLineRenderer(lassoSpawn, lassoPoint); // Initial rope update
 
             if (lassoSwing)
             {
@@ -101,7 +101,7 @@ public class Lasso : AbstractCombat
             if (attachedObject != null)
             {
                 attachedObject.position = Vector3.Lerp(originalPosition, targetPosition, elapsedTime / pullDuration);
-                rope.UpdateLassoRope(lassoSpawn, lassoPoint); // Update rope position during pull
+                rope.UpdateLineRenderer(lassoSpawn, lassoPoint); // Update rope position during pull
             }
             else
             {
@@ -122,12 +122,14 @@ public class Lasso : AbstractCombat
 
         while (elapsedTime < retractDuration)
         {
-            rope.UpdateLassoRope(lassoSpawn, lassoSpawn.position); // Update the lasso to simulate retraction
+            rope.UpdateLineRenderer(lassoSpawn, lassoSpawn.position); // Update the lasso to simulate retraction
             elapsedTime += Time.unscaledDeltaTime;
             yield return null;
         }
 
         rope.DisableLasso();
+        rope.lineRenderer.positionCount = 0;
+        rope.spring.Reset();
         isLassoActive = false;
         StopCombat();
     }
@@ -142,7 +144,7 @@ public class Lasso : AbstractCombat
 
         if (isLassoActive && lassoSwing)
         {
-            rope.UpdateLassoRope(lassoSpawn, lassoPoint); // Handle swinging update
+            rope.UpdateLineRenderer(lassoSpawn, lassoPoint); // Handle swinging update
 
             if (!_action.UseCard) // Stop swinging and retract when the action is released
             {

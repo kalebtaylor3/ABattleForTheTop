@@ -5,13 +5,15 @@ using UnityEngine;
 public class LassoRope : MonoBehaviour
 {
     [HideInInspector] public LineRenderer lineRenderer;
-    public int segments = 20; // Number of segments in the lasso loop
-    public float lassoRadius = 2f; // Initial radius of the lasso loop
-    public float rotationSpeed = 5f; // Speed at which the lasso rotates
-    public float lassoTightness = 1f; // Controls how tightly the lasso loop is wound
-    public AnimationCurve radiusCurve; // Curve to control the radius change during spinning
+    public int quality;
+    [HideInInspector] public Spring spring;
+    public float damper;
+    public float strenght;
+    public float velocity;
+    public float waveCount;
+    public float waveHeight;
+    public AnimationCurve affectCurve;
 
-    private float currentRotation = 0f;
 
     private void Awake()
     {
@@ -19,32 +21,41 @@ public class LassoRope : MonoBehaviour
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
-        lineRenderer.positionCount = segments + 1; // Closed loop
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.positionCount = 2;
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // Ensure you have a material
         lineRenderer.startColor = Color.black;
         lineRenderer.endColor = Color.black;
         lineRenderer.enabled = false; // Initially disable the LineRenderer
+        spring = new Spring();
+        spring.SetTarget(0);
     }
 
-    public void UpdateLassoRope(Transform lassoPivot, Vector3 targetPoint)
+    public void UpdateLineRenderer(Transform grappleSpawn, Vector3 grapplePoint)
     {
         if (lineRenderer.enabled)
         {
-            // Adjust the lasso radius based on the distance to the target
-            float distance = Vector3.Distance(lassoPivot.position, targetPoint);
-            float adjustedRadius = lassoRadius * radiusCurve.Evaluate(distance / lassoTightness);
-
-            // Increment rotation angle
-            currentRotation += rotationSpeed * Time.deltaTime;
-
-            // Update the lasso positions in a circular pattern
-            for (int i = 0; i <= segments; i++)
+            //lineRenderer.SetPosition(0, grappleSpawn.position); // Start point of the rope
+            //lineRenderer.SetPosition(1, grapplePoint); // End point of the rope
+            if (lineRenderer.positionCount == 0)
             {
-                float angle = i * Mathf.PI * 2f / segments + currentRotation;
-                Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * adjustedRadius;
-
-                lineRenderer.SetPosition(i, lassoPivot.position + offset);
+                spring.SetVelocity(velocity);
+                lineRenderer.positionCount = quality + 1;
             }
+
+            spring.SetDamper(damper);
+            spring.SetStrength(strenght);
+            spring.Update(Time.deltaTime);
+            var up = Quaternion.LookRotation(grapplePoint - grappleSpawn.position).normalized * Vector3.up;
+
+
+            for (int i = 0; i < quality + 1; i++)
+            {
+                var delta = i / (float)quality;
+                var offset = up * waveHeight * Mathf.Sin(delta * waveCount * Mathf.PI) * spring.Value * affectCurve.Evaluate(delta);
+
+                lineRenderer.SetPosition(i, Vector3.Lerp(grappleSpawn.position, grapplePoint, delta) + offset);
+            }
+
         }
     }
 
