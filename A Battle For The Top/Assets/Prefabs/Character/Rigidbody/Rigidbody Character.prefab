@@ -2767,7 +2767,7 @@ MonoBehaviour:
   _manager: {fileID: 9009967721863243831}
   cardType: 127
   lassoSpawn: {fileID: 5024304425624354628}
-  lassoSpeed: 20
+  lassoSpeed: 50
   maxLassoDistance: 30
   lassoLayerMask:
     serializedVersion: 2
