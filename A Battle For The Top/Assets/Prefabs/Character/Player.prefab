@@ -521,7 +521,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 4286315519120752009}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.9999999
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2145,15 +2145,15 @@ MonoBehaviour:
   m_LayerIndex: 0
   m_ShowDebugText: 0
   m_ChildCameras:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 6538669317476573847}
+  - {fileID: 7940529870963990524}
+  - {fileID: 7261334386235856999}
+  - {fileID: 6826935976096053008}
+  - {fileID: 6298160949431556862}
+  - {fileID: 5116622453611338105}
+  - {fileID: 3967010337433801954}
+  - {fileID: 551310429169350621}
+  - {fileID: 6538669316430560220}
   m_Instructions:
   - m_FullHash: 0
     m_VirtualCamera: {fileID: 6538669317476573847}
@@ -3562,8 +3562,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5389312938347298543}
   m_HandleRect: {fileID: 8525523724383283884}
   m_Direction: 2
-  m_Value: 1.0000045
-  m_Size: 0.9149999
+  m_Value: 1.000001
+  m_Size: 0.915
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3955,6 +3955,10 @@ PrefabInstance:
       propertyPath: pauseMenu
       value: 
       objectReference: {fileID: 6688505731037409461}
+    - target: {fileID: 8714481368707090554, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9009967721863243831, guid: f85efb8fc2a1b154ca06a1da6bbec2f1, type: 3}
       propertyPath: deckUI
       value: 
