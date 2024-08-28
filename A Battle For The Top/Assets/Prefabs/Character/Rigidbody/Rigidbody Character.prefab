@@ -2773,6 +2773,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   rope: {fileID: 1160107634182697011}
+  retractDuration: 0.5
 --- !u!1 &4240283749775208963
 GameObject:
   m_ObjectHideFlags: 0

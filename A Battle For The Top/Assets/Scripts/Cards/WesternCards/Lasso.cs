@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using BFTT.Combat;
 
@@ -11,10 +10,14 @@ public class Lasso : AbstractCombat
     public float maxLassoDistance = 30f; // Maximum distance the lasso can travel
     public LayerMask lassoLayerMask; // Layer mask for detecting eligible platforms
     public LassoRope rope; // Reference to the LassoRope script
+    public float retractDuration;
 
     private Vector3 lassoPoint; // The point where the lasso hits or attaches
     private bool isLassoActive = false;
     private Transform attachedObject; // The platform or object we're pulling or swinging from
+
+    private Coroutine activeLassoRoutine; // Store the active lasso routine
+    private bool isRetracting = false; // Track whether the lasso is retracting
 
     public override bool CombatReadyToRun()
     {
@@ -48,6 +51,18 @@ public class Lasso : AbstractCombat
 
     private void ShootLasso()
     {
+        // Cancel any active retraction or previous lasso routine
+        if (activeLassoRoutine != null)
+        {
+            StopCoroutine(activeLassoRoutine);
+            activeLassoRoutine = null;
+        }
+
+        // Reset the lasso rope before shooting again
+        rope.lineRenderer.positionCount = 0;
+        rope.spring.Reset();
+        isRetracting = false; // Reset retracting flag
+
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxLassoDistance, lassoLayerMask))
         {
@@ -55,17 +70,7 @@ public class Lasso : AbstractCombat
             attachedObject = hit.transform; // The object the lasso hit
             isLassoActive = true;
 
-            rope.EnableLasso(); // Enable the LineRenderer for the rope
-            rope.UpdateLineRenderer(lassoSpawn, lassoPoint); // Initial rope update
-
-            if (lassoSwing)
-            {
-                StartSwinging();
-            }
-            else
-            {
-                StartCoroutine(PullPlatform());
-            }
+            activeLassoRoutine = StartCoroutine(ShootAndPullLasso());
         }
         else
         {
@@ -74,55 +79,42 @@ public class Lasso : AbstractCombat
         }
     }
 
-    private void StartSwinging()
+    private IEnumerator ShootAndPullLasso()
     {
-        Debug.Log("Started swinging from point: " + lassoPoint);
+        rope.EnableLasso();
+        float shootDuration = Vector3.Distance(lassoSpawn.position, lassoPoint) / lassoSpeed;
 
-        // You can integrate swing mechanics here or call an existing function
-    }
-
-    private IEnumerator PullPlatform()
-    {
-        if (attachedObject == null)
-        {
-            Debug.LogWarning("No object to pull. Stopping combat.");
-            StopCombat();
-            yield break;
-        }
-
-        Vector3 originalPosition = attachedObject.position;
-        Vector3 targetPosition = lassoSpawn.position;
-
-        float pullDuration = 1.5f; // Time taken to pull the platform
         float elapsedTime = 0f;
-
-        while (elapsedTime < pullDuration)
+        while (elapsedTime < shootDuration)
         {
-            if (attachedObject != null)
-            {
-                attachedObject.position = Vector3.Lerp(originalPosition, targetPosition, elapsedTime / pullDuration);
-                rope.UpdateLineRenderer(lassoSpawn, lassoPoint); // Update rope position during pull
-            }
-            else
-            {
-                Debug.LogWarning("Attached object became null during the pull.");
-                break;
-            }
-            elapsedTime += Time.unscaledDeltaTime;
+            Vector3 currentLassoPosition = Vector3.Lerp(lassoSpawn.position, lassoPoint, elapsedTime / shootDuration);
+            rope.UpdateLineRenderer(lassoSpawn, currentLassoPosition);
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        StartCoroutine(RetractLasso());
+        // Ensure the lasso reaches the target
+        rope.UpdateLineRenderer(lassoSpawn, lassoPoint);
+
+        // Wait for a brief moment while the lasso is attached
+        yield return new WaitForSeconds(0.5f);
+
+        // Start pulling the platform briefly
+        
+
+        // Retract the lasso immediately after starting the pull
+        activeLassoRoutine = StartCoroutine(RetractLasso());
     }
 
     private IEnumerator RetractLasso()
     {
-        float retractDuration = 0.5f; // Time to retract
+        isRetracting = true;
         float elapsedTime = 0f;
 
         while (elapsedTime < retractDuration)
         {
-            rope.UpdateLineRenderer(lassoSpawn, lassoSpawn.position); // Update the lasso to simulate retraction
+            Vector3 retractPosition = Vector3.Lerp(lassoPoint, lassoSpawn.position, elapsedTime / retractDuration);
+            rope.UpdateLineRenderer(lassoSpawn, retractPosition); // Update the lasso to simulate retraction
             elapsedTime += Time.unscaledDeltaTime;
             yield return null;
         }
@@ -131,21 +123,21 @@ public class Lasso : AbstractCombat
         rope.lineRenderer.positionCount = 0;
         rope.spring.Reset();
         isLassoActive = false;
+        isRetracting = false;
         StopCombat();
     }
 
     public override void UpdateCombat()
     {
-        if (!_action.UseCard && !isLassoActive)
+        // If the lasso is active, keep updating the rope's position
+        if (isLassoActive && !isRetracting)
         {
-            StopCombat();
-            return;
+            rope.UpdateLineRenderer(lassoSpawn, lassoPoint);
         }
 
+        // Handle swinging update
         if (isLassoActive && lassoSwing)
         {
-            rope.UpdateLineRenderer(lassoSpawn, lassoPoint); // Handle swinging update
-
             if (!_action.UseCard) // Stop swinging and retract when the action is released
             {
                 StopSwinging();
@@ -156,14 +148,22 @@ public class Lasso : AbstractCombat
     private void StopSwinging()
     {
         Debug.Log("Stopping swinging");
-        StartCoroutine(RetractLasso());
+        if (activeLassoRoutine != null)
+        {
+            StopCoroutine(activeLassoRoutine);
+        }
+        activeLassoRoutine = StartCoroutine(RetractLasso());
     }
 
     public override void OnStopCombat()
     {
         if (!isLassoActive)
         {
-            StartCoroutine(RetractLasso());
+            if (activeLassoRoutine != null)
+            {
+                StopCoroutine(activeLassoRoutine);
+            }
+            activeLassoRoutine = StartCoroutine(RetractLasso());
         }
     }
 
