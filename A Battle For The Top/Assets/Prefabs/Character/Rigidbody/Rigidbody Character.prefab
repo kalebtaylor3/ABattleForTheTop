@@ -4397,8 +4397,8 @@ MonoBehaviour:
   damper: 14
   strenght: 800
   velocity: 15
-  waveCount: 3
-  waveHeight: 10
+  waveCount: 20
+  waveHeight: 30
   affectCurve:
     serializedVersion: 2
     m_Curve:
@@ -4412,10 +4412,19 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.1461622
     - serializedVersion: 3
+      time: 0.5724662
+      value: 0.27888426
+      inSlope: 2.2954378
+      outSlope: 2.2954378
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.08389314
+    - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.65230924
+      outSlope: -0.65230924
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -4423,6 +4432,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _color: {r: 0.509434, g: 0.16608946, b: 0, a: 1}
+  startWidth: 0.04
+  endWidth: 0.01
 --- !u!1 &8373669597184144712
 GameObject:
   m_ObjectHideFlags: 0

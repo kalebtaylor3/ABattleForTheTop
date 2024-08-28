@@ -1,41 +1,46 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LassoRope : MonoBehaviour
 {
     [HideInInspector] public LineRenderer lineRenderer;
-    public int quality;
+    public int quality = 20;  // Increase quality for smoother curves
     [HideInInspector] public Spring spring;
-    public float damper;
-    public float strenght;
-    public float velocity;
-    public float waveCount;
-    public float waveHeight;
+    public float damper = 5f;
+    public float strenght = 100f;
+    public float velocity = 20f;
+    public float waveCount = 5f; // Increase wave count for more loops
+    public float waveHeight = 0.2f; // Increase wave height for more pronounced loops
     public AnimationCurve affectCurve;
-
+    public Color _color = Color.yellow;  // Typical lasso color
+    public float startWidth;
+    public float endWidth;
 
     private void Awake()
     {
         // Initialize the LineRenderer
         lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.startWidth = 0.1f;
-        lineRenderer.endWidth = 0.1f;
+        lineRenderer.startWidth = startWidth; // Thicker rope
+        lineRenderer.endWidth = endWidth;  // Slightly taper the end
         lineRenderer.positionCount = 2;
         lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // Ensure you have a material
-        lineRenderer.startColor = Color.black;
-        lineRenderer.endColor = Color.black;
+        lineRenderer.startColor = _color;
+        lineRenderer.endColor = _color;
         lineRenderer.enabled = false; // Initially disable the LineRenderer
         spring = new Spring();
         spring.SetTarget(0);
+
+        // Default affectCurve to make the lasso look more dynamic
+        if (affectCurve == null || affectCurve.keys.Length == 0)
+        {
+            affectCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.5f, 1), new Keyframe(1, 0));
+        }
     }
 
     public void UpdateLineRenderer(Transform grappleSpawn, Vector3 grapplePoint)
     {
         if (lineRenderer.enabled)
         {
-            //lineRenderer.SetPosition(0, grappleSpawn.position); // Start point of the rope
-            //lineRenderer.SetPosition(1, grapplePoint); // End point of the rope
             if (lineRenderer.positionCount == 0)
             {
                 spring.SetVelocity(velocity);
@@ -47,7 +52,6 @@ public class LassoRope : MonoBehaviour
             spring.Update(Time.deltaTime);
             var up = Quaternion.LookRotation(grapplePoint - grappleSpawn.position).normalized * Vector3.up;
 
-
             for (int i = 0; i < quality + 1; i++)
             {
                 var delta = i / (float)quality;
@@ -55,7 +59,6 @@ public class LassoRope : MonoBehaviour
 
                 lineRenderer.SetPosition(i, Vector3.Lerp(grappleSpawn.position, grapplePoint, delta) + offset);
             }
-
         }
     }
 
