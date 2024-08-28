@@ -9,27 +9,27 @@ public class LassoAbility : AbstractAbility
 
     public override void OnStartAbility()
     {
-        // Initialize any necessary components or states here
+        //
     }
 
     public override bool ReadyToRun()
     {
-        // This runs if we are swinging with the lasso
-        if (_lasso.GetIsSwining())
+        //
+        if (_lasso.GetIsRopeOut())
             return true;
         return false;
     }
 
     public override void UpdateAbility()
     {
-        // Handle any updates necessary while swinging
-        if (!_lasso.GetIsSwining())
+        //
+
+        if (!_lasso.GetIsRopeOut())
             StopAbility();
     }
 
     public override void OnStopAbility()
     {
         base.OnStopAbility();
-        // Handle cleanup after stopping the ability
     }
 }

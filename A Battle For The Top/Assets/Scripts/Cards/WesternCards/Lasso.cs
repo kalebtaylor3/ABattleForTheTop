@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using BFTT.Combat;
+using BFTT.IK;
 
 public class Lasso : AbstractCombat
 {
@@ -18,6 +19,19 @@ public class Lasso : AbstractCombat
 
     private Coroutine activeLassoRoutine; // Store the active lasso routine
     private bool isRetracting = false; // Track whether the lasso is retracting
+
+    // IK-related fields
+    private IKScheduler _ikScheduler;
+    public Transform startPosition;
+    public Transform handRaisePosition;
+    public Transform handBackPosition;
+    public Transform handRestPosition;
+    public float windUpDelay = 0.3f; // Delay before launching the lasso
+
+    private void Awake()
+    {
+        _ikScheduler = GetComponent<IKScheduler>();
+    }
 
     public override bool CombatReadyToRun()
     {
@@ -40,12 +54,70 @@ public class Lasso : AbstractCombat
         if (lassoSwing)
         {
             Debug.Log("Swinging from Lasso");
-            ShootLasso();
+            StartCoroutine(LassoHandIKSequence());
         }
         else
         {
             Debug.Log("Pulling Platform with Lasso");
-            ShootLasso();
+            StartCoroutine(LassoHandIKSequence());
+        }
+    }
+
+    private IEnumerator LassoHandIKSequence()
+    {
+        // Step 1: Raise the hand above the head
+        yield return StartCoroutine(SmoothIKTransition(handRaisePosition, 0.2f, startPosition)); // Smoothly transition to the raise position
+
+        // Step 2: Move the hand back to wind up
+        yield return StartCoroutine(SmoothIKTransition(handBackPosition, windUpDelay, handRaisePosition)); // Smoothly transition to the back position
+
+        // Step 3: Launch the lasso
+        yield return StartCoroutine(SmoothIKTransition(handRestPosition, 0.2f, handBackPosition)); // Smoothly transition to the rest position
+        ShootLasso(); // Launch the lasso after the hand has moved forward
+
+        // Step 4: Wait until the lasso action is complete before clearing IK
+        yield return activeLassoRoutine;
+
+        // Clear IK
+        _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+    }
+
+    private IEnumerator SmoothIKTransition(Transform target, float duration, Transform _startPosition)
+    {
+        if (_ikScheduler == null || target == null) yield break;
+
+        Vector3 startPosition = _startPosition.position;
+        Quaternion startRotation = _startPosition.rotation;
+        Vector3 endPosition = target.position;
+        Quaternion endRotation = target.rotation;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            Vector3 interpolatedPosition = Vector3.Lerp(startPosition, endPosition, t);
+            Quaternion interpolatedRotation = Quaternion.Slerp(startRotation, endRotation, t);
+
+            IKPass rightHandPass = new IKPass(interpolatedPosition, interpolatedRotation, AvatarIKGoal.RightHand, 1f, 1f);
+            _ikScheduler.ApplyIK(rightHandPass);
+
+            yield return null;
+        }
+
+        // Ensure the final position and rotation are applied
+        IKPass finalPass = new IKPass(endPosition, endRotation, AvatarIKGoal.RightHand, 1f, 1f);
+        _ikScheduler.ApplyIK(finalPass);
+    }
+
+
+    private void ApplyIK(Transform target, float weight)
+    {
+        if (_ikScheduler != null && target != null)
+        {
+            IKPass rightHandPass = new IKPass(target.position, target.rotation, AvatarIKGoal.RightHand, weight, weight);
+            _ikScheduler.ApplyIK(rightHandPass);
         }
     }
 
@@ -100,7 +172,7 @@ public class Lasso : AbstractCombat
         yield return new WaitForSeconds(0.5f);
 
         // Start pulling the platform briefly
-        
+
 
         // Retract the lasso immediately after starting the pull
         activeLassoRoutine = StartCoroutine(RetractLasso());
@@ -129,6 +201,7 @@ public class Lasso : AbstractCombat
 
     public override void UpdateCombat()
     {
+
         // If the lasso is active, keep updating the rope's position
         if (isLassoActive && !isRetracting)
         {
@@ -157,13 +230,14 @@ public class Lasso : AbstractCombat
 
     public override void OnStopCombat()
     {
+        rope.lineRenderer.positionCount = 0;
+        rope.spring.Reset();
         if (!isLassoActive)
         {
             if (activeLassoRoutine != null)
             {
                 StopCoroutine(activeLassoRoutine);
             }
-            activeLassoRoutine = StartCoroutine(RetractLasso());
         }
     }
 
@@ -173,7 +247,7 @@ public class Lasso : AbstractCombat
         return !isLassoActive;
     }
 
-    public bool GetIsSwining()
+    public bool GetIsRopeOut()
     {
         return lassoSwing;
     }
