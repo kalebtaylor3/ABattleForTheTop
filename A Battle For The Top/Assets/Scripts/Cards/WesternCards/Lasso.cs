@@ -26,6 +26,7 @@ public class Lasso : AbstractCombat
     public Transform handRaisePosition;
     public Transform handBackPosition;
     public Transform handRestPosition;
+    public Transform handPullPosition; // Add this field for the pull position
     public float windUpDelay = 0.3f; // Delay before launching the lasso
 
     private void Awake()
@@ -75,12 +76,14 @@ public class Lasso : AbstractCombat
         yield return StartCoroutine(SmoothIKTransition(handRestPosition, 0.2f, handBackPosition)); // Smoothly transition to the rest position
         ShootLasso(); // Launch the lasso after the hand has moved forward
 
-        // Step 4: Wait until the lasso action is complete before clearing IK
+        // Wait until the lasso action is complete
         yield return activeLassoRoutine;
 
-        // Clear IK
+        // Step 4: Ensure the IK stops after the action is complete
         _ikScheduler.StopIK(AvatarIKGoal.RightHand);
     }
+
+
 
     private IEnumerator SmoothIKTransition(Transform target, float duration, Transform _startPosition)
     {
@@ -171,12 +174,20 @@ public class Lasso : AbstractCombat
         // Wait for a brief moment while the lasso is attached
         yield return new WaitForSeconds(0.5f);
 
-        // Start pulling the platform briefly
+        // Step 4: Transition to pull position right before the actual pull starts
+        yield return StartCoroutine(SmoothIKTransition(handPullPosition, 0.2f, handRestPosition));
 
+        // Now we can start pulling the platform
+        // Add the logic to start pulling the platform here, if necessary
 
         // Retract the lasso immediately after starting the pull
         activeLassoRoutine = StartCoroutine(RetractLasso());
+
+        // Stop the IK after the retraction is done
+        _ikScheduler.StopIK(AvatarIKGoal.RightHand);
     }
+
+
 
     private IEnumerator RetractLasso()
     {
@@ -232,14 +243,19 @@ public class Lasso : AbstractCombat
     {
         rope.lineRenderer.positionCount = 0;
         rope.spring.Reset();
-        if (!isLassoActive)
+        if (activeLassoRoutine != null)
         {
-            if (activeLassoRoutine != null)
-            {
-                StopCoroutine(activeLassoRoutine);
-            }
+            StopCoroutine(activeLassoRoutine);
+            activeLassoRoutine = null;
         }
+
+        // Stop the IK when the combat stops
+        _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+
+        isLassoActive = false;
+        isRetracting = false;
     }
+
 
     public override bool ReadyToExit()
     {

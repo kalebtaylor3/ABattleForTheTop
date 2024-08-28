@@ -320,6 +320,37 @@ Transform:
   - {fileID: 4481339283339999505}
   m_Father: {fileID: 5522513335331594376}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1873091877545573667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1884191613259488437}
+  m_Layer: 15
+  m_Name: HandPull
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1884191613259488437
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873091877545573667}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.48159403, y: 0.48319528, z: 0.3618188, w: -0.63535565}
+  m_LocalPosition: {x: 0.18500137, y: 0.5950001, z: -0.00000013799263}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5357513697459948290}
+  m_LocalEulerAnglesHint: {x: -74.076, y: -75.396, z: -358.822}
 --- !u!1 &1950967642453367422
 GameObject:
   m_ObjectHideFlags: 0
@@ -2810,6 +2841,7 @@ MonoBehaviour:
   handRaisePosition: {fileID: 4990159744711091112}
   handBackPosition: {fileID: 7904369848266756602}
   handRestPosition: {fileID: 5408365906680525513}
+  handPullPosition: {fileID: 1884191613259488437}
   windUpDelay: 0.3
 --- !u!1 &3937186222745755526
 GameObject:
@@ -2843,6 +2875,7 @@ Transform:
   - {fileID: 4990159744711091112}
   - {fileID: 5408365906680525513}
   - {fileID: 7904369848266756602}
+  - {fileID: 1884191613259488437}
   m_Father: {fileID: 3797456225819413307}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4240283749775208963
