@@ -403,5 +403,10 @@ namespace BFTT.Components
         {
             //
         }
+
+        public void StartJump()
+        {
+            //throw new System.NotImplementedException();
+        }
     }
 }

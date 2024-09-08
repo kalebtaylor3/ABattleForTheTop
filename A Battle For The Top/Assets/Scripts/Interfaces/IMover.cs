@@ -28,5 +28,6 @@ namespace BFTT.Components
         void StopRootMotion();
         Vector3 GetRelativeInput(Vector2 input);
         void SetNoClip();
+        public void StartJump();
     }
 }

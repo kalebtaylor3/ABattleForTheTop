@@ -475,5 +475,10 @@ namespace BFTT.Components
         {
             Debug.Log("Ur on  a horse");
         }
+
+        public void StartJump()
+        {
+            
+        }
     }
 }

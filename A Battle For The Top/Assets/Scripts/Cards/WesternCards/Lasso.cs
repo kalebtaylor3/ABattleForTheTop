@@ -39,6 +39,8 @@ public class Lasso : AbstractCombat
     private Animator _animator;
     private Rigidbody _rigidbody; // For handling player movement
     public Transform _pullPoint;
+    float ropeLength;
+    bool swingOnce = false;
 
     PullablePlatform currentPullablePlatform = null;
 
@@ -157,7 +159,7 @@ public class Lasso : AbstractCombat
             Debug.Log("Lasso missed, shooting forward a short distance and retracting.");
 
             // Set the lasso point a bit forward from the spawn point
-            lassoPoint = lassoSpawn.position + Camera.current.transform.forward * 3f; // 5 units in front, adjust this distance if needed
+            lassoPoint = lassoSpawn.position + Camera.main.transform.forward * 3f; // 5 units in front, adjust this distance if needed
 
             // Start the forward shot and immediate retraction routine
             activeLassoRoutine = StartCoroutine(ShootAndRetract());
@@ -249,43 +251,42 @@ public class Lasso : AbstractCombat
     {
         rope.EnableLasso();
         isSwinging = true;
+        _mover.lassoSwing = true;
 
-        // Set the maximum rope length (the distance between the player and the lasso point)
-        float ropeLength = Vector3.Distance(lassoPoint, transform.position);
+        // Set the rope length (distance between the player and the lasso point)
+        ropeLength = Vector3.Distance(lassoPoint, transform.position);
 
-        // Stop player movement and control their movement manually while swinging
-        _mover.SetVelocity(Vector3.zero); // Stop all current movement
         Debug.Log("Lasso attached for swinging");
 
+        // Wait until the player finishes jumping before starting the swing
+        while (_mover.Grounded || _mover.isJumping)
+        {
+            yield return null; // Wait until player is off the ground and done jumping
+        }
+
+        // Disable gravity for smooth swing
+        _mover.DisableGravity();
+
+        // Initiate swing mechanics once jump is done
         while (isSwinging)
         {
-
+            // Check if the player becomes grounded again, then stop swinging
             if (_mover.Grounded)
+            {
+                Debug.Log("Player grounded, ending swing");
+
                 break;
+            }
 
-            // Calculate the direction from the lasso point to the player
-            Vector3 directionToPlayer = transform.position - lassoPoint;
+            // Update player input for swinging
+            _mover.UpdateSwingInput(_action.move);
 
-            // Normalize the direction and multiply it by the fixed rope length to prevent infinite stretching
-            directionToPlayer = directionToPlayer.normalized * ropeLength;
-
-            // Use time-based trigonometric functions to simulate swinging motion
-            Vector3 swingOffset = new Vector3(
-                Mathf.Sin(Time.time * swingAmplitude),  // Horizontal swinging
-                Mathf.Cos(Time.time * swingAmplitude)   // Vertical swinging
-            );
-
-            // Update the player's position while maintaining the fixed rope length
-            Vector3 targetPosition = lassoPoint + directionToPlayer + swingOffset;
-
-            // Smoothly move the player to the new position
-            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 2);
-
-            // Update the rope's visual line renderer
-            rope.UpdateLineRenderer(lassoSpawn, lassoPoint);
-
+            // Continue swing physics handled by RigidbodyMover
             yield return null;
         }
+
+        // Enable gravity again when the swing ends
+        _mover.EnableGravity();
     }
 
 
@@ -295,6 +296,9 @@ public class Lasso : AbstractCombat
 
         isSwinging = false;
         lassoSwing = false;
+        swingOnce = false;
+        _mover.lassoSwing = false;
+        _mover.StopSwing();
         StartCoroutine(SmoothIKTransition(handPullPosition, 0.2f, handRestPosition));
         Debug.Log("Stopped swinging");
 
@@ -354,6 +358,14 @@ public class Lasso : AbstractCombat
             DetachSwinging(); // Stop swinging and retract when the player stops aiming
             _zoomAbility.canZoom = false;
         }
+
+        if (lassoSwing && !_mover.Grounded && !swingOnce)
+        {
+            isSwinging = true;
+            _mover.StartSwing(lassoPoint, ropeLength);
+            swingOnce = true;
+        }
+
     }
 
     public override void OnStopCombat()

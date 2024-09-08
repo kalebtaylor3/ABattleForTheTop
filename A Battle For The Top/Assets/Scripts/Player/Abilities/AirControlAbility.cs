@@ -166,6 +166,7 @@ namespace BFTT.Abilities
         {
             Vector3 velocity = _mover.GetVelocity();
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * _mover.GetGravity());
+            _mover.StartJump();
 
             _mover.SetVelocity(velocity);
             _animator.CrossFadeInFixedTime(animJumpState, 0.1f);

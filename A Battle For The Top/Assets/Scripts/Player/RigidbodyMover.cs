@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BFTT.Components
 {
@@ -57,6 +58,18 @@ namespace BFTT.Components
         private bool _hasAnimator;
         private bool _isOnIce = false;
 
+        // Lasso-specific fields
+        private bool isSwinging = false;
+        private Vector3 swingPoint; // The point where the lasso is attached
+        private float ropeLength; // The maximum length of the lasso
+        private Vector2 playerInput; // Store player movement input for swing control
+        private float swingForceMultiplier = 30f; // Adjust this to tweak the swing force
+        [HideInInspector] public bool isJumping = false; // Track if the player is jumping
+        private float jumpCooldown = 0.5f; // Cooldown time to ensure jump finishes before swinging
+
+        [HideInInspector] public bool lassoSwing = false;
+
+
         private void Awake()
         {
             _mainCamera = Camera.main.gameObject;
@@ -90,6 +103,16 @@ namespace BFTT.Components
         private void FixedUpdate()
         {
             // Manage collision and gravity only if there's a change in NoClip status
+
+            if (isJumping)
+            {
+                jumpCooldown -= Time.deltaTime;
+                if (jumpCooldown <= 0)
+                {
+                    isJumping = false;
+                }
+            }
+
             if (NoClipEnabled != _wasNoClipEnabled)
             {
                 if (NoClipEnabled)
@@ -100,17 +123,77 @@ namespace BFTT.Components
                 else
                 {
                     EnableCollision();
-                    EnableGravity();
+                    if(!isSwinging)
+                        EnableGravity();
                 }
                 _wasNoClipEnabled = NoClipEnabled;
             }
 
-            if (!NoClipEnabled)
+            if (!NoClipEnabled && !isSwinging)
             {
                 GroundedCheck();
                 GravityControl();
                 HandleSliding();
             }
+
+            if (isSwinging)
+            {
+                ApplySwinging();
+                GroundedCheck();
+            }
+        }
+
+        public void StartJump()
+        {
+            isJumping = true;
+            jumpCooldown = 0.5f; // Reset the jump cooldown
+        }
+
+        private void ApplySwinging()
+        {
+            // Calculate the direction to the swing point (lasso point)
+            Vector3 directionToSwingPoint = swingPoint - transform.position;
+            float currentDistance = directionToSwingPoint.magnitude;
+
+            // If the player is beyond the rope length, gently pull them back
+            if (currentDistance > ropeLength)
+            {
+                Vector3 clampedPosition = swingPoint + directionToSwingPoint.normalized * ropeLength;
+
+                // Apply a gentle force to bring the player back within the rope length
+                Vector3 correctionForce = (clampedPosition - transform.position) * 2f;  // Gentle correction force
+                _rigidbody.AddForce(correctionForce, ForceMode.Acceleration);
+
+                // Only correct velocity if the player is moving away from the swing point
+                Vector3 velocityAlongRope = Vector3.Project(_rigidbody.velocity, directionToSwingPoint.normalized);
+                _rigidbody.velocity -= velocityAlongRope * 0.1f;  // Small velocity correction to prevent overshooting
+            }
+
+            // Simulate natural pendulum motion with gravity
+            _rigidbody.AddForce(Vector3.down * Mathf.Abs(Gravity), ForceMode.Acceleration);
+
+            // Add perpendicular swinging force for natural pendulum motion
+            Vector3 perpendicularSwingForce = Vector3.Cross(directionToSwingPoint.normalized, Vector3.up).normalized;
+            _rigidbody.AddForce(perpendicularSwingForce * swingForceMultiplier, ForceMode.Acceleration);
+
+            // Handle player input: Allow the player to add a bit of force to control the swing
+            if (playerInput.magnitude > 0)
+            {
+                Vector3 inputSwingForce = new Vector3(playerInput.x, 0, playerInput.y) * swingForceMultiplier * 0.4f;
+                _rigidbody.AddForce(inputSwingForce, ForceMode.Acceleration);
+            }
+
+            // If no input, allow gravity and the pendulum motion to naturally bring the player to the lowest point
+            if (playerInput.magnitude == 0)
+            {
+                // Gravity and swing momentum will take over, no input forces applied
+                _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, Vector3.zero, Time.deltaTime * 0.05f);  // Very gradual slow down
+            }
+        }
+
+        public void UpdateSwingInput(Vector2 input)
+        {
+            playerInput = input;
         }
 
         private void OnAnimatorMove()
@@ -130,6 +213,22 @@ namespace BFTT.Components
             _animIDSpeed = Animator.StringToHash("Speed");
             _animIDMotionSpeed = Animator.StringToHash("Motion Speed");
         }
+
+        public void StartSwing(Vector3 lassoPoint, float maxRopeLength)
+        {
+            isSwinging = true;
+            swingPoint = lassoPoint;
+            ropeLength = maxRopeLength;
+        }
+
+        // Disable swinging mode
+        // Disable swinging mode and handle transition to grounded state
+        public void StopSwing()
+        {
+            isSwinging = false;
+            EnableGravity(); // Re-enable gravity when not swinging
+        }
+
 
         private void GroundedCheck()
         {
@@ -236,6 +335,7 @@ namespace BFTT.Components
             {
                 Vector3 velocity = targetDirection.normalized * _speed;
                 velocity.y = _rigidbody.velocity.y;
+
                 _rigidbody.velocity = velocity;
             }
         }
