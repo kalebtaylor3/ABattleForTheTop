@@ -133,7 +133,6 @@ public class Lasso : AbstractCombat
 
         // Reset the lasso rope before shooting again
         rope.lineRenderer.positionCount = 0;
-        //rope.spring.Reset();
         isRetracting = false; // Reset retracting flag
 
         RaycastHit hit;
@@ -154,13 +153,50 @@ public class Lasso : AbstractCombat
         }
         else
         {
-            Debug.Log("Lasso missed");
-            // Stop the IK when the combat stops
-            _ikScheduler.StopIK(AvatarIKGoal.RightHand);
-            _animator.SetTrigger("Retract");
-            StopCombat();
+            // When the lasso misses, shoot it forward a little and retract immediately
+            Debug.Log("Lasso missed, shooting forward a short distance and retracting.");
+
+            // Set the lasso point a bit forward from the spawn point
+            lassoPoint = lassoSpawn.position + Camera.current.transform.forward * 3f; // 5 units in front, adjust this distance if needed
+
+            // Start the forward shot and immediate retraction routine
+            activeLassoRoutine = StartCoroutine(ShootAndRetract());
         }
     }
+
+    private IEnumerator ShootAndRetract()
+    {
+        // Enable the lasso visuals
+        rope.EnableLasso();
+
+        // Shoot the lasso a short distance forward
+        float shootDuration = Vector3.Distance(lassoSpawn.position, lassoPoint) / lassoSpeed;
+        float elapsedTime = 0f;
+
+        // Move the lasso forward over time
+        while (elapsedTime < shootDuration)
+        {
+            Vector3 currentLassoPosition = Vector3.Lerp(lassoSpawn.position, lassoPoint, elapsedTime / shootDuration);
+            rope.UpdateLineRenderer(lassoSpawn, currentLassoPosition);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure the lasso reaches the short forward target
+        rope.UpdateLineRenderer(lassoSpawn, lassoPoint);
+
+        // Wait for a short moment before retracting
+        _animator.SetTrigger("Retract");
+
+        yield return StartCoroutine(SmoothIKTransition(handPullPosition, 0.2f, handRestPosition));
+
+        // Retract the lasso immediately after starting the pull
+        activeLassoRoutine = StartCoroutine(RetractLasso());
+
+        // Stop the IK after the retraction is done
+        _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+    }
+
 
     private IEnumerator ShootAndPullLasso()
     {
@@ -211,33 +247,43 @@ public class Lasso : AbstractCombat
 
     private IEnumerator AttachForSwing()
     {
-        // Attach the lasso to the target but don't apply immediate force
         rope.EnableLasso();
         isSwinging = true;
 
-        RaycastHit hit;
-        currentPullablePlatform = null;
-        if (Physics.Raycast(lassoSpawn.position, (lassoPoint - lassoSpawn.position).normalized, out hit, Vector3.Distance(lassoSpawn.position, lassoPoint)))
-        {
-            // Check if the object hit has the PullablePlatform component
-            currentPullablePlatform = hit.collider.GetComponent<PullablePlatform>();
-        }
+        // Set the maximum rope length (the distance between the player and the lasso point)
+        float ropeLength = Vector3.Distance(lassoPoint, transform.position);
 
+        // Stop player movement and control their movement manually while swinging
+        _mover.SetVelocity(Vector3.zero); // Stop all current movement
         Debug.Log("Lasso attached for swinging");
 
         while (isSwinging)
         {
-            // If the player is grounded, don't apply force (let them hang)
-            if (!_mover.Grounded)
-            {
-                // If the player leaves the ground, allow swinging motion
-                Vector3 swingDirection = new Vector3(Mathf.Sin(Time.time), Mathf.Cos(Time.time), 0) * swingAmplitude;
-                Vector3 swingPosition = lassoPoint + swingDirection;
 
-                transform.position = Vector3.Lerp(transform.position, swingPosition, Time.deltaTime);
-            }
+            if (_mover.Grounded)
+                break;
 
+            // Calculate the direction from the lasso point to the player
+            Vector3 directionToPlayer = transform.position - lassoPoint;
+
+            // Normalize the direction and multiply it by the fixed rope length to prevent infinite stretching
+            directionToPlayer = directionToPlayer.normalized * ropeLength;
+
+            // Use time-based trigonometric functions to simulate swinging motion
+            Vector3 swingOffset = new Vector3(
+                Mathf.Sin(Time.time * swingAmplitude),  // Horizontal swinging
+                Mathf.Cos(Time.time * swingAmplitude)   // Vertical swinging
+            );
+
+            // Update the player's position while maintaining the fixed rope length
+            Vector3 targetPosition = lassoPoint + directionToPlayer + swingOffset;
+
+            // Smoothly move the player to the new position
+            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 2);
+
+            // Update the rope's visual line renderer
             rope.UpdateLineRenderer(lassoSpawn, lassoPoint);
+
             yield return null;
         }
     }
@@ -276,6 +322,7 @@ public class Lasso : AbstractCombat
         float elapsedTime = 0f;
         rope.StartRetracting();
 
+        // Retract the lasso from the current point back to the spawn point
         while (elapsedTime < retractDuration)
         {
             Vector3 retractPosition = Vector3.Lerp(lassoPoint, lassoSpawn.position, elapsedTime / retractDuration);
@@ -284,9 +331,9 @@ public class Lasso : AbstractCombat
             yield return null;
         }
 
+        // Disable the lasso and reset its state
         rope.DisableLasso();
         rope.lineRenderer.positionCount = 0;
-        //rope.spring.Reset();
         isLassoActive = false;
         isRetracting = false;
         currentPullablePlatform = null;
