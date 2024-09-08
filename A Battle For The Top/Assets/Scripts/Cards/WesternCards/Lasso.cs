@@ -2,16 +2,20 @@ using System.Collections;
 using UnityEngine;
 using BFTT.Combat;
 using BFTT.IK;
+using BFTT.Components;
+using BFTT.Abilities;
 
 public class Lasso : AbstractCombat
 {
     private bool lassoSwing = false;
+    private bool swingingActive = false; // Toggle for starting/stopping swing
     public Transform lassoSpawn; // Where the lasso is shot from
     public float lassoSpeed = 20f; // Speed of the lasso shot
     public float maxLassoDistance = 30f; // Maximum distance the lasso can travel
     public LayerMask lassoLayerMask; // Layer mask for detecting eligible platforms
     public LassoRope rope; // Reference to the LassoRope script
     public float retractDuration;
+    public float swingAmplitude = 3f; // Amplitude of the swinging motion
 
     private Vector3 lassoPoint; // The point where the lasso hits or attaches
     private bool isLassoActive = false;
@@ -19,27 +23,34 @@ public class Lasso : AbstractCombat
 
     private Coroutine activeLassoRoutine; // Store the active lasso routine
     private bool isRetracting = false; // Track whether the lasso is retracting
+    private bool isSwinging = false; // Track if the player is swinging
 
     // IK-related fields
     private IKScheduler _ikScheduler;
+    private RigidbodyMover _mover;
     public Transform startPosition;
     public Transform handRaisePosition;
     public Transform handBackPosition;
     public Transform handRestPosition;
     public Transform handPullPosition; // Add this field for the pull position
     public float windUpDelay = 0.3f; // Delay before launching the lasso
+    private Strafe _zoomAbility;
 
     private Animator _animator;
+    private Rigidbody _rigidbody; // For handling player movement
 
     private void Awake()
     {
         _ikScheduler = GetComponent<IKScheduler>();
         _animator = GetComponent<Animator>();
+        _rigidbody = GetComponent<Rigidbody>(); // Assuming the player has a Rigidbody
+        _mover = GetComponent<RigidbodyMover>();
+        _zoomAbility = GetComponent<Strafe>();
     }
 
     public override bool CombatReadyToRun()
     {
-        if (_manager.currentCard == this && _action.UseCard)
+        if (_manager.currentCard == this && _action.UseCard && !_action.zoom)
         {
             lassoSwing = false;
             return true;
@@ -48,6 +59,8 @@ public class Lasso : AbstractCombat
         if (_manager.currentCard == this && _action.zoom && _action.UseCard)
         {
             lassoSwing = true;
+            _zoomAbility.canZoom = false;
+            _ikScheduler.StopIK(AvatarIKGoal.RightHand);
             return true;
         }
         return false;
@@ -69,27 +82,13 @@ public class Lasso : AbstractCombat
 
     private IEnumerator LassoHandIKSequence()
     {
-        // Step 1: Raise the hand above the head
-        //yield return StartCoroutine(SmoothIKTransition(handRaisePosition, 0.2f, startPosition)); // Smoothly transition to the raise position
-
-        // Step 2: Move the hand back to wind up
-        //yield return StartCoroutine(SmoothIKTransition(handBackPosition, windUpDelay, handRaisePosition)); // Smoothly transition to the back position
-
-
-
-        // Step 3: Launch the lasso
-        //yield return StartCoroutine(SmoothIKTransition(handRestPosition, 0.2f, handBackPosition)); // Smoothly transition to the rest position
-        //ShootLasso(); // Launch the lasso after the hand has moved forward
-
         _animator.SetTrigger("Lasso");
 
         // Wait until the lasso action is complete
         yield return activeLassoRoutine;
 
-        // Step 4: Ensure the IK stops after the action is complete
+        // Ensure the IK stops after the action is complete
     }
-
-
 
     private IEnumerator SmoothIKTransition(Transform target, float duration, Transform _startPosition)
     {
@@ -120,16 +119,6 @@ public class Lasso : AbstractCombat
         _ikScheduler.ApplyIK(finalPass);
     }
 
-
-    private void ApplyIK(Transform target, float weight)
-    {
-        if (_ikScheduler != null && target != null)
-        {
-            IKPass rightHandPass = new IKPass(target.position, target.rotation, AvatarIKGoal.RightHand, weight, weight);
-            _ikScheduler.ApplyIK(rightHandPass);
-        }
-    }
-
     public void ShootLasso()
     {
         // Cancel any active retraction or previous lasso routine
@@ -151,11 +140,21 @@ public class Lasso : AbstractCombat
             attachedObject = hit.transform; // The object the lasso hit
             isLassoActive = true;
 
-            activeLassoRoutine = StartCoroutine(ShootAndPullLasso());
+            if (lassoSwing)
+            {
+                activeLassoRoutine = StartCoroutine(AttachForSwing()); // Attach for swinging
+            }
+            else
+            {
+                activeLassoRoutine = StartCoroutine(ShootAndPullLasso()); // Start pulling
+            }
         }
         else
         {
             Debug.Log("Lasso missed");
+            // Stop the IK when the combat stops
+            _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+            _animator.SetTrigger("Retract");
             StopCombat();
         }
     }
@@ -194,7 +193,50 @@ public class Lasso : AbstractCombat
         _ikScheduler.StopIK(AvatarIKGoal.RightHand);
     }
 
+    private IEnumerator AttachForSwing()
+    {
+        // Attach the lasso to the target but don't apply immediate force
+        rope.EnableLasso();
+        isSwinging = true;
 
+        Debug.Log("Lasso attached for swinging");
+
+        while (isSwinging)
+        {
+            // If the player is grounded, don't apply force (let them hang)
+            if (!_mover.Grounded)
+            {
+                // If the player leaves the ground, allow swinging motion
+                Vector3 swingDirection = new Vector3(Mathf.Sin(Time.time), Mathf.Cos(Time.time), 0) * swingAmplitude;
+                Vector3 swingPosition = lassoPoint + swingDirection;
+
+                transform.position = Vector3.Lerp(transform.position, swingPosition, Time.deltaTime);
+            }
+
+            rope.UpdateLineRenderer(lassoSpawn, lassoPoint);
+            yield return null;
+        }
+    }
+
+
+    private void DetachSwinging()
+    {
+        if (!isSwinging) return;
+
+        isSwinging = false;
+        lassoSwing = false;
+        Debug.Log("Stopped swinging");
+
+        if (activeLassoRoutine != null)
+        {
+            StopCoroutine(activeLassoRoutine);
+        }
+
+        _animator.SetTrigger("Retract");
+        // Start retraction immediately after stopping swing
+        activeLassoRoutine = StartCoroutine(RetractLasso());
+        _zoomAbility.canZoom = true;
+    }
 
     private IEnumerator RetractLasso()
     {
@@ -219,31 +261,18 @@ public class Lasso : AbstractCombat
 
     public override void UpdateCombat()
     {
-
         // If the lasso is active, keep updating the rope's position
         if (isLassoActive && !isRetracting)
         {
             rope.UpdateLineRenderer(lassoSpawn, lassoPoint);
         }
 
-        // Handle swinging update
-        if (isLassoActive && lassoSwing)
+        if (lassoSwing && !_action.zoom)
         {
-            if (!_action.UseCard) // Stop swinging and retract when the action is released
-            {
-                StopSwinging();
-            }
+            Debug.Log("Player stopped aiming, detaching lasso");
+            DetachSwinging(); // Stop swinging and retract when the player stops aiming
+            _zoomAbility.canZoom = false;
         }
-    }
-
-    private void StopSwinging()
-    {
-        Debug.Log("Stopping swinging");
-        if (activeLassoRoutine != null)
-        {
-            StopCoroutine(activeLassoRoutine);
-        }
-        activeLassoRoutine = StartCoroutine(RetractLasso());
     }
 
     public override void OnStopCombat()
@@ -261,12 +290,12 @@ public class Lasso : AbstractCombat
 
         isLassoActive = false;
         isRetracting = false;
+        isSwinging = false;
+        _zoomAbility.canZoom = true;
     }
-
 
     public override bool ReadyToExit()
     {
-        // The ability should not exit until the platform has been pulled and the lasso has retracted
         return !isLassoActive;
     }
 

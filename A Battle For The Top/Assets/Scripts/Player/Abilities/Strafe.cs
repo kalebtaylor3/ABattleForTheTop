@@ -27,6 +27,7 @@ namespace BFTT.Abilities
 
         private CardManager _manager;
         public AbstractCombat sword;
+        [HideInInspector] public bool canZoom = true;
 
         private void Awake()
         {
@@ -42,7 +43,10 @@ namespace BFTT.Abilities
 
         public override bool ReadyToRun()
         {
-            return _mover.IsGrounded() && _action.zoom;
+            if (canZoom)
+                return _mover.IsGrounded() && _action.zoom;
+            else
+                return false;
         }
 
         public override void OnStartAbility()
@@ -52,6 +56,12 @@ namespace BFTT.Abilities
 
         public override void UpdateAbility()
         {
+            if (!canZoom)
+            {
+                _ikScheduler.StopIK(AvatarIKGoal.RightHand);
+                StopAbility();
+            }
+
             _mover.Move(_action.move, strafeWalkSpeed, false);
             transform.rotation = Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0);
 
@@ -77,7 +87,7 @@ namespace BFTT.Abilities
 
         private void HandleIK()
         {
-            if (aimPosition != null && _ikScheduler != null)
+            if (aimPosition != null && _ikScheduler != null && canZoom)
             {
                 IKPass rightHandPass = new IKPass(aimPosition.position, aimPosition.rotation, AvatarIKGoal.RightHand, 1, 1);
                 _ikScheduler.ApplyIK(rightHandPass);

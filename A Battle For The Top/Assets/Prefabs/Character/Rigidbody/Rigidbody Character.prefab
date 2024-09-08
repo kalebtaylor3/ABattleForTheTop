@@ -2862,12 +2862,13 @@ MonoBehaviour:
   cardType: 127
   lassoSpawn: {fileID: 3938785845377565170}
   lassoSpeed: 50
-  maxLassoDistance: 30
+  maxLassoDistance: 10
   lassoLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
   rope: {fileID: 1160107634182697011}
   retractDuration: 0.5
+  swingAmplitude: 3
   startPosition: {fileID: 5024304425624354628}
   handRaisePosition: {fileID: 4990159744711091112}
   handBackPosition: {fileID: 7904369848266756602}
