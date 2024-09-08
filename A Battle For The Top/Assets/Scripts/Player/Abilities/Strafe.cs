@@ -38,6 +38,7 @@ namespace BFTT.Abilities
             _animHorizontalID = Animator.StringToHash(horizontalAnimFloat);
             _animVerticalID = Animator.StringToHash(verticalAnimFloat);
             _manager = GetComponent<CardManager>();
+            canZoom = true;
         }
 
 

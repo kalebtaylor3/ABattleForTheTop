@@ -38,6 +38,9 @@ public class Lasso : AbstractCombat
 
     private Animator _animator;
     private Rigidbody _rigidbody; // For handling player movement
+    public Transform _pullPoint;
+
+    PullablePlatform currentPullablePlatform = null;
 
     private void Awake()
     {
@@ -130,7 +133,7 @@ public class Lasso : AbstractCombat
 
         // Reset the lasso rope before shooting again
         rope.lineRenderer.positionCount = 0;
-        rope.spring.Reset();
+        //rope.spring.Reset();
         isRetracting = false; // Reset retracting flag
 
         RaycastHit hit;
@@ -164,6 +167,14 @@ public class Lasso : AbstractCombat
         rope.EnableLasso();
         float shootDuration = Vector3.Distance(lassoSpawn.position, lassoPoint) / lassoSpeed;
 
+        RaycastHit hit;
+        PullablePlatform pullablePlatform = null;
+        if (Physics.Raycast(lassoSpawn.position, (lassoPoint - lassoSpawn.position).normalized, out hit, Vector3.Distance(lassoSpawn.position, lassoPoint)))
+        {
+            // Check if the object hit has the PullablePlatform component
+            pullablePlatform = hit.collider.GetComponent<PullablePlatform>();
+        }
+
         float elapsedTime = 0f;
         while (elapsedTime < shootDuration)
         {
@@ -185,6 +196,11 @@ public class Lasso : AbstractCombat
 
         // Now we can start pulling the platform
         // Add the logic to start pulling the platform here, if necessary
+        if (pullablePlatform != null)
+        {
+            // Platform was hit, initiate the pull
+            pullablePlatform.Pull(_pullPoint);
+        }
 
         // Retract the lasso immediately after starting the pull
         activeLassoRoutine = StartCoroutine(RetractLasso());
@@ -198,6 +214,14 @@ public class Lasso : AbstractCombat
         // Attach the lasso to the target but don't apply immediate force
         rope.EnableLasso();
         isSwinging = true;
+
+        RaycastHit hit;
+        currentPullablePlatform = null;
+        if (Physics.Raycast(lassoSpawn.position, (lassoPoint - lassoSpawn.position).normalized, out hit, Vector3.Distance(lassoSpawn.position, lassoPoint)))
+        {
+            // Check if the object hit has the PullablePlatform component
+            currentPullablePlatform = hit.collider.GetComponent<PullablePlatform>();
+        }
 
         Debug.Log("Lasso attached for swinging");
 
@@ -225,12 +249,20 @@ public class Lasso : AbstractCombat
 
         isSwinging = false;
         lassoSwing = false;
+        StartCoroutine(SmoothIKTransition(handPullPosition, 0.2f, handRestPosition));
         Debug.Log("Stopped swinging");
 
         if (activeLassoRoutine != null)
         {
             StopCoroutine(activeLassoRoutine);
         }
+
+        if (currentPullablePlatform != null)
+        {
+            // Platform was hit, initiate the pull
+            currentPullablePlatform.Pull(_pullPoint);
+        }
+        currentPullablePlatform = null;
 
         _animator.SetTrigger("Retract");
         // Start retraction immediately after stopping swing
@@ -242,6 +274,7 @@ public class Lasso : AbstractCombat
     {
         isRetracting = true;
         float elapsedTime = 0f;
+        rope.StartRetracting();
 
         while (elapsedTime < retractDuration)
         {
@@ -253,9 +286,10 @@ public class Lasso : AbstractCombat
 
         rope.DisableLasso();
         rope.lineRenderer.positionCount = 0;
-        rope.spring.Reset();
+        //rope.spring.Reset();
         isLassoActive = false;
         isRetracting = false;
+        currentPullablePlatform = null;
         StopCombat();
     }
 
@@ -279,6 +313,7 @@ public class Lasso : AbstractCombat
     {
         rope.lineRenderer.positionCount = 0;
         rope.spring.Reset();
+        currentPullablePlatform = null;
         if (activeLassoRoutine != null)
         {
             StopCoroutine(activeLassoRoutine);

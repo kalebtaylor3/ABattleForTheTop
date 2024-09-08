@@ -15,6 +15,10 @@ public class LassoRope : MonoBehaviour
     public Color _color = Color.yellow;  // Typical lasso color
     public float startWidth;
     public float endWidth;
+    private float initialWaveHeight; // To store the initial wave height
+    private bool isRetracting = false; // Track whether the rope is retracting
+    private float retractProgress = 0f; // Track the progress of retraction
+    public float retractTime = 0f;
 
     private void Awake()
     {
@@ -29,6 +33,9 @@ public class LassoRope : MonoBehaviour
         lineRenderer.enabled = false; // Initially disable the LineRenderer
         spring = new Spring();
         spring.SetTarget(0);
+
+        // Store the initial wave height for resetting during retraction
+        initialWaveHeight = waveHeight;
 
         // Default affectCurve to make the lasso look more dynamic
         if (affectCurve == null || affectCurve.keys.Length == 0)
@@ -50,12 +57,22 @@ public class LassoRope : MonoBehaviour
             spring.SetDamper(damper);
             spring.SetStrength(strenght);
             spring.Update(Time.deltaTime);
+
             var up = Quaternion.LookRotation(grapplePoint - grappleSpawn.position).normalized * Vector3.up;
+
+            // Reverse the wave pattern if retracting
+            float currentWaveCount = isRetracting ? waveCount * (1 - retractProgress) : waveCount;
+            float currentWaveHeight = isRetracting ? Mathf.Lerp(initialWaveHeight, 0f, retractProgress) : waveHeight;
 
             for (int i = 0; i < quality + 1; i++)
             {
                 var delta = i / (float)quality;
-                var offset = up * waveHeight * Mathf.Sin(delta * waveCount * Mathf.PI) * spring.Value * affectCurve.Evaluate(delta);
+
+                // Invert the sine wave for retraction by adjusting the phase
+                float sineWave = Mathf.Sin((delta * currentWaveCount * Mathf.PI) + (isRetracting ? Mathf.PI : 0));
+
+                // Apply sine wave offset with reverse effect during retraction
+                var offset = up * currentWaveHeight * sineWave * affectCurve.Evaluate(delta);
 
                 lineRenderer.SetPosition(i, Vector3.Lerp(grappleSpawn.position, grapplePoint, delta) + offset);
             }
@@ -64,11 +81,32 @@ public class LassoRope : MonoBehaviour
 
     public void EnableLasso()
     {
+        isRetracting = false; // Set the flag to false when the lasso is extended
         lineRenderer.enabled = true;
     }
 
     public void DisableLasso()
     {
         lineRenderer.enabled = false;
+    }
+
+    public void StartRetracting()
+    {
+        isRetracting = true; // Set the flag to true when retraction starts
+        StartCoroutine(RetractOverTime(retractTime));
+    }
+
+    private IEnumerator RetractOverTime(float duration)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            retractProgress = elapsedTime / duration; // Calculate retraction progress
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        retractProgress = 1f; // Fully retracted
     }
 }
