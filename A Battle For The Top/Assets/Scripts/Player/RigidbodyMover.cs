@@ -65,7 +65,7 @@ namespace BFTT.Components
         private Vector2 playerInput; // Store player movement input for swing control
         private float swingForceMultiplier = 30f; // Adjust this to tweak the swing force
         [HideInInspector] public bool isJumping = false; // Track if the player is jumping
-        private float jumpCooldown = 0.5f; // Cooldown time to ensure jump finishes before swinging
+        private float jumpCooldown = 0.9f; // Cooldown time to ensure jump finishes before swinging
 
         [HideInInspector] public bool lassoSwing = false;
 
@@ -151,45 +151,59 @@ namespace BFTT.Components
 
         private void ApplySwinging()
         {
-            // Calculate the direction to the swing point (lasso point)
-            Vector3 directionToSwingPoint = swingPoint - transform.position;
-            float currentDistance = directionToSwingPoint.magnitude;
-
-            // If the player is beyond the rope length, gently pull them back
-            if (currentDistance > ropeLength)
+            if (!Grounded && !isJumping)
             {
-                Vector3 clampedPosition = swingPoint + directionToSwingPoint.normalized * ropeLength;
+                // Calculate the direction from the swing point to the player
+                Vector3 toSwingPoint = swingPoint - transform.position;
+                float currentDistance = toSwingPoint.magnitude;
 
-                // Apply a gentle force to bring the player back within the rope length
-                Vector3 correctionForce = (clampedPosition - transform.position) * 2f;  // Gentle correction force
-                _rigidbody.AddForce(correctionForce, ForceMode.Acceleration);
+                // Shorten the rope length slightly to avoid hanging too low
+                float adjustedRopeLength = ropeLength * 0.6f;  // Adjust this value to control how low the player hangs
 
-                // Only correct velocity if the player is moving away from the swing point
-                Vector3 velocityAlongRope = Vector3.Project(_rigidbody.velocity, directionToSwingPoint.normalized);
-                _rigidbody.velocity -= velocityAlongRope * 0.1f;  // Small velocity correction to prevent overshooting
-            }
+                // Get the normalized direction toward the swing point
+                Vector3 swingDirection = toSwingPoint.normalized;
 
-            // Simulate natural pendulum motion with gravity
-            _rigidbody.AddForce(Vector3.down * Mathf.Abs(Gravity), ForceMode.Acceleration);
+                // Ensure momentum from the player's entry into the swing is maintained
+                if (currentDistance > adjustedRopeLength)
+                {
+                    Vector3 correction = (currentDistance - adjustedRopeLength) * swingDirection;
+                    _rigidbody.position -= correction;  // Directly correct position to prevent going beyond the rope length
+                }
 
-            // Add perpendicular swinging force for natural pendulum motion
-            Vector3 perpendicularSwingForce = Vector3.Cross(directionToSwingPoint.normalized, Vector3.up).normalized;
-            _rigidbody.AddForce(perpendicularSwingForce * swingForceMultiplier, ForceMode.Acceleration);
+                // Calculate pendulum forces: velocity tangential to the rope, centripetal force to keep player on the rope
+                Vector3 velocityAlongRope = Vector3.Dot(_rigidbody.velocity, swingDirection) * swingDirection;
+                Vector3 tangentialVelocity = _rigidbody.velocity - velocityAlongRope;
 
-            // Handle player input: Allow the player to add a bit of force to control the swing
-            if (playerInput.magnitude > 0)
-            {
-                Vector3 inputSwingForce = new Vector3(playerInput.x, 0, playerInput.y) * swingForceMultiplier * 0.4f;
-                _rigidbody.AddForce(inputSwingForce, ForceMode.Acceleration);
-            }
+                // Apply stronger gravity when no input is provided to speed up return to the bottom of the swing
+                Vector3 gravityForce = Physics.gravity * (playerInput == Vector2.zero ? 2.0f : 0.2f);
 
-            // If no input, allow gravity and the pendulum motion to naturally bring the player to the lowest point
-            if (playerInput.magnitude == 0)
-            {
-                // Gravity and swing momentum will take over, no input forces applied
-                _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, Vector3.zero, Time.deltaTime * 0.05f);  // Very gradual slow down
+                // Apply player input force for more control while swinging
+                Vector3 playerInputForce = new Vector3(playerInput.x, 0, playerInput.y) * swingForceMultiplier;
+
+                // Calculate total force acting on the player (gravity + input)
+                Vector3 totalForce = gravityForce + playerInputForce;
+
+                // Apply forces only in the tangential direction, keeping the rope length constant
+                _rigidbody.AddForce(totalForce - velocityAlongRope, ForceMode.Force);
+
+                // Limit the tangential speed to prevent excessive swing, but allow for faster speeds
+                float maxSpeed = 250f;
+                if (tangentialVelocity.magnitude > maxSpeed)
+                {
+                    tangentialVelocity = tangentialVelocity.normalized * maxSpeed;
+                    _rigidbody.velocity = tangentialVelocity + velocityAlongRope;  // Combine constrained tangential and current rope velocity
+                }
+
+                // Reduce or remove damping when no input is given to speed up the descent
+                float dampingFactor = playerInput == Vector2.zero ? 0.999f : 0.998f;  // Higher damping when no input to smooth the swing
+                _rigidbody.velocity *= dampingFactor;
+
+                // Finally, keep the player on the rope by constraining their position to the rope length
+                Vector3 correctedPosition = swingPoint + (transform.position - swingPoint).normalized * adjustedRopeLength;
+                _rigidbody.position = correctedPosition;
             }
         }
+
 
         public void UpdateSwingInput(Vector2 input)
         {
