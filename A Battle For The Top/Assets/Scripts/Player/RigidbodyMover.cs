@@ -157,52 +157,58 @@ namespace BFTT.Components
                 Vector3 toSwingPoint = swingPoint - transform.position;
                 float currentDistance = toSwingPoint.magnitude;
 
-                // Shorten the rope length slightly to avoid hanging too low
-                float adjustedRopeLength = ropeLength * 0.6f;  // Adjust this value to control how low the player hangs
+                // Adjust rope length to control hanging
+                float adjustedRopeLength = ropeLength * 0.6f;
 
                 // Get the normalized direction toward the swing point
                 Vector3 swingDirection = toSwingPoint.normalized;
 
-                // Ensure momentum from the player's entry into the swing is maintained
+                // Correct the position if the player exceeds the rope length
                 if (currentDistance > adjustedRopeLength)
                 {
                     Vector3 correction = (currentDistance - adjustedRopeLength) * swingDirection;
-                    _rigidbody.position -= correction;  // Directly correct position to prevent going beyond the rope length
+                    _rigidbody.position -= correction;
                 }
 
-                // Calculate pendulum forces: velocity tangential to the rope, centripetal force to keep player on the rope
+                // Calculate velocity along the rope direction and tangential velocity
                 Vector3 velocityAlongRope = Vector3.Dot(_rigidbody.velocity, swingDirection) * swingDirection;
                 Vector3 tangentialVelocity = _rigidbody.velocity - velocityAlongRope;
 
-                // Apply stronger gravity when no input is provided to speed up return to the bottom of the swing
-                Vector3 gravityForce = Physics.gravity * (playerInput == Vector2.zero ? 2.0f : 0.2f);
+                if (isSwinging)
+                {
+                    // Apply gravity along the rope direction when no input is given
+                    Vector3 gravityForce = Physics.gravity * (playerInput == Vector2.zero ? 2.0f : 0.2f);
 
-                // Apply player input force for more control while swinging
-                Vector3 playerInputForce = new Vector3(playerInput.x, 0, playerInput.y) * swingForceMultiplier;
+                    // Convert player input into the player's local space to ensure it affects the swing directionally
+                    Vector3 localInputDirection = _mainCamera.transform.TransformDirection(new Vector3(playerInput.x, 0, playerInput.y)).normalized;
 
-                // Calculate total force acting on the player (gravity + input)
-                Vector3 totalForce = gravityForce + playerInputForce;
+                    // Project the local input onto the plane perpendicular to the swing direction
+                    Vector3 tangentialInputForce = Vector3.ProjectOnPlane(localInputDirection, swingDirection) * swingForceMultiplier;
 
-                // Apply forces only in the tangential direction, keeping the rope length constant
-                _rigidbody.AddForce(totalForce - velocityAlongRope, ForceMode.Force);
+                    // Apply the total force (gravity and input) tangentially to the rope
+                    Vector3 totalForce = gravityForce + tangentialInputForce;
+                    _rigidbody.AddForce(totalForce - velocityAlongRope, ForceMode.Force);
+                }
 
-                // Limit the tangential speed to prevent excessive swing, but allow for faster speeds
+                // Limit tangential speed to avoid excessive swinging
                 float maxSpeed = 250f;
                 if (tangentialVelocity.magnitude > maxSpeed)
                 {
                     tangentialVelocity = tangentialVelocity.normalized * maxSpeed;
-                    _rigidbody.velocity = tangentialVelocity + velocityAlongRope;  // Combine constrained tangential and current rope velocity
+                    _rigidbody.velocity = tangentialVelocity + velocityAlongRope;
                 }
 
-                // Reduce or remove damping when no input is given to speed up the descent
-                float dampingFactor = playerInput == Vector2.zero ? 0.999f : 0.998f;  // Higher damping when no input to smooth the swing
+                // Apply damping to reduce velocity gradually when no input is given
+                float dampingFactor = playerInput == Vector2.zero ? 0.999f : 0.998f;
                 _rigidbody.velocity *= dampingFactor;
 
-                // Finally, keep the player on the rope by constraining their position to the rope length
+                // Constrain the player to the rope length
                 Vector3 correctedPosition = swingPoint + (transform.position - swingPoint).normalized * adjustedRopeLength;
                 _rigidbody.position = correctedPosition;
             }
         }
+
+
 
 
         public void UpdateSwingInput(Vector2 input)
