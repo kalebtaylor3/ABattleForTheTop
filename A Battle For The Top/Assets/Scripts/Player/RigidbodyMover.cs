@@ -1,3 +1,4 @@
+using BFTT.IK;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -66,6 +67,13 @@ namespace BFTT.Components
         private float swingForceMultiplier = 30f; // Adjust this to tweak the swing force
         [HideInInspector] public bool isJumping = false; // Track if the player is jumping
         private float jumpCooldown = 0.9f; // Cooldown time to ensure jump finishes before swinging
+        private float _hangWeight = 0;
+        private float _hangvel;
+
+        public Transform leftFoot;
+        public Transform rightFoot;
+
+        IKScheduler _ikScheduler;
 
         [HideInInspector] public bool lassoSwing = false;
 
@@ -75,6 +83,7 @@ namespace BFTT.Components
             _mainCamera = Camera.main.gameObject;
             _rigidbody = GetComponent<Rigidbody>();
             _capsule = GetComponent<CapsuleCollider>();
+            _ikScheduler = GetComponent<IKScheduler>();
 
             _initialCapsuleHeight = _capsule.height;
             _initialCapsuleRadius = _capsule.radius;
@@ -103,6 +112,8 @@ namespace BFTT.Components
         private void FixedUpdate()
         {
             // Manage collision and gravity only if there's a change in NoClip status
+
+            UpdateFootIK();
 
             if (isJumping)
             {
@@ -147,6 +158,37 @@ namespace BFTT.Components
         {
             isJumping = true;
             jumpCooldown = 0.5f; // Reset the jump cooldown
+        }
+
+        private void UpdateFootIK()
+        {
+            float targetWeight = InSwing() ? 0 : 1;
+
+            switch (targetWeight)
+            {
+                case 0:
+                    //apply foot ik
+                    IKPass leftFootPass = new IKPass(leftFoot.position, leftFoot.rotation, AvatarIKGoal.LeftFoot, 1, 1);
+                    IKPass rightFootPass = new IKPass(rightFoot.position, rightFoot.rotation, AvatarIKGoal.RightFoot, 1, 1);
+
+                    _ikScheduler.ApplyIK(leftFootPass);
+                    _ikScheduler.ApplyIK(rightFootPass);
+                    break;
+                case 1:
+                    //clear foot ik.
+                    _ikScheduler.StopIK(AvatarIKGoal.LeftFoot);
+                    _ikScheduler.StopIK(AvatarIKGoal.RightFoot);
+                    break;
+            }
+
+        }
+
+        private bool InSwing()
+        {
+            if (isSwinging && !isJumping)
+                return true;
+            else
+                return false;
         }
 
         private void ApplySwinging()

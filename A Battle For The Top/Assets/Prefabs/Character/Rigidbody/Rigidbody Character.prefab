@@ -768,6 +768,37 @@ Transform:
   - {fileID: 6420071394406863075}
   m_Father: {fileID: 1422667912422995040}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2391041939342177329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2252843826709821780}
+  m_Layer: 0
+  m_Name: LassoRightFoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2252843826709821780
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2391041939342177329}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.843132, y: 0.001060754, z: 0.013157738, w: 0.5375445}
+  m_LocalPosition: {x: 0.099999726, y: -0.062, z: 0}
+  m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3797456225819413307}
+  m_LocalEulerAnglesHint: {x: 65.014, y: 176.834, z: 177.838}
 --- !u!1 &2761620105993401615
 GameObject:
   m_ObjectHideFlags: 0
@@ -1409,6 +1440,8 @@ Transform:
   - {fileID: 1440696419845963626}
   - {fileID: 2461691264376929694}
   - {fileID: 1568121552569740181}
+  - {fileID: 6791316623997174392}
+  - {fileID: 2252843826709821780}
   - {fileID: 6750627346579767741}
   - {fileID: 6510960822439073664}
   - {fileID: 8685629045512354813}
@@ -1646,6 +1679,8 @@ MonoBehaviour:
   NoClipEnabled: 0
   _animator: {fileID: 0}
   isJumping: 0
+  leftFoot: {fileID: 0}
+  rightFoot: {fileID: 0}
   lassoSwing: 0
 --- !u!114 &3797456225819413310
 MonoBehaviour:
@@ -3493,6 +3528,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &5005404315162888269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6791316623997174392}
+  m_Layer: 0
+  m_Name: LassoLeftFoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6791316623997174392
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5005404315162888269}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.94595945, y: -0.020450504, z: -0.13702399, w: 0.29320124}
+  m_LocalPosition: {x: -0.11, y: -0.062, z: 0}
+  m_LocalScale: {x: 2.3251035, y: 2.325067, z: 2.6649559}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3797456225819413307}
+  m_LocalEulerAnglesHint: {x: 33.306, y: -161.063, z: -171.811}
 --- !u!1 &5305536631802860096
 GameObject:
   m_ObjectHideFlags: 0
