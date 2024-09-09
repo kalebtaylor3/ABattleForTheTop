@@ -1679,8 +1679,8 @@ MonoBehaviour:
   NoClipEnabled: 0
   _animator: {fileID: 0}
   isJumping: 0
-  leftFoot: {fileID: 0}
-  rightFoot: {fileID: 0}
+  leftFoot: {fileID: 6791316623997174392}
+  rightFoot: {fileID: 2252843826709821780}
   lassoSwing: 0
 --- !u!114 &3797456225819413310
 MonoBehaviour:
