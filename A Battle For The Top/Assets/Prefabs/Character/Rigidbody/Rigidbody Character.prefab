@@ -1645,6 +1645,8 @@ MonoBehaviour:
   slidingForce: 15
   NoClipEnabled: 0
   _animator: {fileID: 0}
+  isJumping: 0
+  lassoSwing: 0
 --- !u!114 &3797456225819413310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2848,14 +2850,7 @@ MonoBehaviour:
   - {fileID: 3797456225819413310}
   - {fileID: 5295543893798943764}
   - {fileID: 3797456225819413252}
-  - {fileID: 2536674040576789992}
-  - {fileID: 1939822118217720700}
-  - {fileID: 3878017899592148627}
-  - {fileID: 6423809000933012547}
-  - {fileID: 1764070892886877082}
   - {fileID: 8826966994789190160}
-  - {fileID: 7737306116547435084}
-  - {fileID: 4333128637472120592}
   abilityName: Lasso
   abilityDescription: Get a Lasso
   abilityProp: {fileID: 8714481368707090554}
