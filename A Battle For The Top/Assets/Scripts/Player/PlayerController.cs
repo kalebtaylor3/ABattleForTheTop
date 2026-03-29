@@ -32,12 +32,21 @@ namespace BFTT.Controller
         [Tooltip("Speed of camera turn")]
         public Vector2 CameraTurnSpeed = new Vector2(300.0f, 200.0f);
         public Vector2 CameraTurnSpeedController = new Vector2(300.0f, 200.0f);
+        [Header("Camera Feel")]
+        [Tooltip("How quickly the camera catches up horizontally. Lower feels snappier.")]
+        [SerializeField] private float horizontalSpringTime = 0.06f;
+        [Tooltip("How quickly the camera catches up vertically. Slightly higher feels softer.")]
+        [SerializeField] private float verticalSpringTime = 0.08f;
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
         // cinemachine
+        private float _targetCinemachineYaw;
+        private float _targetCinemachinePitch;
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
+        private float _cinemachineYawVelocity;
+        private float _cinemachinePitchVelocity;
 
         public bool _usingController;
 
@@ -81,7 +90,10 @@ namespace BFTT.Controller
 
 
             // set right angle on start for camera
-            _cinemachineTargetYaw = CinemachineCameraTarget.transform.eulerAngles.y;
+            _targetCinemachineYaw = CinemachineCameraTarget.transform.eulerAngles.y;
+            _cinemachineTargetYaw = _targetCinemachineYaw;
+            _targetCinemachinePitch = CinemachineCameraTarget.transform.eulerAngles.x;
+            _cinemachineTargetPitch = _targetCinemachinePitch;
         }
 
         private void OnEnable()
@@ -147,19 +159,32 @@ namespace BFTT.Controller
             {
                 if (!_usingController)
                 {
-                    _cinemachineTargetYaw += Look.x * CameraTurnSpeed.x * Time.deltaTime;
-                    _cinemachineTargetPitch += Look.y * CameraTurnSpeed.y * Time.deltaTime;
+                    _targetCinemachineYaw += Look.x * CameraTurnSpeed.x * Time.deltaTime;
+                    _targetCinemachinePitch += Look.y * CameraTurnSpeed.y * Time.deltaTime;
                 }
                 else
                 {
-                    _cinemachineTargetYaw += Look.x * CameraTurnSpeedController.x * Time.deltaTime;
-                    _cinemachineTargetPitch += Look.y * -CameraTurnSpeedController.y * Time.deltaTime;
+                    _targetCinemachineYaw += Look.x * CameraTurnSpeedController.x * Time.deltaTime;
+                    _targetCinemachinePitch += Look.y * -CameraTurnSpeedController.y * Time.deltaTime;
                 }
             }
 
             // clamp our rotations so our values are limited 360 degrees
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+            _targetCinemachineYaw = ClampAngle(_targetCinemachineYaw, float.MinValue, float.MaxValue);
+            _targetCinemachinePitch = ClampAngle(_targetCinemachinePitch, BottomClamp, TopClamp);
+
+            // Spring the visible camera target toward the input-driven target.
+            _cinemachineTargetYaw = Mathf.SmoothDampAngle(
+                _cinemachineTargetYaw,
+                _targetCinemachineYaw,
+                ref _cinemachineYawVelocity,
+                horizontalSpringTime);
+
+            _cinemachineTargetPitch = Mathf.SmoothDampAngle(
+                _cinemachineTargetPitch,
+                _targetCinemachinePitch,
+                ref _cinemachinePitchVelocity,
+                verticalSpringTime);
 
             // Cinemachine will follow this target
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride, _cinemachineTargetYaw, 0.0f);

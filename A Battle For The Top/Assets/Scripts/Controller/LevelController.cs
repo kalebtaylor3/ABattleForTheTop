@@ -18,6 +18,8 @@ namespace BFTT.Controller
 
         private void Awake()
         {
+            Application.targetFrameRate = -1;
+
             if (player == null)
                 player = GameObject.FindGameObjectWithTag("Player");
 

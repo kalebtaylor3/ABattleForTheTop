@@ -7,9 +7,20 @@ using UnityEngine;
 public class SpinningObstacle : MonoBehaviour
 {
     public float launchForce = 10f; // Adjust this value to control the launch force
-    public float rayDistance = 10f; // Maximum distance for the raycast
+    public float upwardLaunchForce = 5f;
+    [SerializeField] private float outwardLaunchWeight = 1.25f;
+    [Tooltip("Optional explicit pivot. If left empty, the parent transform is used.")]
+    [SerializeField] private Transform spinCenter;
+    [Tooltip("Treat the spinner as rotating clockwise around its up axis.")]
+    [SerializeField] private bool clockwise = true;
 
     public static event Action OnCollision;
+
+    private void Awake()
+    {
+        if (spinCenter == null)
+            spinCenter = transform.parent;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -19,41 +30,34 @@ public class SpinningObstacle : MonoBehaviour
             collision.gameObject.GetComponent<PlayerController>().Move = Vector2.zero;
             if (playerMover != null)
             {
-                Transform playerTransform = collision.transform;
-                Vector3 toObstacle = (transform.position - playerTransform.position).normalized;
-                Vector3 playerForward = playerTransform.forward;
+                Rigidbody playerRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+                Vector3 pivotPosition = spinCenter != null ? spinCenter.position : transform.position;
+                Vector3 spinAxis = spinCenter != null ? spinCenter.up : transform.up;
+                ContactPoint contact = collision.GetContact(0);
+                Vector3 radialDirection = contact.point - pivotPosition;
+                radialDirection = Vector3.ProjectOnPlane(radialDirection, spinAxis);
 
-                // Check if the player is looking at the obstacle
-                if (Vector3.Dot(playerForward, toObstacle) > 0)
-                {
-                    // Launch the player in the opposite direction they are looking
-                    Vector3 launchDirection = playerForward;
-                    launchDirection *= launchForce;
-                    collision.gameObject.GetComponent<Rigidbody>().AddForceAtPosition(launchDirection + Vector3.up * 5, transform.position, ForceMode.Impulse);
-                    this.GetComponent<BoxCollider>().enabled = false;
-                    Debug.Log("bump - launched opposite direction");
-                    OnCollision?.Invoke();
-                }
-                else
-                {
-                    // Perform a raycast from the obstacle to the player
-                    Ray ray = new Ray(transform.position, (collision.transform.position - transform.position).normalized);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, rayDistance))
-                    {
-                        if (hit.collider.CompareTag("Player"))
-                        {
-                            // Calculate the launch direction away from the obstacle
-                            Vector3 launchDirection = (hit.point - transform.position).normalized;
-                            launchDirection *= launchForce;
+                if (radialDirection.sqrMagnitude < 0.001f)
+                    radialDirection = Vector3.ProjectOnPlane(playerRigidbody.worldCenterOfMass - pivotPosition, spinAxis);
 
-                            // Apply force at the point of the collision
-                            collision.gameObject.GetComponent<Rigidbody>().AddForceAtPosition(launchDirection + Vector3.up * 5, hit.point, ForceMode.Impulse);
-                            Debug.Log("bump - launched from collision point");
-                            OnCollision?.Invoke();
-                        }
-                    }
-                }
+                radialDirection.Normalize();
+
+                // Tangential sweep direction at the hit point.
+                Vector3 tangentialDirection = clockwise
+                    ? Vector3.Cross(radialDirection, spinAxis.normalized)
+                    : Vector3.Cross(spinAxis.normalized, radialDirection);
+                tangentialDirection.Normalize();
+
+                // Blend spin direction with an outward push so hits always throw the player away
+                // from the wheel instead of letting their own momentum carry them over the paddle.
+                Vector3 launchDirection = (tangentialDirection + radialDirection * outwardLaunchWeight).normalized;
+
+                playerRigidbody.linearVelocity = Vector3.zero;
+
+                playerRigidbody.AddForce(launchDirection * launchForce + Vector3.up * upwardLaunchForce, ForceMode.VelocityChange);
+                GetComponent<BoxCollider>().enabled = false;
+                Debug.Log("bump - launched in spin direction");
+                OnCollision?.Invoke();
             }
         }
     }

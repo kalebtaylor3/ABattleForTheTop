@@ -20,6 +20,15 @@ public class RopeSwing : AbstractAbility
     [SerializeField] private float smoothnessTime = 0.12f;
     [SerializeField] private float swingForce = 10f; // Force applied for swinging
     [SerializeField] private float maxSwingSpeed = 5f; // Maximum speed for swinging
+    [SerializeField] private float maxInputSwingAngle = 65f;
+    [SerializeField] private float swingDamping = 0.985f;
+    [SerializeField] private float hardSwingAngleLimit = 120f;
+    [SerializeField] private float momentumTransferMultiplier = 0.85f;
+    [SerializeField] private float ropeJumpLaunchForce = 11f;
+    [SerializeField] private float ropeJumpUpwardForce = 4.5f;
+    [SerializeField] private float ropeJumpLaunchSpeedMultiplier = 1.5f;
+    [SerializeField] private float ropeJumpUpwardSpeedMultiplier = 0.45f;
+    [SerializeField] private float maxReleaseSpeed = 14f;
 
     // Values to set position on the rope
     private Vector3 _startPosition, _targetPosition;
@@ -28,6 +37,7 @@ public class RopeSwing : AbstractAbility
     private float _weight;
     [SerializeField] private float charOffsetY = 0.3f;
     [SerializeField] private float charOffsetX = 0.3f;
+    [SerializeField] private float hangOffsetY = 0.25f;
     [SerializeField] private Transform grabReference;
     [SerializeField] private float overlapRange = 1f;
     [SerializeField] private LayerMask ropeMask;
@@ -37,8 +47,10 @@ public class RopeSwing : AbstractAbility
     private float _targetDuration = 2f;
     private float _startTime;
     private IKScheduler _ikScheduler;
+    private bool _isJumpReleasing;
 
     private Vector3 ropeForce;
+    private Vector3 _ropeLocalCharacterOffset;
 
     [SerializeField] private string climbUpAnimState = "RopeIdle";
 
@@ -53,18 +65,38 @@ public class RopeSwing : AbstractAbility
 
     public override void OnStartAbility()
     {
-        _ropeRigidbody.AddForce(new Vector3(0, 0, _mover.GetVelocity().z));
+        _isJumpReleasing = false;
+        TransferPlayerMomentumToRope();
         _weight = 0;
         _step = 1 / smoothnessTime;
         _startPosition = transform.position;
         _startRotation = transform.rotation;
         _mover.DisableGravity();
+        _mover.SetVelocity(Vector3.zero);
         _animator.SetFloat("HangWeight", 1);
         _animator.CrossFadeInFixedTime(climbUpAnimState, 0.1f);
+
+        // Keep the character attached in rope-local space so the pose stays locked
+        // to the grab point as the rope tilts and swings.
+        _ropeLocalCharacterOffset = new Vector3(0f, -(charOffsetY + hangOffsetY), charOffsetX);
+    }
+
+    private void TransferPlayerMomentumToRope()
+    {
+        if (_ropeRigidbody == null) return;
+
+        Vector3 incomingVelocity = _mover.GetVelocity();
+        Vector3 swingPlaneVelocity = Vector3.ProjectOnPlane(incomingVelocity, _ropeRigidbody.transform.right);
+
+        if (swingPlaneVelocity.sqrMagnitude <= 0.0001f)
+            return;
+
+        _ropeRigidbody.AddForce(swingPlaneVelocity * momentumTransferMultiplier, ForceMode.VelocityChange);
     }
 
     public override void OnStopAbility()
     {
+        _isJumpReleasing = false;
         if (_ikScheduler != null)
         {
             _ikScheduler.StopIK(AvatarIKGoal.RightHand);
@@ -102,7 +134,11 @@ public class RopeSwing : AbstractAbility
     public bool CanGrab(GameObject rope)
     {
         // Can't grab if character is not looking on ladder
-        if (Vector3.Dot(transform.forward, rope.transform.forward) < -0.1f) return false;
+        if (Vector3.Dot(transform.forward, rope.transform.forward) < -0.1f)
+        {
+            Debug.Log("Cant grab rope from this way");
+            return false;
+        }
 
         return true;
     }
@@ -122,11 +158,15 @@ public class RopeSwing : AbstractAbility
 
     public override void UpdateAbility()
     {
+        if (_isJumpReleasing)
+            return;
+
         Debug.Log("onRope");
         _targetPosition = GetCharPosition();
         _targetRotation = GetCharRotation();
+        _mover.SetVelocity(Vector3.zero);
         _mover.SetPosition(_targetPosition);
-        transform.rotation = _targetRotation;
+        _mover.SetRotation(_targetRotation);
         HandleIK();
 
         HandleSwingInput();
@@ -140,12 +180,24 @@ public class RopeSwing : AbstractAbility
 
         if (_action.jump)
         {
+            _isJumpReleasing = true;
             BlockRope();
             _mover.EnableGravity();
-            _mover.SetVelocity(_ropeRigidbody.velocity);
-            _mover.GetComponent<Rigidbody>().AddForce(_ropeRigidbody.velocity, ForceMode.VelocityChange);
+            Vector3 ropeVelocity = _ropeRigidbody.linearVelocity;
+            float releaseSpeed = Mathf.Min(ropeVelocity.magnitude, maxReleaseSpeed);
+            Vector3 releaseDirection = ropeVelocity.sqrMagnitude > 0.001f
+                ? ropeVelocity.normalized
+                : _currentRope.transform.forward;
+            float scaledLaunchForce = ropeJumpLaunchForce + releaseSpeed * ropeJumpLaunchSpeedMultiplier;
+            float scaledUpwardForce = ropeJumpUpwardForce + releaseSpeed * ropeJumpUpwardSpeedMultiplier;
+
+            _mover.SetVelocity(ropeVelocity);
+            _mover.GetComponent<Rigidbody>().AddForce(
+                releaseDirection * scaledLaunchForce + Vector3.up * scaledUpwardForce,
+                ForceMode.VelocityChange);
             _animator.CrossFadeInFixedTime(jumpBackState, 0.1f);
             StartCoroutine(WaitJumpBackAnimation(0.62f, _context));
+            return;
         }
 
     }
@@ -165,12 +217,6 @@ public class RopeSwing : AbstractAbility
             yield return null;
         }
 
-        _targetDuration = 2f;
-        transform.rotation = Quaternion.LookRotation(ropeForce);
-        _mover.SetVelocity(_ropeRigidbody.velocity * 2);
-        _mover.GetComponent<Rigidbody>().AddForce(_ropeRigidbody.velocity, ForceMode.VelocityChange);
-
-        _startTime = Time.time;
         StopAbility();
     }
 
@@ -184,26 +230,37 @@ public class RopeSwing : AbstractAbility
     {
         if (_ropeRigidbody == null) return;
 
-        float horizontalInput = _action.move.x; // Get horizontal input (A/D or Left Arrow/Right Arrow)
         float verticalInput = _action.move.y; // Get vertical input (W/S or Up Arrow/Down Arrow)
+        float currentSwingAngle = Vector3.Angle(Vector3.down, _ropeRigidbody.transform.up);
+        float inputAngleFactor = 1f - Mathf.Clamp01(currentSwingAngle / maxInputSwingAngle);
+        Vector3 swingDirection = Vector3.ProjectOnPlane(_ropeRigidbody.linearVelocity, _ropeRigidbody.transform.right);
+
+        // If the rope is already too high in the arc, strip any velocity that would carry it
+        // farther upward so the player can't brute-force over the top.
+        if (currentSwingAngle >= hardSwingAngleLimit && swingDirection.y > 0f)
+        {
+            Vector3 clampedVelocity = _ropeRigidbody.linearVelocity;
+            clampedVelocity.y = Mathf.Min(clampedVelocity.y, 0f);
+            _ropeRigidbody.linearVelocity = clampedVelocity;
+            inputAngleFactor = 0f;
+        }
 
         // Calculate the force to apply in local space
-        ropeForce = new Vector3(0, 0, verticalInput * swingForce);
+        ropeForce = new Vector3(0, 0, verticalInput * swingForce * inputAngleFactor);
         Vector3 localRopeForce = _ropeRigidbody.transform.TransformDirection(ropeForce);
 
         // Apply the force to the Rigidbody of the hinge joint in local space
-        if (_ropeRigidbody.velocity.magnitude < maxSwingSpeed)
+        if (_ropeRigidbody.linearVelocity.magnitude < maxSwingSpeed && Mathf.Abs(verticalInput) > 0.01f)
         {
             _ropeRigidbody.AddForce(localRopeForce);
         }
+
+        _ropeRigidbody.linearVelocity *= swingDamping;
     }
 
     public Vector3 GetCharPosition()
     {
-        Vector3 position = _currentRope.transform.position + _currentRope.transform.forward * charOffsetX;
-        position.y = _currentRope.transform.position.y - charOffsetY;
-
-        return position;
+        return _currentRope.transform.TransformPoint(_ropeLocalCharacterOffset);
     }
 
     public Quaternion GetCharRotation()

@@ -13,8 +13,8 @@ namespace BFTT.Puzzle
 
         public virtual bool Move(Vector3 velocity)
         {
-            velocity.y = _rigidbody.velocity.y;
-            _rigidbody.velocity = velocity;
+            velocity.y = _rigidbody.linearVelocity.y;
+            _rigidbody.linearVelocity = velocity;
 
             return true;
         }
@@ -22,13 +22,13 @@ namespace BFTT.Puzzle
         public void EnablePhysics()
         {
             _rigidbody.isKinematic = false;
-            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.linearVelocity = Vector3.zero;
         }
 
         public virtual void DisablePhysics()
         {
             _rigidbody.isKinematic = true;
-            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.linearVelocity = Vector3.zero;
         }
     }
 }

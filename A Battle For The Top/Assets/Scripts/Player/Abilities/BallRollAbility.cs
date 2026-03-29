@@ -101,7 +101,7 @@ namespace BFTT.Abilities
             tumbleWeedModel.SetActive(false);
             _isRolling = false;
             // Stop rolling movement
-            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.linearVelocity = Vector3.zero;
             _card.activated = false;
         }
 
@@ -119,7 +119,7 @@ namespace BFTT.Abilities
         private void ApplyMovement(Vector3 movement)
         {
             // Calculate current speed
-            float currentSpeed = _rigidbody.velocity.magnitude;
+            float currentSpeed = _rigidbody.linearVelocity.magnitude;
 
             // Adjust the applied force based on current speed
             if (currentSpeed < maxSpeed)
@@ -129,13 +129,13 @@ namespace BFTT.Abilities
             else
             {
                 // Apply deceleration if over max speed
-                _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, movement.normalized * maxSpeed, decelerationRate * Time.deltaTime);
+                _rigidbody.linearVelocity = Vector3.Lerp(_rigidbody.linearVelocity, movement.normalized * maxSpeed, decelerationRate * Time.deltaTime);
             }
         }
 
         private void RotateModel()
         {
-            Vector3 velocity = _rigidbody.velocity;
+            Vector3 velocity = _rigidbody.linearVelocity;
 
             if (velocity != Vector3.zero)
             {

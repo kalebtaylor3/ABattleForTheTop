@@ -85,6 +85,10 @@ namespace BFTT.Components
             _capsule = GetComponent<CapsuleCollider>();
             _ikScheduler = GetComponent<IKScheduler>();
 
+            // Keep interpolation off here because this controller mixes rigidbody motion
+            // with direct transform rotation updates, which causes visible body jitter.
+            _rigidbody.interpolation = RigidbodyInterpolation.None;
+
             _initialCapsuleHeight = _capsule.height;
             _initialCapsuleRadius = _capsule.radius;
 
@@ -213,8 +217,8 @@ namespace BFTT.Components
                 }
 
                 // Calculate velocity along the rope direction and tangential velocity
-                Vector3 velocityAlongRope = Vector3.Dot(_rigidbody.velocity, swingDirection) * swingDirection;
-                Vector3 tangentialVelocity = _rigidbody.velocity - velocityAlongRope;
+                Vector3 velocityAlongRope = Vector3.Dot(_rigidbody.linearVelocity, swingDirection) * swingDirection;
+                Vector3 tangentialVelocity = _rigidbody.linearVelocity - velocityAlongRope;
 
                 if (isSwinging)
                 {
@@ -237,12 +241,12 @@ namespace BFTT.Components
                 if (tangentialVelocity.magnitude > maxSpeed)
                 {
                     tangentialVelocity = tangentialVelocity.normalized * maxSpeed;
-                    _rigidbody.velocity = tangentialVelocity + velocityAlongRope;
+                    _rigidbody.linearVelocity = tangentialVelocity + velocityAlongRope;
                 }
 
                 // Apply damping to reduce velocity gradually when no input is given
                 float dampingFactor = playerInput == Vector2.zero ? 0.999f : 0.998f;
-                _rigidbody.velocity *= dampingFactor;
+                _rigidbody.linearVelocity *= dampingFactor;
 
                 // Constrain the player to the rope length
                 Vector3 correctedPosition = swingPoint + (transform.position - swingPoint).normalized * adjustedRopeLength;
@@ -264,9 +268,9 @@ namespace BFTT.Components
 
             Vector3 velocity = Vector3.Scale(_animator.deltaPosition / Time.deltaTime, _rootMotionMultiplier);
             if (_rigidbody.useGravity)
-                velocity.y = _rigidbody.velocity.y;
+                velocity.y = _rigidbody.linearVelocity.y;
 
-            _rigidbody.velocity = velocity;
+            _rigidbody.linearVelocity = velocity;
             transform.rotation *= _animator.deltaRotation;
         }
 
@@ -304,7 +308,7 @@ namespace BFTT.Components
         {
             if (Grounded && IsOnIce())
             {
-                Vector3 slidingDirection = new Vector3(_rigidbody.velocity.x, 0, _rigidbody.velocity.z).normalized;
+                Vector3 slidingDirection = new Vector3(_rigidbody.linearVelocity.x, 0, _rigidbody.linearVelocity.z).normalized;
                 if (slidingDirection == Vector3.zero)
                 {
                     slidingDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
@@ -355,7 +359,7 @@ namespace BFTT.Components
 
             if (moveInput == Vector2.zero) targetSpeed = 0.0f;
 
-            float currentHorizontalSpeed = new Vector3(_rigidbody.velocity.x, 0.0f, _rigidbody.velocity.z).magnitude;
+            float currentHorizontalSpeed = new Vector3(_rigidbody.linearVelocity.x, 0.0f, _rigidbody.linearVelocity.z).magnitude;
 
             float speedOffset = 0.1f;
             float inputMagnitude = moveInput.magnitude;
@@ -396,9 +400,9 @@ namespace BFTT.Components
             if (!_useRootMotion)
             {
                 Vector3 velocity = targetDirection.normalized * _speed;
-                velocity.y = _rigidbody.velocity.y;
+                velocity.y = _rigidbody.linearVelocity.y;
 
-                _rigidbody.velocity = velocity;
+                _rigidbody.linearVelocity = velocity;
             }
         }
 
@@ -427,16 +431,16 @@ namespace BFTT.Components
             Vector3 moveDirection = (forwardMovement + strafeMovement + verticalMovement).normalized;
             Vector3 velocity = moveDirection * (targetSpeed * 2);
 
-            _rigidbody.velocity = velocity;
+            _rigidbody.linearVelocity = velocity;
         }
 
 
         public void Move(Vector3 velocity)
         {
             if (_rigidbody.useGravity && !NoClipEnabled)
-                velocity.y = _rigidbody.velocity.y;
+                velocity.y = _rigidbody.linearVelocity.y;
 
-            _rigidbody.velocity = velocity;
+            _rigidbody.linearVelocity = velocity;
         }
 
         private void GravityControl()
@@ -445,11 +449,11 @@ namespace BFTT.Components
             {
                 if (Grounded)
                 {
-                    if (_rigidbody.velocity.y < 0.0f)
+                    if (_rigidbody.linearVelocity.y < 0.0f)
                     {
-                        Vector3 velocity = _rigidbody.velocity;
+                        Vector3 velocity = _rigidbody.linearVelocity;
                         velocity.y = Mathf.Clamp(velocity.y, -2, 0);
-                        _rigidbody.velocity = velocity;
+                        _rigidbody.linearVelocity = velocity;
                     }
                 }
             }
@@ -463,7 +467,7 @@ namespace BFTT.Components
 
         public void SetPosition(Vector3 newPosition)
         {
-            _rigidbody.position = newPosition + _rigidbody.velocity * Time.fixedDeltaTime;
+            _rigidbody.position = newPosition + _rigidbody.linearVelocity * Time.fixedDeltaTime;
         }
 
         public void SetRotation(Quaternion newRotation)
@@ -499,12 +503,12 @@ namespace BFTT.Components
 
         public void SetVelocity(Vector3 velocity)
         {
-            _rigidbody.velocity = velocity;
+            _rigidbody.linearVelocity = velocity;
         }
 
         public Vector3 GetVelocity()
         {
-            return _rigidbody.velocity;
+            return _rigidbody.linearVelocity;
         }
 
         public float GetGravity()
@@ -552,7 +556,7 @@ namespace BFTT.Components
 
         public void StopMovement()
         {
-            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.linearVelocity = Vector3.zero;
             _speed = 0;
 
             _animator.SetFloat(_animIDSpeed, 0);
@@ -581,7 +585,7 @@ namespace BFTT.Components
         {
             StopMovement();
             Grounded = true; 
-            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.linearVelocity = Vector3.zero;
             NoClipEnabled = !NoClipEnabled;
         }
     }

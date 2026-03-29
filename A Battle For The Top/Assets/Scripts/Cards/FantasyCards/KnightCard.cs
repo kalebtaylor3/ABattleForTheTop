@@ -23,6 +23,7 @@ public class KnightCard : AbstractCombat
     public LayerMask originalExcludeLayer;
 
     public ParticleSystem[] trail;
+    public AudioSource inairloop;
 
     public Vector3 origionalScale;
 
@@ -320,6 +321,8 @@ public class KnightCard : AbstractCombat
         {
             trail[i].Play();
         }
+
+        UpdateInAirLoop();
     }
 
     void ReturnSword()
@@ -329,7 +332,7 @@ public class KnightCard : AbstractCombat
         zoomWasReleased = false; // Reset zoom release state after return
         abilityProp.transform.localScale = origionalScale * 2.2f;
         oldPosition = rb.position;
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
         throwSword = false;
         rb.excludeLayers = originalExcludeLayer;
@@ -341,6 +344,8 @@ public class KnightCard : AbstractCombat
         {
             trail[i].Play();
         }
+
+        UpdateInAirLoop();
     }
 
     Vector3 getBQCPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)
@@ -366,6 +371,43 @@ public class KnightCard : AbstractCombat
         for (int i = 0; i < trail.Length; i++)
         {
             trail[i].Stop();
+        }
+
+        UpdateInAirLoop();
+    }
+
+    void UpdateInAirLoop()
+    {
+        if (inairloop == null)
+        {
+            return;
+        }
+
+        bool shouldPlay = effects != null && ((throwSword && !effects.hitSomething) || isReturning);
+
+        if (shouldPlay)
+        {
+            if (!inairloop.isPlaying)
+            {
+                inairloop.Play();
+            }
+        }
+        else if (inairloop.isPlaying)
+        {
+            inairloop.Stop();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        UpdateInAirLoop();
+    }
+
+    private void OnDisable()
+    {
+        if (inairloop != null && inairloop.isPlaying)
+        {
+            inairloop.Stop();
         }
     }
 

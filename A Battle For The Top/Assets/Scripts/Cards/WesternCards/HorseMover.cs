@@ -102,7 +102,7 @@ namespace BFTT.Components
 
             if (_currentGait == Gait.Idle)
             {
-                _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, Vector3.zero, Time.fixedDeltaTime * _acceleration);
+                _rigidbody.linearVelocity = Vector3.Lerp(_rigidbody.linearVelocity, Vector3.zero, Time.fixedDeltaTime * _acceleration);
             }
 
             // Debug the grounded state
@@ -114,9 +114,9 @@ namespace BFTT.Components
 
             Vector3 velocity = Vector3.Scale(_animator.deltaPosition / Time.deltaTime, _rootMotionMultiplier);
             if (_rigidbody.useGravity)
-                velocity.y = _rigidbody.velocity.y;
+                velocity.y = _rigidbody.linearVelocity.y;
 
-            _rigidbody.velocity = velocity;
+            _rigidbody.linearVelocity = velocity;
             transform.rotation *= _animator.deltaRotation;
         }
 
@@ -138,7 +138,7 @@ namespace BFTT.Components
         {
             if (Grounded && IsOnIce())
             {
-                Vector3 slidingDirection = new Vector3(_rigidbody.velocity.x, 0, _rigidbody.velocity.z).normalized;
+                Vector3 slidingDirection = new Vector3(_rigidbody.linearVelocity.x, 0, _rigidbody.linearVelocity.z).normalized;
                 if (slidingDirection == Vector3.zero)
                 {
                     slidingDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
@@ -185,7 +185,7 @@ namespace BFTT.Components
             if (moveInput == Vector2.zero)
             {
                 _currentGait = Gait.Idle;
-                _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, Vector3.zero, Time.deltaTime * _acceleration);
+                _rigidbody.linearVelocity = Vector3.Lerp(_rigidbody.linearVelocity, Vector3.zero, Time.deltaTime * _acceleration);
                 if (_hasAnimator)
                 {
                     _animator.SetFloat(_animIDSpeed, 0);
@@ -201,7 +201,7 @@ namespace BFTT.Components
             _currentGait = DetermineGait(targetSpeed);
             float gaitSpeed = GetGaitSpeed();
 
-            float currentHorizontalSpeed = new Vector3(_rigidbody.velocity.x, 0.0f, _rigidbody.velocity.z).magnitude;
+            float currentHorizontalSpeed = new Vector3(_rigidbody.linearVelocity.x, 0.0f, _rigidbody.linearVelocity.z).magnitude;
             float speedOffset = 0.1f;
             float inputMagnitude = moveInput.magnitude;
 
@@ -265,11 +265,11 @@ namespace BFTT.Components
                 _isTurning = false;
                 Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
                 Vector3 velocity = targetDirection.normalized * _speed;
-                velocity.y = _rigidbody.velocity.y;
+                velocity.y = _rigidbody.linearVelocity.y;
 
                 if (!_useRootMotion)
                 {
-                    _rigidbody.velocity = velocity;
+                    _rigidbody.linearVelocity = velocity;
                 }
             }
             else
@@ -277,11 +277,11 @@ namespace BFTT.Components
                 // Gradually reduce forward movement during significant rotation
                 Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
                 Vector3 velocity = Vector3.zero; //targetDirection.normalized * _speed * (1 - Time.deltaTime * _decelerationDuringTurn);
-                velocity.y = _rigidbody.velocity.y;
+                velocity.y = _rigidbody.linearVelocity.y;
 
                 if (!_useRootMotion)
                 {
-                    _rigidbody.velocity = velocity;
+                    _rigidbody.linearVelocity = velocity;
                 }
 
                 // Gradually reduce speed
@@ -325,9 +325,9 @@ namespace BFTT.Components
         public void Move(Vector3 velocity)
         {
             if (_rigidbody.useGravity)
-                velocity.y = _rigidbody.velocity.y;
+                velocity.y = _rigidbody.linearVelocity.y;
 
-            _rigidbody.velocity = velocity;
+            _rigidbody.linearVelocity = velocity;
         }
 
         private void GravityControl()
@@ -336,11 +336,11 @@ namespace BFTT.Components
             {
                 if (Grounded)
                 {
-                    if (_rigidbody.velocity.y < 0.0f)
+                    if (_rigidbody.linearVelocity.y < 0.0f)
                     {
-                        Vector3 velocity = _rigidbody.velocity;
+                        Vector3 velocity = _rigidbody.linearVelocity;
                         velocity.y = Mathf.Clamp(velocity.y, -2, 0);
-                        _rigidbody.velocity = velocity;
+                        _rigidbody.linearVelocity = velocity;
                     }
                 }
             }
@@ -354,7 +354,7 @@ namespace BFTT.Components
 
         public void SetPosition(Vector3 newPosition)
         {
-            _rigidbody.position = newPosition + _rigidbody.velocity * Time.fixedDeltaTime;
+            _rigidbody.position = newPosition + _rigidbody.linearVelocity * Time.fixedDeltaTime;
         }
 
         public void SetRotation(Quaternion newRotation)
@@ -390,12 +390,12 @@ namespace BFTT.Components
 
         public void SetVelocity(Vector3 velocity)
         {
-            _rigidbody.velocity = velocity;
+            _rigidbody.linearVelocity = velocity;
         }
 
         public Vector3 GetVelocity()
         {
-            return _rigidbody.velocity;
+            return _rigidbody.linearVelocity;
         }
 
         public float GetGravity()
@@ -443,7 +443,7 @@ namespace BFTT.Components
 
         public void StopMovement()
         {
-            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.linearVelocity = Vector3.zero;
             _speed = 0;
 
             if (_hasAnimator)
